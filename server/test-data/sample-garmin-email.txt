@@ -1,0 +1,38 @@
+Your Weekly Health Summary
+March 3 - March 9, 2026
+
+Hi Jessica,
+
+Here's your health snapshot for the week:
+
+RESTING HEART RATE
+Average: 62 bpm
+Mon: 61 | Tue: 63 | Wed: 62 | Thu: 60 | Fri: 64 | Sat: 63 | Sun: 61
+
+HEART RATE VARIABILITY
+Average: 42 ms
+Mon: 40 | Tue: 44 | Wed: 43 | Thu: 45 | Fri: 39 | Sat: 41 | Sun: 42
+
+SLEEP
+Average Score: 78
+Average Duration: 7.2 hours
+Mon: 82 (7.5h) | Tue: 75 (6.8h) | Wed: 80 (7.3h) | Thu: 76 (7.0h) | Fri: 72 (6.5h) | Sat: 84 (7.8h) | Sun: 77 (7.5h)
+
+BODY BATTERY
+Average Morning Reading: 52
+Mon: 55 | Tue: 48 | Wed: 53 | Thu: 50 | Fri: 45 | Sat: 58 | Sun: 55
+
+STEPS
+Average: 8,234
+Mon: 9,102 | Tue: 7,854 | Wed: 8,543 | Thu: 8,012 | Fri: 6,987 | Sat: 9,234 | Sun: 7,906
+
+VIGOROUS ACTIVITY MINUTES
+Total: 142 minutes
+Mon: 35 | Tue: 0 | Wed: 28 | Thu: 32 | Fri: 0 | Sat: 0 | Sun: 47
+
+STRESS
+Average: 38
+Mon: 35 | Tue: 42 | Wed: 37 | Thu: 40 | Fri: 44 | Sat: 32 | Sun: 36
+
+Keep up the great work!
+- Your Garmin Team

@@ -5,6 +5,8 @@ import { serve } from '@hono/node-server';
 import { authMiddleware } from './middleware/auth.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { computeCurrentWeek } from './utils.js';
+import { checkinRouter } from './routes/checkin.js';
+import { metricsRouter } from './routes/metrics.js';
 
 const app = new Hono();
 
@@ -30,6 +32,10 @@ app.get('/api/health', (c) => {
   const week = computeCurrentWeek(startDate);
   return c.json({ status: 'ok', week, authenticated: true });
 });
+
+// Routes
+app.route('/api/checkin', checkinRouter);
+app.route('/api/metrics', metricsRouter);
 
 const port = parseInt(process.env.PORT || '3001');
 
