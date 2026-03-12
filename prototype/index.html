@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fitness Age 28</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
+            min-height: 100vh;
+            padding: 12px;
+            padding-bottom: 80px;
+        }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            font-size: 0.75rem;
+            color: #888;
+        }
+        
+        /* Tab Navigation - Bottom Bar */
+        .tab-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            background: #1e1e3f;
+            border-top: 1px solid #333;
+            padding: 8px 0 20px 0;
+            z-index: 1000;
+        }
+        .tab-btn {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 0;
+            border: none;
+            background: transparent;
+            color: #666;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .tab-btn.active {
+            color: #f5576c;
+        }
+        .tab-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+        .tab-btn.active .tab-icon {
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Metrics Dashboard */
+        .metrics-dashboard {
+            background: #1e1e3f;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 16px;
+            border: 1px solid #333;
+        }
+        .metrics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .metrics-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #f093fb;
+        }
+        .metrics-date {
+            font-size: 0.7rem;
+            color: #666;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .metric-card {
+            background: #2a2a4a;
+            border-radius: 10px;
+            padding: 10px 8px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f5576c;
+        }
+        .metric-value.good { color: #7dde7d; }
+        .metric-value.warning { color: #dede7d; }
+        .metric-value.target { color: #f5576c; }
+        .metric-label {
+            font-size: 0.6rem;
+            color: #888;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+        .metric-target {
+            font-size: 0.55rem;
+            color: #555;
+            margin-top: 2px;
+        }
+        
+        /* Week Mode Toggle */
+        .week-mode-container {
+            margin-bottom: 16px;
+        }
+        .week-mode-toggle {
+            display: flex;
+            background: #1e1e3f;
+            border-radius: 14px;
+            padding: 4px;
+            border: 1px solid #333;
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 12px 8px;
+            border: none;
+            border-radius: 12px;
+            background: transparent;
+            color: #888;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .mode-btn.active.push {
+            background: linear-gradient(90deg, #f5576c, #f093fb);
+            color: white;
+            font-weight: 600;
+        }
+        .mode-btn.active.maintain {
+            background: linear-gradient(90deg, #7d7dde, #7dde7d);
+            color: white;
+            font-weight: 600;
+        }
+        .mode-subtitle {
+            display: block;
+            font-size: 0.65rem;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+        
+        /* Program Phase Banner */
+        .phase-banner {
+            background: linear-gradient(90deg, rgba(245,87,108,0.15), rgba(240,147,251,0.1));
+            border: 1px solid rgba(245,87,108,0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        .phase-banner.rampup {
+            background: linear-gradient(90deg, rgba(222,222,125,0.15), rgba(125,222,125,0.1));
+            border-color: rgba(222,222,125,0.3);
+        }
+        .phase-banner-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #f5576c;
+            margin-bottom: 4px;
+        }
+        .phase-banner.rampup .phase-banner-title {
+            color: #dede7d;
+        }
+        .phase-banner-text {
+            font-size: 0.75rem;
+            color: #aaa;
+            line-height: 1.4;
+        }
+        .phase-tags {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .phase-tag {
+            font-size: 0.6rem;
+            padding: 4px 8px;
+            border-radius: 10px;
+            background: #2a2a4a;
+            font-weight: 500;
+        }
+        .phase-tag.caution { background: rgba(222,222,125,0.2); color: #dede7d; }
+        .phase-tag.intensity { background: rgba(245,87,108,0.2); color: #f5576c; }
+        .phase-tag.recovery { background: rgba(125,222,125,0.2); color: #7dde7d; }
+        
+        /* Weekly Targets */
+        .weekly-targets {
+            background: #1e1e3f;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #333;
+        }
+        .targets-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #f093fb;
+            margin-bottom: 10px;
+        }
+        .targets-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        .target-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+        }
+        .target-value {
+            font-weight: 700;
+            color: #f5576c;
+        }
+        
+        /* Day Cards */
+        .day-card {
+            background: #1e1e3f;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+        .day-header {
+            padding: 14px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .day-header:active {
+            opacity: 0.9;
+        }
+        .day-header.vigorous {
+            background: linear-gradient(90deg, rgba(245,87,108,0.2), rgba(240,147,251,0.1));
+            border-left: 3px solid #f5576c;
+        }
+        .day-header.strength {
+            background: linear-gradient(90deg, rgba(125,125,222,0.15), rgba(125,125,222,0.05));
+            border-left: 3px solid #7d7dde;
+        }
+        .day-header.recovery {
+            background: linear-gradient(90deg, rgba(125,222,125,0.1), rgba(125,222,125,0.05));
+            border-left: 3px solid #7dde7d;
+        }
+        .day-header.rest {
+            background: rgba(255,255,255,0.02);
+            border-left: 3px solid #555;
+        }
+        .day-info {
+            flex: 1;
+        }
+        .day-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+        .day-subtitle {
+            font-size: 0.75rem;
+            color: #888;
+        }
+        .day-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .day-badge {
+            font-size: 0.55rem;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-vigorous { background: #f5576c; color: white; }
+        .badge-strength { background: #7d7dde; color: white; }
+        .badge-recovery { background: #7dde7d; color: #1a1a2e; }
+        .badge-rest { background: #444; color: #999; }
+        .arrow {
+            transition: transform 0.3s;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .arrow.open {
+            transform: rotate(180deg);
+        }
+        .day-content {
+            display: none;
+            padding: 14px;
+            border-top: 1px solid #2a2a4a;
+        }
+        .day-content.open {
+            display: block;
+        }
+        
+        /* Exercise Sections */
+        .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #f093fb;
+            margin: 14px 0 8px 0;
+            font-weight: 600;
+        }
+        .section-title:first-child {
+            margin-top: 0;
+        }
+        .exercise-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #252545;
+        }
+        .exercise-row:last-child {
+            border-bottom: none;
+        }
+        .exercise-name {
+            font-size: 0.9rem;
+            flex: 1;
+            padding-right: 12px;
+        }
+        .exercise-sets {
+            font-size: 0.85rem;
+            color: #f5576c;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        /* Special Boxes */
+        .note-box {
+            background: #252545;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .caution-box {
+            background: rgba(222,222,125,0.1);
+            border: 1px solid rgba(222,222,125,0.3);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #dede7d;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .vigorous-box {
+            background: linear-gradient(90deg, rgba(245,87,108,0.15), rgba(240,147,251,0.1));
+            border: 1px solid #f5576c;
+            border-radius: 10px;
+            padding: 14px;
+            margin: 12px 0;
+        }
+        .vigorous-title {
+            font-size: 0.75rem;
+            color: #f5576c;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .vigorous-content {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+        .vigorous-target {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #f5576c;
+            font-weight: 600;
+        }
+        .finisher-box {
+            background: linear-gradient(90deg, rgba(125,125,222,0.15), rgba(240,147,251,0.1));
+            border: 1px solid #7d7dde;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 14px;
+        }
+        .finisher-title {
+            font-size: 0.7rem;
+            color: #7d7dde;
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .finisher-content {
+            font-size: 0.85rem;
+        }
+        .superset-group {
+            background: #252545;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        .superset-label {
+            font-size: 0.65rem;
+            color: #f093fb;
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        /* Rest Day */
+        .rest-content {
+            text-align: center;
+            padding: 12px;
+        }
+        .rest-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 0;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        .rest-emoji {
+            font-size: 1rem;
+        }
+        .rest-check {
+            color: #7dde7d;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        /* Nutrition Tab */
+        .nutrition-card {
+            background: #1e1e3f;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #333;
+        }
+        .nutrition-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .macro-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .macro-item {
+            background: #2a2a4a;
+            padding: 14px 10px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .macro-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #f5576c;
+        }
+        .macro-label {
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 4px;
+        }
+        .plate-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #333;
+        }
+        .plate-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #f093fb;
+        }
+        .plate-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 8px 0;
+            font-size: 0.85rem;
+            gap: 10px;
+        }
+        .plate-emoji {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .plate-marker {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: #2a2a4a;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #f093fb;
+            flex-shrink: 0;
+        }
+        .rule-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            border-radius: 50%;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        /* Sleep Tab */
+        .sleep-card {
+            background: #1e1e3f;
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid #333;
+        }
+        .sleep-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            color: #7d7dde;
+        }
+        .sleep-timeline {
+            position: relative;
+            padding-left: 20px;
+        }
+        .sleep-timeline::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: linear-gradient(180deg, #7d7dde, #7dde7d);
+            border-radius: 1px;
+        }
+        .sleep-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            position: relative;
+        }
+        .sleep-item::before {
+            content: '';
+            position: absolute;
+            left: -14px;
+            width: 8px;
+            height: 8px;
+            background: #7d7dde;
+            border-radius: 50%;
+        }
+        .sleep-time {
+            font-weight: 700;
+            color: #7d7dde;
+            min-width: 75px;
+            font-size: 0.9rem;
+        }
+        .sleep-action {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        .sleep-note {
+            background: #252545;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 14px;
+            line-height: 1.4;
+        }
+        
+        /* Check-in Tab */
+        .checkin-card {
+            background: #1e1e3f;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #333;
+        }
+        .checkin-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #f093fb;
+        }
+        .checkin-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: #252545;
+            border-radius: 10px;
+            margin-bottom: 14px;
+        }
+        .checkin-status.pending {
+            border: 1px solid rgba(222,222,125,0.3);
+        }
+        .checkin-status.complete {
+            border: 1px solid rgba(125,222,125,0.3);
+        }
+        .checkin-icon {
+            font-size: 1.5rem;
+        }
+        .checkin-text {
+            flex: 1;
+        }
+        .checkin-text-main {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #eee;
+        }
+        .checkin-text-sub {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 2px;
+        }
+        .checkin-steps {
+            margin-top: 12px;
+        }
+        .checkin-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #252545;
+        }
+        .checkin-step:last-child {
+            border-bottom: none;
+        }
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            background: #2a2a4a;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #f093fb;
+            flex-shrink: 0;
+        }
+        .step-text {
+            font-size: 0.85rem;
+            color: #aaa;
+            line-height: 1.4;
+        }
+        
+        /* Goals Section */
+        .goals-card {
+            background: linear-gradient(135deg, rgba(245,87,108,0.1), rgba(240,147,251,0.05));
+            border: 1px solid rgba(245,87,108,0.2);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        .goals-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #f5576c;
+            margin-bottom: 12px;
+        }
+        .goal-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .goal-row:last-child {
+            border-bottom: none;
+        }
+        .goal-label {
+            font-size: 0.85rem;
+            color: #aaa;
+        }
+        .goal-values {
+            text-align: right;
+        }
+        .goal-current {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .goal-arrow {
+            color: #f5576c;
+            margin: 0 6px;
+        }
+        .goal-target {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #f5576c;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Fitness Age 28</h1>
+        <p class="subtitle">Garmin-Integrated | Push/Maintain | Post-Op Safe</p>
+    </div>
+    
+    <!-- Tab Navigation - Bottom Bar -->
+    <nav class="tab-nav">
+        <button class="tab-btn active" onclick="showTab('workouts')">
+            <span class="tab-icon">W</span>
+            <span>Workouts</span>
+        </button>
+        <button class="tab-btn" onclick="showTab('nutrition')">
+            <span class="tab-icon">N</span>
+            <span>Nutrition</span>
+        </button>
+        <button class="tab-btn" onclick="showTab('checkin')">
+            <span class="tab-icon">C</span>
+            <span>Check-In</span>
+        </button>
+    </nav>
+    
+    <!-- WORKOUTS TAB -->
+    <div id="workouts-tab" class="tab-content active">
+        
+        <!-- Metrics Dashboard -->
+        <div class="metrics-dashboard">
+            <div class="metrics-header">
+                <span class="metrics-title">This Week's Metrics</span>
+                <span class="metrics-date">Week of Mar 9, 2026</span>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value warning" id="vig-min">—</div>
+                    <div class="metric-label">Vigorous Min</div>
+                    <div class="metric-target">Target: 75-90</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value good" id="resting-hr">54</div>
+                    <div class="metric-label">Resting HR</div>
+                    <div class="metric-target">Maintain &lt;56</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="sleep-avg">—</div>
+                    <div class="metric-label">Sleep Avg</div>
+                    <div class="metric-target">Target: 7-8 hrs</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="steps-avg">—</div>
+                    <div class="metric-label">Steps/Day</div>
+                    <div class="metric-target">Target: 8-10k</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="body-battery">—</div>
+                    <div class="metric-label">Body Battery</div>
+                    <div class="metric-target">End day &gt;20</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="weight">~152</div>
+                    <div class="metric-label">Weight (lbs)</div>
+                    <div class="metric-target">Target: 137-140</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Week Mode Toggle -->
+        <div class="week-mode-container">
+            <div class="week-mode-toggle">
+                <button class="mode-btn push active" onclick="setWeekMode('push')">
+                    Push Week
+                    <span class="mode-subtitle">3 vigorous | heavy strength</span>
+                </button>
+                <button class="mode-btn maintain" onclick="setWeekMode('maintain')">
+                    Maintain Week
+                    <span class="mode-subtitle">2 vigorous | moderate</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Program Phase Banner -->
+        <div class="phase-banner rampup" id="phase-banner">
+            <div class="phase-banner-title">Week 1: Ramp-Up (Post-Op)</div>
+            <div class="phase-banner-text">You're cleared for exercise but still healing internally. Avoiding heavy Valsalva, inversions, and swimming for 3 more weeks.</div>
+            <div class="phase-tags">
+                <span class="phase-tag caution">No Heavy Straining</span>
+                <span class="phase-tag caution">No Inversions</span>
+                <span class="phase-tag recovery">Moderate Intensity OK</span>
+            </div>
+        </div>
+        
+        <!-- Weekly Targets -->
+        <div class="weekly-targets" id="weekly-targets">
+            <div class="targets-title">THIS WEEK'S TARGETS</div>
+            <div class="targets-grid">
+                <div class="target-item"><span class="target-value">2-3</span> vigorous days</div>
+                <div class="target-item"><span class="target-value">2</span> strength days</div>
+                <div class="target-item"><span class="target-value">50-70</span> vig. minutes</div>
+                <div class="target-item"><span class="target-value">Ramp up</span> gradually</div>
+            </div>
+        </div>
+        
+        <!-- Workout Days -->
+        <div id="workout-container"></div>
+        
+    </div>
+    
+    <!-- NUTRITION TAB -->
+    <div id="nutrition-tab" class="tab-content">
+        <div class="nutrition-card">
+            <div class="nutrition-title">Daily Targets</div>
+            <div class="macro-grid">
+                <div class="macro-item">
+                    <div class="macro-value">130-140g</div>
+                    <div class="macro-label">Protein (non-negotiable)</div>
+                </div>
+                <div class="macro-item">
+                    <div class="macro-value">1500-1650</div>
+                    <div class="macro-label">Calories (~300 deficit)</div>
+                </div>
+                <div class="macro-item">
+                    <div class="macro-value">80-100 oz</div>
+                    <div class="macro-label">Water</div>
+                </div>
+                <div class="macro-item">
+                    <div class="macro-value">0-2</div>
+                    <div class="macro-label">Drinks/Week Max</div>
+                </div>
+            </div>
+            
+            <div class="plate-section">
+                <div class="plate-title">The Plate Method (No Tracking Needed)</div>
+                <div class="plate-item">
+                    <span class="plate-marker">1/2</span>
+                    <span><strong>Half plate protein</strong> — palm-sized minimum (chicken, fish, eggs, greek yogurt)</span>
+                </div>
+                <div class="plate-item">
+                    <span class="plate-marker">1/4</span>
+                    <span><strong>Quarter plate veggies</strong> — volume foods, fiber, nutrients</span>
+                </div>
+                <div class="plate-item">
+                    <span class="plate-marker">1/4</span>
+                    <span><strong>Quarter plate carbs</strong> — around workouts only (rice, potato, fruit)</span>
+                </div>
+                <div class="plate-item">
+                    <span class="plate-marker">+</span>
+                    <span><strong>Thumb of fat</strong> — olive oil, avocado, nuts (easy to overdo)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="nutrition-card">
+            <div class="nutrition-title">5 Non-Negotiable Rules</div>
+            <div class="plate-item">
+                <span class="rule-number">1</span>
+                <span><strong>Protein at every meal</strong> — 30-40g minimum per meal</span>
+            </div>
+            <div class="plate-item">
+                <span class="rule-number">2</span>
+                <span><strong>No liquid calories</strong> — water, black coffee, tea only</span>
+            </div>
+            <div class="plate-item">
+                <span class="rule-number">3</span>
+                <span><strong>Stop eating by 7:30pm</strong> — 3 hrs before bed</span>
+            </div>
+            <div class="plate-item">
+                <span class="rule-number">4</span>
+                <span><strong>80% whole foods</strong> — if it has a barcode, limit it</span>
+            </div>
+            <div class="plate-item">
+                <span class="rule-number">5</span>
+                <span><strong>Eat carbs around training</strong> — not at every meal</span>
+            </div>
+        </div>
+
+        <div class="sleep-card">
+            <div class="sleep-title">Sleep Protocol</div>
+            <div class="sleep-timeline">
+                <div class="sleep-item">
+                    <span class="sleep-time">7:30 PM</span>
+                    <span class="sleep-action">Last meal</span>
+                </div>
+                <div class="sleep-item">
+                    <span class="sleep-time">8:30 PM</span>
+                    <span class="sleep-action">Stop fluids</span>
+                </div>
+                <div class="sleep-item">
+                    <span class="sleep-time">9:00 PM</span>
+                    <span class="sleep-action">Screens off, wind down</span>
+                </div>
+                <div class="sleep-item">
+                    <span class="sleep-time">9:30 PM</span>
+                    <span class="sleep-action">In bed, lights out by 10</span>
+                </div>
+                <div class="sleep-item">
+                    <span class="sleep-time">5:30 AM</span>
+                    <span class="sleep-action">Wake (7.5-8 hrs sleep)</span>
+                </div>
+            </div>
+            <div class="sleep-note">
+                Poor sleep = high cortisol = fat storage + water retention. With PCOS & Mirena, this is even more critical. You cannot out-train poor sleep.
+            </div>
+        </div>
+    </div>
+    
+    <!-- CHECK-IN TAB -->
+    <div id="checkin-tab" class="tab-content">
+        
+        <div class="checkin-card">
+            <div class="checkin-title">Weekly Check-In</div>
+            <div class="checkin-status pending">
+                <span class="checkin-icon">—</span>
+                <div class="checkin-text">
+                    <div class="checkin-text-main">Next check-in: Sunday 6:00 PM</div>
+                    <div class="checkin-text-sub">Calendar reminder set</div>
+                </div>
+            </div>
+            
+            <div class="checkin-steps">
+                <div class="checkin-step">
+                    <span class="step-number">1</span>
+                    <span class="step-text"><strong>Garmin email arrives</strong> — Weekly summary to your Gmail</span>
+                </div>
+                <div class="checkin-step">
+                    <span class="step-number">2</span>
+                    <span class="step-text"><strong>Open Claude</strong> — Say "Check-in time" or "Weekly check-in"</span>
+                </div>
+                <div class="checkin-step">
+                    <span class="step-number">3</span>
+                    <span class="step-text"><strong>I pull your metrics</strong> — Search Gmail for Garmin summary</span>
+                </div>
+                <div class="checkin-step">
+                    <span class="step-number">4</span>
+                    <span class="step-text"><strong>You share quick update</strong> — Energy level, workouts done, how you feel</span>
+                </div>
+                <div class="checkin-step">
+                    <span class="step-number">5</span>
+                    <span class="step-text"><strong>Get your adjusted plan</strong> — Push or Maintain week + any modifications</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="goals-card">
+            <div class="goals-title">12-Week Goals</div>
+            <div class="goal-row">
+                <span class="goal-label">Fitness Age</span>
+                <div class="goal-values">
+                    <span class="goal-current">30.5</span>
+                    <span class="goal-arrow">→</span>
+                    <span class="goal-target">28</span>
+                </div>
+            </div>
+            <div class="goal-row">
+                <span class="goal-label">Weight</span>
+                <div class="goal-values">
+                    <span class="goal-current">~152 lbs</span>
+                    <span class="goal-arrow">→</span>
+                    <span class="goal-target">137-140 lbs</span>
+                </div>
+            </div>
+            <div class="goal-row">
+                <span class="goal-label">BMI</span>
+                <div class="goal-values">
+                    <span class="goal-current">25.1</span>
+                    <span class="goal-arrow">→</span>
+                    <span class="goal-target">22.4</span>
+                </div>
+            </div>
+            <div class="goal-row">
+                <span class="goal-label">Vigorous Min/Week</span>
+                <div class="goal-values">
+                    <span class="goal-current">~36</span>
+                    <span class="goal-arrow">→</span>
+                    <span class="goal-target">75-90</span>
+                </div>
+            </div>
+            <div class="goal-row">
+                <span class="goal-label">Vigorous Days/Week</span>
+                <div class="goal-values">
+                    <span class="goal-current">1</span>
+                    <span class="goal-arrow">→</span>
+                    <span class="goal-target">3</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="checkin-card">
+            <div class="checkin-title">Progress Photos</div>
+            <div class="note-box">
+                Take progress photos monthly — same lighting, same time of day, same poses. The scale lies; photos over time tell the truth.
+            </div>
+            <div class="plate-item">
+                <span class="plate-emoji">📷</span>
+                <span><strong>Baseline:</strong> March 11, 2026 </span>
+            </div>
+            <div class="plate-item">
+                <span class="plate-emoji">📷</span>
+                <span><strong>Month 1:</strong> April 11, 2026</span>
+            </div>
+            <div class="plate-item">
+                <span class="plate-emoji">📷</span>
+                <span><strong>Month 2:</strong> May 11, 2026</span>
+            </div>
+            <div class="plate-item">
+                <span class="plate-emoji">📷</span>
+                <span><strong>Month 3:</strong> June 11, 2026</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Program data
+        const programData = {
+            rampup: {
+                week1: {
+                    title: "Week 1: Ramp-Up (Post-Op)",
+                    description: "You're cleared for exercise but still healing internally. Avoiding heavy Valsalva, inversions, and swimming for 3 more weeks.",
+                    tags: [
+                        { text: "No Heavy Straining", class: "caution" },
+                        { text: "No Inversions", class: "caution" },
+                        { text: "Moderate Intensity OK", class: "recovery" }
+                    ],
+                    targets: {
+                        vigorousDays: "2",
+                        strengthDays: "2",
+                        vigorousMin: "40-60",
+                        note: "Ramp up gradually"
+                    },
+                    days: [
+                        {
+                            title: "Thursday",
+                            subtitle: "Upper Body — Moderate",
+                            type: "strength",
+                            caution: "Avoid heavy overhead pressing that increases sinus pressure. Keep breathing steady.",
+                            warmup: [
+                                { name: "Arm circles", sets: "30 sec each" },
+                                { name: "Band pull-aparts", sets: "15" },
+                                { name: "Light lat pulldowns", sets: "10" }
+                            ],
+                            main: [
+                                { name: "Lat pulldowns", sets: "3 × 12" },
+                                { name: "DB shoulder press (light)", sets: "3 × 10" },
+                                { name: "Seated cable rows", sets: "3 × 12" },
+                                { name: "Lateral raises", sets: "3 × 12" },
+                                { name: "Face pulls", sets: "3 × 15" },
+                                { name: "Rear delt flyes", sets: "3 × 12" }
+                            ],
+                            superset: {
+                                label: "Arms — 2 rounds",
+                                exercises: [
+                                    { name: "Bicep curls", sets: "12" },
+                                    { name: "Tricep pushdowns", sets: "12" },
+                                    { name: "Hammer curls", sets: "10" }
+                                ]
+                            },
+                            core: {
+                                label: "Core — 2 rounds (NO inversions)",
+                                exercises: [
+                                    { name: "Pallof press", sets: "10 each" },
+                                    { name: "Bird dogs", sets: "10 each" },
+                                    { name: "Dead bugs (slow)", sets: "10 each" }
+                                ]
+                            },
+                            finisher: "10 min easy incline walk (10%, 3.0 mph)"
+                        },
+                        {
+                            title: "Friday",
+                            subtitle: "VIGOROUS — Rowing Intervals",
+                            type: "vigorous",
+                            note: "First vigorous day back! Start conservative. If you feel pressure in your sinuses, back off.",
+                            vigorous: {
+                                title: "ROWING INTERVALS — 20-25 MIN",
+                                content: "Warm-up: 5 min easy row\n\nMain set:\n6 rounds:\n• 2 min moderate-hard effort\n• 2 min easy recovery\n\nCool-down: 3 min easy row",
+                                target: "Target: 15-20 vigorous minutes"
+                            },
+                            core: {
+                                label: "Core — 2 rounds",
+                                exercises: [
+                                    { name: "Plank hold (no down dog)", sets: "30 sec" },
+                                    { name: "Side plank", sets: "20 sec each" },
+                                    { name: "Dead bugs", sets: "10 each" }
+                                ]
+                            }
+                        },
+                        {
+                            title: "Saturday",
+                            subtitle: "Lower Body — Moderate",
+                            type: "strength",
+                            caution: "Avoid heavy squats/deadlifts that require bearing down. Keep weights moderate, reps higher.",
+                            warmup: [
+                                { name: "Banded glute bridges", sets: "20" },
+                                { name: "Banded clamshells", sets: "15 each" },
+                                { name: "Bodyweight squats", sets: "10" }
+                            ],
+                            main: [
+                                { name: "Leg press (moderate)", sets: "3 × 15" },
+                                { name: "Romanian deadlifts (light)", sets: "3 × 12" },
+                                { name: "Hip thrusts", sets: "3 × 12" },
+                                { name: "Walking lunges", sets: "3 × 10 each" },
+                                { name: "Leg curl", sets: "3 × 12" },
+                                { name: "Cable kickbacks", sets: "3 × 12 each" },
+                                { name: "Hip abductor machine", sets: "3 × 15" }
+                            ],
+                            core: {
+                                label: "Core — 2 rounds",
+                                exercises: [
+                                    { name: "Dead bugs", sets: "12 each" },
+                                    { name: "Bird dogs", sets: "12 each" },
+                                    { name: "Plank hold", sets: "30 sec" }
+                                ]
+                            },
+                            finisher: "15 min stair climber (moderate pace)"
+                        },
+                        {
+                            title: "Sunday",
+                            subtitle: "Tennis + Check-In",
+                            type: "recovery",
+                            rest: true,
+                            activities: [
+                                "Tennis — play at your normal intensity",
+                                "No swimming yet (3 more weeks)",
+                                "After tennis: Do your weekly check-in!",
+                                "Sunday 6 PM reminder set in calendar"
+                            ]
+                        },
+                        {
+                            title: "Monday",
+                            subtitle: "VIGOROUS — Spin or Bike Intervals",
+                            type: "vigorous",
+                            note: "Second vigorous day of the week. You should be feeling good.",
+                            vigorous: {
+                                title: "SPIN CLASS OR BIKE HIIT — 30-40 MIN",
+                                content: "Option A: Take a spin class (45 min)\n• Stay at 70-80% effort\n• Avoid standing climbs if pressure builds\n\nOption B: Solo bike intervals\n• 5 min warm-up\n• 5 rounds: 3 min hard / 2 min easy\n• 5 min cool-down",
+                                target: "Target: 20-25 vigorous minutes"
+                            }
+                        },
+                        {
+                            title: "Tuesday",
+                            subtitle: "Active Recovery",
+                            type: "rest",
+                            rest: true,
+                            activities: [
+                                "30 min easy incline walk (10-12%, 3.0 mph)",
+                                "Foam roll — 10 min",
+                                "Stretch or gentle yoga (no inversions)",
+                                "Sauna if available — 15 min"
+                            ]
+                        },
+                        {
+                            title: "Wednesday",
+                            subtitle: "Zone 2 Cardio + Glute Activation",
+                            type: "recovery",
+                            note: "Keep heart rate 120-140 bpm. This is fat-burning, recovery cardio.",
+                            circuit: {
+                                label: "Glute Activation — 2 rounds",
+                                exercises: [
+                                    { name: "Banded glute bridges", sets: "20" },
+                                    { name: "Banded lateral walks", sets: "15 each" },
+                                    { name: "Fire hydrants", sets: "12 each" },
+                                    { name: "Donkey kicks", sets: "12 each" }
+                                ]
+                            },
+                            finisher: "35-40 min Zone 2: incline walk (12%, 3.2 mph) OR easy bike"
+                        }
+                    ]
+                },
+                week2: {
+                    title: "Week 2: Building",
+                    description: "Increasing intensity slightly. Still avoiding heavy Valsalva and inversions. Adding a third vigorous day.",
+                    tags: [
+                        { text: "Still Healing", class: "caution" },
+                        { text: "Ramping Up", class: "intensity" }
+                    ],
+                    targets: {
+                        vigorousDays: "3",
+                        strengthDays: "2",
+                        vigorousMin: "60-75",
+                        note: "Building toward full"
+                    }
+                }
+            },
+            push: {
+                title: "Push Week",
+                description: "High energy week. 3 vigorous days, heavy strength, chase PRs. Go hard.",
+                tags: [
+                    { text: "High Intensity", class: "intensity" },
+                    { text: "Heavy Strength", class: "intensity" }
+                ],
+                targets: {
+                    vigorousDays: "3",
+                    strengthDays: "2",
+                    vigorousMin: "75-90",
+                    note: "Push for progress"
+                },
+                days: [
+                    {
+                        title: "Monday",
+                        subtitle: "Heavy Lower — Glutes & Hamstrings",
+                        type: "strength",
+                        warmup: [
+                            { name: "Stair climber", sets: "5 min" },
+                            { name: "Banded glute bridges", sets: "20" },
+                            { name: "Banded clamshells", sets: "15 each" },
+                            { name: "Leg swings", sets: "10 each" }
+                        ],
+                        main: [
+                            { name: "Barbell hip thrusts", sets: "4 × 10" },
+                            { name: "Sumo deadlifts", sets: "4 × 6-8" },
+                            { name: "Romanian deadlifts", sets: "4 × 10" },
+                            { name: "Single-leg hip thrust", sets: "3 × 10 each" },
+                            { name: "Lying leg curl", sets: "3 × 12" },
+                            { name: "Cable pull-throughs", sets: "3 × 15" }
+                        ],
+                        core: {
+                            label: "Core — 3 rounds",
+                            exercises: [
+                                { name: "Dead bugs", sets: "12 each" },
+                                { name: "Plank hold", sets: "45 sec" },
+                                { name: "Bird dogs", sets: "12 each" }
+                            ]
+                        },
+                        finisher: "10 min incline treadmill (12%, 3.2 mph)"
+                    },
+                    {
+                        title: "Tuesday",
+                        subtitle: "VIGOROUS — Rowing Intervals",
+                        type: "vigorous",
+                        vigorous: {
+                            title: "ROWING HIIT — 25-30 MIN",
+                            content: "Warm-up: 5 min easy row\n\nMain set:\n8 rounds:\n• 30 sec ALL OUT sprint\n• 90 sec easy recovery\n\nCool-down: 5 min easy row",
+                            target: "Target: 25+ vigorous minutes"
+                        },
+                        core: {
+                            label: "Core — 3 rounds",
+                            exercises: [
+                                { name: "Mountain climbers", sets: "20 each" },
+                                { name: "V-ups", sets: "12" },
+                                { name: "Plank shoulder taps", sets: "12 each" }
+                            ]
+                        }
+                    },
+                    {
+                        title: "Wednesday",
+                        subtitle: "Upper Body + Shoulders",
+                        type: "strength",
+                        main: [
+                            { name: "Lat pulldowns (wide)", sets: "4 × 10" },
+                            { name: "DB shoulder press", sets: "4 × 10" },
+                            { name: "Seated cable rows", sets: "4 × 10" },
+                            { name: "Lateral raises", sets: "4 × 12" },
+                            { name: "Face pulls", sets: "3 × 15" },
+                            { name: "Rear delt flyes", sets: "3 × 12" }
+                        ],
+                        superset: {
+                            label: "Arms — 3 rounds",
+                            exercises: [
+                                { name: "Bicep curls", sets: "12" },
+                                { name: "Tricep pushdowns", sets: "12" },
+                                { name: "Hammer curls", sets: "10" }
+                            ]
+                        },
+                        core: {
+                            label: "Core — 3 rounds",
+                            exercises: [
+                                { name: "Pallof press", sets: "12 each" },
+                                { name: "Cable woodchops", sets: "12 each" },
+                                { name: "Hanging knee raise", sets: "12" }
+                            ]
+                        },
+                        finisher: "KB swings: 5 × 15 (30 sec rest)"
+                    },
+                    {
+                        title: "Thursday",
+                        subtitle: "VIGOROUS — Spin or Bike Intervals",
+                        type: "vigorous",
+                        vigorous: {
+                            title: "SPIN CLASS OR BIKE HIIT — 35-45 MIN",
+                            content: "Option A: Take a spin class (45 min)\n• Go hard, compete with yourself\n\nOption B: Solo bike intervals\n• 5 min warm-up\n• 6 rounds: 3 min hard / 2 min easy\n• 5 min cool-down",
+                            target: "Target: 25-30 vigorous minutes"
+                        }
+                    },
+                    {
+                        title: "Friday",
+                        subtitle: "Lower Body Volume — Glutes & Quads",
+                        type: "strength",
+                        warmup: [
+                            { name: "Banded monster walks", sets: "20 each" },
+                            { name: "Banded squats", sets: "15" },
+                            { name: "Glute bridges", sets: "20" }
+                        ],
+                        main: [
+                            { name: "Leg press (high & wide)", sets: "4 × 15" },
+                            { name: "Bulgarian split squats", sets: "3 × 10 each" },
+                            { name: "Hack squat", sets: "3 × 12" },
+                            { name: "Walking lunges", sets: "3 × 12 each" },
+                            { name: "Cable kickbacks", sets: "3 × 15 each" },
+                            { name: "Hip abductor machine", sets: "3 × 20" },
+                            { name: "Frog pumps (burnout)", sets: "3 × 30" }
+                        ],
+                        core: {
+                            label: "Core — 3 rounds",
+                            exercises: [
+                                { name: "Reverse crunches", sets: "15" },
+                                { name: "Side plank + hip dip", sets: "10 each" },
+                                { name: "Ab wheel rollout", sets: "10" }
+                            ]
+                        },
+                        finisher: "15 min stair climber (moderate-hard)"
+                    },
+                    {
+                        title: "Saturday",
+                        subtitle: "VIGOROUS — Long Run/Hike or Swim",
+                        type: "vigorous",
+                        vigorous: {
+                            title: "OUTDOOR CARDIO — 50-70 MIN",
+                            content: "Option A: Outdoor run with hills\n• Include 4-6 hill repeats or tempo sections\n• Easy jog between efforts\n\nOption B: Challenging hike with elevation\n• Keep pace brisk on uphills\n\nOption C: Swim intervals\n• 10 × 50m hard / 30 sec rest\n• 5 × 100m moderate / 45 sec rest",
+                            target: "Target: 30+ vigorous minutes"
+                        }
+                    },
+                    {
+                        title: "Sunday",
+                        subtitle: "Tennis + Check-In",
+                        type: "recovery",
+                        rest: true,
+                        activities: [
+                            "Tennis — play competitive!",
+                            "Optional: easy swim after",
+                            "Evening: Weekly check-in with Claude",
+                            "This can count as bonus vigorous!"
+                        ]
+                    }
+                ]
+            },
+            maintain: {
+                title: "Maintain Week",
+                description: "Lower energy or recovery week. 2 vigorous days, moderate strength, more Zone 2. Listen to your body.",
+                tags: [
+                    { text: "Moderate Intensity", class: "recovery" },
+                    { text: "Extra Recovery", class: "recovery" }
+                ],
+                targets: {
+                    vigorousDays: "2",
+                    strengthDays: "2",
+                    vigorousMin: "50-70",
+                    note: "Maintain consistency"
+                },
+                days: [
+                    {
+                        title: "Monday",
+                        subtitle: "Moderate Lower Body",
+                        type: "strength",
+                        warmup: [
+                            { name: "Foam roll", sets: "5 min" },
+                            { name: "Banded glute bridges", sets: "20" },
+                            { name: "Banded clamshells", sets: "15 each" }
+                        ],
+                        main: [
+                            { name: "Hip thrusts (moderate)", sets: "4 × 12" },
+                            { name: "Romanian deadlifts", sets: "4 × 10" },
+                            { name: "Goblet squats", sets: "3 × 12" },
+                            { name: "Single-leg hip thrust", sets: "3 × 10 each" },
+                            { name: "Leg curl", sets: "3 × 12" },
+                            { name: "Cable pull-throughs", sets: "3 × 15" }
+                        ],
+                        core: {
+                            label: "Core — 2 rounds",
+                            exercises: [
+                                { name: "Dead bugs", sets: "12 each" },
+                                { name: "Plank hold", sets: "40 sec" },
+                                { name: "Bird dogs", sets: "12 each" }
+                            ]
+                        },
+                        finisher: "12 min incline walk"
+                    },
+                    {
+                        title: "Tuesday",
+                        subtitle: "VIGOROUS — Spin or Row (Moderate-Hard)",
+                        type: "vigorous",
+                        note: "Still getting vigorous work in, but listen to your body.",
+                        vigorous: {
+                            title: "SPIN CLASS OR ROW — 30-40 MIN",
+                            content: "Option A: Spin class\n• Stay at 70-80% effort\n• Don't max out\n\nOption B: Rowing intervals\n6 rounds:\n• 2 min hard / 2 min easy",
+                            target: "Target: 20-25 vigorous minutes"
+                        },
+                        core: {
+                            label: "Core — 2 rounds",
+                            exercises: [
+                                { name: "Bicycle crunches", sets: "15 each" },
+                                { name: "Reverse crunches", sets: "12" }
+                            ]
+                        }
+                    },
+                    {
+                        title: "Wednesday",
+                        subtitle: "Upper Body — Moderate",
+                        type: "strength",
+                        main: [
+                            { name: "Lat pulldowns", sets: "3 × 12" },
+                            { name: "DB shoulder press", sets: "3 × 10" },
+                            { name: "Cable rows", sets: "3 × 12" },
+                            { name: "Lateral raises", sets: "3 × 12" },
+                            { name: "Face pulls", sets: "3 × 15" },
+                            { name: "Rear delt flyes", sets: "3 × 12" }
+                        ],
+                        superset: {
+                            label: "Arms — 2 rounds",
+                            exercises: [
+                                { name: "Bicep curls", sets: "12" },
+                                { name: "Tricep pushdowns", sets: "12" }
+                            ]
+                        },
+                        core: {
+                            label: "Core — 2 rounds",
+                            exercises: [
+                                { name: "Pallof press", sets: "10 each" },
+                                { name: "Plank shoulder taps", sets: "10 each" }
+                            ]
+                        },
+                        finisher: "10 min easy row or bike"
+                    },
+                    {
+                        title: "Thursday",
+                        subtitle: "Zone 2 — Steady State",
+                        type: "recovery",
+                        note: "Fat burning, recovery pace. Keep HR 120-140.",
+                        options: [
+                            { name: "Incline treadmill", sets: "40-50 min" },
+                            { name: "OR Easy outdoor walk/hike", sets: "50-60 min" },
+                            { name: "OR Easy swim", sets: "35-45 min" }
+                        ]
+                    },
+                    {
+                        title: "Friday",
+                        subtitle: "VIGOROUS — Interval Choice",
+                        type: "vigorous",
+                        note: "Second vigorous day. Modify based on energy.",
+                        vigorous: {
+                            title: "YOUR CHOICE — 25-35 MIN",
+                            content: "Pick what feels manageable:\n\nA: Rowing intervals (moderate)\n• 6-8 rounds: 1 min hard / 1.5 min easy\n\nB: Treadmill intervals\n• 8 rounds: 1 min run / 1 min walk\n\nC: Bike intervals\n• 5 rounds: 3 min hard / 2 min easy",
+                            target: "Target: 20-25 vigorous minutes"
+                        },
+                        core: {
+                            label: "Core — 2 rounds",
+                            exercises: [
+                                { name: "Dead bugs", sets: "12 each" },
+                                { name: "Side plank", sets: "25 sec each" },
+                                { name: "Reverse crunches", sets: "12" }
+                            ]
+                        }
+                    },
+                    {
+                        title: "Saturday",
+                        subtitle: "Glute Burnout + Zone 2",
+                        type: "recovery",
+                        circuit: {
+                            label: "Glute Circuit — 3 rounds",
+                            exercises: [
+                                { name: "Banded glute bridges", sets: "25" },
+                                { name: "Banded lateral walks", sets: "15 each" },
+                                { name: "Fire hydrants", sets: "15 each" },
+                                { name: "Donkey kicks", sets: "15 each" },
+                                { name: "Frog pumps", sets: "25" }
+                            ]
+                        },
+                        core: {
+                            label: "Core — 2 rounds",
+                            exercises: [
+                                { name: "Bicycle crunches", sets: "15 each" },
+                                { name: "Flutter kicks", sets: "20 each" }
+                            ]
+                        },
+                        finisher: "35-45 min Zone 2 (stair climber, incline walk, or easy bike)"
+                    },
+                    {
+                        title: "Sunday",
+                        subtitle: "Tennis + Check-In",
+                        type: "recovery",
+                        rest: true,
+                        activities: [
+                            "Tennis — social pace is fine",
+                            "OR Easy swim — recovery focus",
+                            "Evening: Weekly check-in with Claude",
+                            "Listen to your body"
+                        ]
+                    }
+                ]
+            }
+        };
+
+        let currentMode = 'rampup';
+        let currentWeek = 'week1';
+        let currentTab = 'workouts';
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.currentTarget.classList.add('active');
+            currentTab = tabName;
+        }
+
+        function setWeekMode(mode) {
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.mode-btn.${mode}`).classList.add('active');
+            
+            // If selecting push/maintain and we're in rampup, stay in rampup
+            // This is controlled by program phase
+            if (currentMode === 'rampup') {
+                // Still in ramp-up phase, don't change
+                return;
+            }
+            
+            currentMode = mode;
+            renderWorkouts();
+        }
+
+        function toggleDay(index) {
+            const content = document.getElementById(`day-content-${index}`);
+            const arrow = document.getElementById(`arrow-${index}`);
+            content.classList.toggle('open');
+            arrow.classList.toggle('open');
+        }
+
+        function renderWorkouts() {
+            let data;
+            if (currentMode === 'rampup') {
+                data = programData.rampup[currentWeek];
+            } else {
+                data = programData[currentMode];
+            }
+            
+            // Update phase banner
+            const banner = document.getElementById('phase-banner');
+            banner.className = currentMode === 'rampup' ? 'phase-banner rampup' : 'phase-banner';
+            banner.innerHTML = `
+                <div class="phase-banner-title">${data.title}</div>
+                <div class="phase-banner-text">${data.description}</div>
+                <div class="phase-tags">
+                    ${data.tags.map(tag => `<span class="phase-tag ${tag.class}">${tag.text}</span>`).join('')}
+                </div>
+            `;
+            
+            // Update targets
+            const targets = document.getElementById('weekly-targets');
+            targets.innerHTML = `
+                <div class="targets-title">THIS WEEK'S TARGETS</div>
+                <div class="targets-grid">
+                    <div class="target-item"><span class="target-value">${data.targets.vigorousDays}</span> vigorous days</div>
+                    <div class="target-item"><span class="target-value">${data.targets.strengthDays}</span> strength days</div>
+                    <div class="target-item"><span class="target-value">${data.targets.vigorousMin}</span> vig. minutes</div>
+                    <div class="target-item"><span class="target-value">${data.targets.note}</span></div>
+                </div>
+            `;
+            
+            // Render workout days
+            const container = document.getElementById('workout-container');
+            let html = '';
+            
+            data.days.forEach((day, index) => {
+                const badgeClass = day.type === 'vigorous' ? 'badge-vigorous' : 
+                                   day.type === 'strength' ? 'badge-strength' : 
+                                   day.type === 'rest' ? 'badge-rest' : 'badge-recovery';
+                const badgeText = day.type === 'vigorous' ? 'Vigorous' : 
+                                  day.type === 'strength' ? 'Strength' : 
+                                  day.type === 'rest' ? 'Rest' : 'Zone 2';
+                
+                html += `
+                    <div class="day-card">
+                        <div class="day-header ${day.type}" onclick="toggleDay(${index})">
+                            <div class="day-info">
+                                <div class="day-title">${day.title}</div>
+                                <div class="day-subtitle">${day.subtitle}</div>
+                            </div>
+                            <div class="day-right">
+                                <span class="day-badge ${badgeClass}">${badgeText}</span>
+                                <span class="arrow" id="arrow-${index}">▼</span>
+                            </div>
+                        </div>
+                        <div class="day-content" id="day-content-${index}">
+                            ${renderDayContent(day)}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        function renderDayContent(day) {
+            if (day.rest && day.activities) {
+                return `
+                    <div class="rest-content">
+                        ${day.activities.map(a => `<div class="rest-item"><span class="rest-check">•</span>${a}</div>`).join('')}
+                    </div>
+                `;
+            }
+
+            let html = '';
+
+            if (day.caution) {
+                html += `<div class="caution-box">${day.caution}</div>`;
+            }
+
+            if (day.note) {
+                html += `<div class="note-box">${day.note}</div>`;
+            }
+
+            if (day.vigorous) {
+                html += `
+                    <div class="vigorous-box">
+                        <div class="vigorous-title">${day.vigorous.title}</div>
+                        <div class="vigorous-content">${day.vigorous.content}</div>
+                        <div class="vigorous-target">${day.vigorous.target}</div>
+                    </div>
+                `;
+            }
+
+            if (day.options) {
+                html += `<div class="section-title">Options</div>`;
+                day.options.forEach(opt => {
+                    html += `
+                        <div class="exercise-row">
+                            <span class="exercise-name">${opt.name}</span>
+                            <span class="exercise-sets">${opt.sets}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            if (day.warmup && day.warmup.length > 0) {
+                html += `<div class="section-title">Warm-Up</div>`;
+                day.warmup.forEach(ex => {
+                    html += `
+                        <div class="exercise-row">
+                            <span class="exercise-name">${ex.name}</span>
+                            <span class="exercise-sets">${ex.sets}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            if (day.main && day.main.length > 0) {
+                html += `<div class="section-title">Main Work</div>`;
+                day.main.forEach(ex => {
+                    html += `
+                        <div class="exercise-row">
+                            <span class="exercise-name">${ex.name}</span>
+                            <span class="exercise-sets">${ex.sets}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            if (day.circuit) {
+                html += `
+                    <div class="section-title">${day.circuit.label}</div>
+                `;
+                day.circuit.exercises.forEach(ex => {
+                    html += `
+                        <div class="exercise-row">
+                            <span class="exercise-name">${ex.name}</span>
+                            <span class="exercise-sets">${ex.sets}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            if (day.superset) {
+                html += `
+                    <div class="superset-group">
+                        <div class="superset-label">${day.superset.label}</div>
+                `;
+                day.superset.exercises.forEach(ex => {
+                    html += `
+                        <div class="exercise-row">
+                            <span class="exercise-name">${ex.name}</span>
+                            <span class="exercise-sets">${ex.sets}</span>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            if (day.core) {
+                html += `<div class="section-title">${day.core.label}</div>`;
+                day.core.exercises.forEach(ex => {
+                    html += `
+                        <div class="exercise-row">
+                            <span class="exercise-name">${ex.name}</span>
+                            <span class="exercise-sets">${ex.sets}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            if (day.finisher) {
+                html += `
+                    <div class="finisher-box">
+                        <div class="finisher-title">Finisher</div>
+                        <div class="finisher-content">${day.finisher}</div>
+                    </div>
+                `;
+            }
+
+            return html;
+        }
+
+        // Initialize
+        renderWorkouts();
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+.expo/
+.venv/
+
+# Build
+dist/
+build/
+*.apk
+*.aab
+*.ipa
+
+# Environment
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Design reference (not part of the app)
+assets/design-reference/
