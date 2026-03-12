@@ -47,6 +47,7 @@ export const workoutPlans = pgTable('workout_plans', {
   planJson: jsonb('plan_json').notNull(),
   nutritionJson: jsonb('nutrition_json'),
   focusAreas: jsonb('focus_areas'),
+  progressNarrative: text('progress_narrative'),
   generatedAt: timestamp('generated_at').defaultNow(),
 });
 
