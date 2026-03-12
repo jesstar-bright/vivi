@@ -6,6 +6,12 @@ interface CheckinSubmission {
   motivation: number;
   notes: string;
   photo_key?: string;
+  manual_metrics?: {
+    sleep_avg: number;
+    body_battery_avg: number;
+    hrv_current: number;
+    stress_avg: number;
+  };
 }
 
 interface CheckinResponse {

@@ -25,7 +25,7 @@ plansRouter.get('/current', async (c) => {
     return c.json({ week: weekNumber, plan: plan.planJson, mode: plan.mode });
   }
 
-  // Check for missed check-in — auto-generate Maintain if we're behind
+  // Check for missed check-in or first week with no plan
   const [latestPlan] = await db
     .select()
     .from(schema.workoutPlans)
@@ -34,27 +34,33 @@ plansRouter.get('/current', async (c) => {
 
   const latestWeek = latestPlan?.weekNumber || 0;
 
-  if (weekNumber > latestWeek + 1) {
-    // Missed check-in — generate safe Maintain plan
+  // First week ever OR missed check-in — auto-generate a plan
+  if (latestWeek === 0 || weekNumber > latestWeek + 1) {
+    const isFirstWeek = latestWeek === 0;
+    const mode = isFirstWeek ? 'rampup' : 'maintain';
+    const reasoning = isFirstWeek
+      ? 'Week 1 — auto-generated Ramp-Up plan. Easing back in safely.'
+      : 'Auto-generated Maintain week — missed check-in. Recovery-first approach.';
+
     const autoPlan = await generateWeeklyPlan({
-      mode: 'maintain',
+      mode,
       weekNumber,
       focusAreas: [],
       exerciseHistory: [],
       userConditions: user.conditions || '',
       postOpCleared: user.postOpCleared ?? false,
-      modeReasoning: 'Auto-generated Maintain week — missed check-in. Recovery-first approach.',
+      modeReasoning: reasoning,
     });
 
     await db.insert(schema.workoutPlans).values({
       weekNumber,
-      mode: 'maintain',
+      mode,
       planJson: autoPlan as any,
       nutritionJson: autoPlan.nutrition as any,
       focusAreas: [] as any,
     });
 
-    return c.json({ week: weekNumber, plan: autoPlan, mode: 'maintain', auto_generated: true });
+    return c.json({ week: weekNumber, plan: autoPlan, mode, auto_generated: true });
   }
 
   return c.json({ week: weekNumber, needs_checkin: true });
