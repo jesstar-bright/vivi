@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vivi — Gentler Streak Theme Preview</title>
+    <title>Crea</title>
     <style>
         * {
             box-sizing: border-box;
@@ -27,32 +27,16 @@
             position: relative;
             overflow: visible;
         }
-        .header-mascot {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-            top: -10px;
-            right: 20px;
-            opacity: 0.18;
-            pointer-events: none;
-            mix-blend-mode: multiply;
+        .header-mark {
+            display: block;
+            margin: 0 auto;
         }
-        h1 {
-            font-size: 1.6rem;
-            margin-bottom: 4px;
-            background: linear-gradient(90deg, #f093fb, #f5576c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
-        }
-        .subtitle {
-            font-size: 0.75rem;
-            color: #8E8E93;
-            letter-spacing: 0.3px;
+        .week-subtitle {
+            font-size: 0.6rem;
+            color: #BCBCBC;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 6px;
         }
 
         /* Tab Navigation - Floating Bubble */
@@ -946,9 +930,18 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <img src="../assets/mascot/chinchilla.png" alt="" class="header-mascot">
-        <h1>Vivi</h1>
-        <p class="subtitle">Garmin-Integrated | Push/Maintain | Post-Op Safe</p>
+        <svg class="header-mark" width="30" height="32" viewBox="0 0 100 100" role="img" aria-label="Crea">
+            <defs>
+                <linearGradient id="crea-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#f093fb"/>
+                    <stop offset="100%" style="stop-color:#f5576c"/>
+                </linearGradient>
+            </defs>
+            <path d="M50 8 L82 38 L50 92 L18 38 Z" fill="url(#crea-gradient)"/>
+            <path d="M18 38 L50 50 L82 38" fill="none" stroke="white" stroke-width="2" opacity="0.3"/>
+            <path d="M50 50 L50 92" fill="none" stroke="white" stroke-width="2" opacity="0.2"/>
+        </svg>
+        <p class="week-subtitle">Week 1 of 12</p>
     </div>
 
     <!-- Tab Navigation - Floating Bubble -->
