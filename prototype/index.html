@@ -979,76 +979,51 @@
         </div>
     </div>
 
-    <!-- NUTRITION TAB -->
-    <div id="nutrition-tab" class="tab-content">
+    <!-- LIFESTYLE TAB -->
+    <div id="lifestyle-tab" class="tab-content">
+        <!-- Nutrition Targets Card -->
         <div class="nutrition-card">
-            <div class="nutrition-title">Daily Targets</div>
-            <div class="macro-grid">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+                <svg width="22" height="22" viewBox="0 0 100 100" style="flex-shrink:0;">
+                    <defs><linearGradient id="ls-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#f093fb"/><stop offset="100%" style="stop-color:#f5576c"/></linearGradient></defs>
+                    <path d="M50 8 L82 38 L50 92 L18 38 Z" fill="url(#ls-grad)"/>
+                </svg>
+                <div>
+                    <div style="font-size:0.6rem;color:#BCBCBC;letter-spacing:2px;text-transform:uppercase;">AI Nutrition Plan</div>
+                    <div style="font-size:1rem;font-weight:700;color:#1C1C1E;">Your Nutrition This Week</div>
+                </div>
+            </div>
+            <div class="macro-grid" id="lifestyle-macro-grid">
                 <div class="macro-item">
-                    <div class="macro-value">130-140g</div>
-                    <div class="macro-label">Protein (non-negotiable)</div>
+                    <div class="macro-value" id="ls-protein">130-140g</div>
+                    <div class="macro-label">Protein</div>
                 </div>
                 <div class="macro-item">
-                    <div class="macro-value">1500-1650</div>
-                    <div class="macro-label">Calories (~300 deficit)</div>
+                    <div class="macro-value" id="ls-calories">1500-1650</div>
+                    <div class="macro-label">Calories</div>
                 </div>
                 <div class="macro-item">
-                    <div class="macro-value">80-100 oz</div>
+                    <div class="macro-value" id="ls-water">80-100 oz</div>
                     <div class="macro-label">Water</div>
                 </div>
                 <div class="macro-item">
-                    <div class="macro-value">0-2</div>
-                    <div class="macro-label">Drinks/Week Max</div>
+                    <div class="macro-value" id="ls-focus">Anti-inflammatory</div>
+                    <div class="macro-label">Focus</div>
                 </div>
             </div>
-
-            <div class="plate-section">
-                <div class="plate-title">The Plate Method (No Tracking Needed)</div>
-                <div class="plate-item">
-                    <span class="plate-marker">1/2</span>
-                    <span><strong>Half plate protein</strong> — palm-sized minimum (chicken, fish, eggs, greek yogurt)</span>
-                </div>
-                <div class="plate-item">
-                    <span class="plate-marker">1/4</span>
-                    <span><strong>Quarter plate veggies</strong> — volume foods, fiber, nutrients</span>
-                </div>
-                <div class="plate-item">
-                    <span class="plate-marker">1/4</span>
-                    <span><strong>Quarter plate carbs</strong> — around workouts only (rice, potato, fruit)</span>
-                </div>
-                <div class="plate-item">
-                    <span class="plate-marker">+</span>
-                    <span><strong>Thumb of fat</strong> — olive oil, avocado, nuts (easy to overdo)</span>
+            <div style="margin-top:14px;padding-top:14px;border-top:1px solid #F2F2F7;">
+                <div style="font-size:0.78rem;color:#6B6B6B;line-height:1.6;">
+                    <strong>Carb timing:</strong> Eat carbs around your training window only — not at every meal. This supports PCOS insulin sensitivity.
                 </div>
             </div>
         </div>
 
-        <div class="nutrition-card">
-            <div class="nutrition-title">5 Non-Negotiable Rules</div>
-            <div class="plate-item">
-                <span class="rule-number">1</span>
-                <span><strong>Protein at every meal</strong> — 30-40g minimum per meal</span>
+        <!-- Sleep Card -->
+        <div class="sleep-card" style="margin-bottom:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                <div class="sleep-title" style="margin-bottom:0;">Sleep Protocol</div>
+                <div style="font-size:0.85rem;font-weight:700;color:#5B7FBF;">7.5 hrs target</div>
             </div>
-            <div class="plate-item">
-                <span class="rule-number">2</span>
-                <span><strong>No liquid calories</strong> — water, black coffee, tea only</span>
-            </div>
-            <div class="plate-item">
-                <span class="rule-number">3</span>
-                <span><strong>Stop eating by 7:30pm</strong> — 3 hrs before bed</span>
-            </div>
-            <div class="plate-item">
-                <span class="rule-number">4</span>
-                <span><strong>80% whole foods</strong> — if it has a barcode, limit it</span>
-            </div>
-            <div class="plate-item">
-                <span class="rule-number">5</span>
-                <span><strong>Eat carbs around training</strong> — not at every meal</span>
-            </div>
-        </div>
-
-        <div class="sleep-card">
-            <div class="sleep-title">Sleep Protocol</div>
             <div class="sleep-timeline">
                 <div class="sleep-item">
                     <span class="sleep-time">7:30 PM</span>
@@ -1072,8 +1047,15 @@
                 </div>
             </div>
             <div class="sleep-note">
-                Poor sleep = high cortisol = fat storage + water retention. With PCOS & Mirena, this is even more critical. You cannot out-train poor sleep.
+                PCOS + Mirena tip: Poor sleep = high cortisol = fat storage + water retention. You cannot out-train poor sleep.
             </div>
+        </div>
+
+        <!-- Grocery placeholder -->
+        <div class="nutrition-card" style="text-align:center;padding:28px 18px;">
+            <div style="font-size:2rem;margin-bottom:8px;">🛒</div>
+            <div style="font-size:1rem;font-weight:700;color:#1C1C1E;margin-bottom:4px;">Grocery List</div>
+            <div style="font-size:0.8rem;color:#8E8E93;">Coming Soon — AI-generated grocery list based on your weekly plan</div>
         </div>
     </div>
 
@@ -1307,12 +1289,27 @@
             // Load AI-generated plan if available
             if (plan?.plan?.days) {
                 renderAPIPlan(plan);
+                // Populate lifestyle macros
+                const nutrition = plan.plan.nutrition;
+                if (nutrition) {
+                    const el = id => document.getElementById(id);
+                    if (el('ls-protein')) el('ls-protein').textContent = nutrition.protein_g ? nutrition.protein_g + 'g' : '130-140g';
+                    if (el('ls-calories')) el('ls-calories').textContent = nutrition.calories || '1500-1650';
+                    if (el('ls-water')) el('ls-water').textContent = nutrition.hydration || '80-100 oz';
+                    if (el('ls-focus')) el('ls-focus').textContent = nutrition.focus || 'Anti-inflammatory';
+                }
             }
 
-            // Update progress stats in check-in tab
+            // Update progress stats
             if (progress) {
                 updateProgressDisplay(progress);
             }
+
+            // Load progress tab data
+            loadProgressTab();
+
+            // Check for pending check-in
+            checkForPendingCheckin(plan);
         }
 
         // ─── Render AI-generated plan ────────────────────────────────
@@ -1321,36 +1318,8 @@
             const mode = planData.mode;
             const week = planData.week;
 
-            // Update mode toggle
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            const modeBtn = document.querySelector(`.mode-btn.${mode}`);
-            if (modeBtn) modeBtn.classList.add('active');
-
-            // Update phase banner
-            const banner = document.getElementById('phase-banner');
-            banner.className = mode === 'rampup' ? 'phase-banner rampup' : 'phase-banner';
-            banner.innerHTML = `
-                <div class="phase-banner-title">Week ${week}: ${mode.charAt(0).toUpperCase() + mode.slice(1)} Week</div>
-                <div class="phase-banner-text">${plan.trainer_message || ''}</div>
-                <div class="phase-tags">
-                    <span class="phase-tag ${mode === 'push' ? 'intensity' : 'recovery'}">${mode.toUpperCase()}</span>
-                    ${planData.auto_generated ? '<span class="phase-tag caution">Auto-Generated</span>' : ''}
-                </div>
-            `;
-
-            // Update weekly targets from cardio data
-            if (plan.weekly_cardio) {
-                const targets = document.getElementById('weekly-targets');
-                targets.innerHTML = `
-                    <div class="targets-title">THIS WEEK'S TARGETS</div>
-                    <div class="targets-grid">
-                        <div class="target-item"><span class="target-value">${plan.weekly_cardio.zone2_sessions}</span> Zone 2 sessions</div>
-                        <div class="target-item"><span class="target-value">${plan.weekly_cardio.zone2_duration}</span> duration</div>
-                        <div class="target-item"><span class="target-value">${plan.weekly_cardio.vigorous_target}</span> vigorous</div>
-                        <div class="target-item"><span class="target-value">${plan.days.length}</span> training days</div>
-                    </div>
-                `;
-            }
+            // Store plan metadata for progress tab
+            window._currentPlanMeta = { mode, week, trainer_message: plan.trainer_message };
 
             // Render days
             const container = document.getElementById('workout-container');
@@ -1432,43 +1401,9 @@
             return html || '<div class="note-box">Rest day — listen to your body.</div>';
         }
 
-        function updateNutritionFromPlan(nutrition) {
-            const macroGrid = document.querySelector('#nutrition-tab .macro-grid');
-            if (macroGrid && nutrition) {
-                macroGrid.innerHTML = `
-                    <div class="macro-item">
-                        <div class="macro-value">${nutrition.protein_g}g</div>
-                        <div class="macro-label">Protein</div>
-                    </div>
-                    <div class="macro-item">
-                        <div class="macro-value">${nutrition.calories}</div>
-                        <div class="macro-label">Calories</div>
-                    </div>
-                    <div class="macro-item">
-                        <div class="macro-value">${nutrition.hydration || '80-100 oz'}</div>
-                        <div class="macro-label">Water</div>
-                    </div>
-                    <div class="macro-item">
-                        <div class="macro-value">${nutrition.focus || 'Anti-inflammatory'}</div>
-                        <div class="macro-label">Focus</div>
-                    </div>
-                `;
-            }
-        }
-
         function updateProgressDisplay(progress) {
-            // Update check-in status
-            const statusEl = document.querySelector('.checkin-status');
-            if (statusEl && progress.check_ins_completed > 0) {
-                statusEl.className = 'checkin-status complete';
-                statusEl.innerHTML = `
-                    <span class="checkin-icon" style="color:#4CAF50;font-size:1.2rem;font-weight:700;">✓</span>
-                    <div class="checkin-text">
-                        <div class="checkin-text-main">${progress.check_ins_completed} check-in${progress.check_ins_completed > 1 ? 's' : ''} completed</div>
-                        <div class="checkin-text-sub">Week ${progress.current_week} of ${progress.total_weeks}</div>
-                    </div>
-                `;
-            }
+            // Store progress data for the progress tab
+            window._progressData = progress;
         }
 
         // ─── Check-in submission ─────────────────────────────────────
