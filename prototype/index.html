@@ -962,86 +962,21 @@
 
     <!-- WORKOUTS TAB -->
     <div id="workouts-tab" class="tab-content active">
-
-        <!-- Metrics Dashboard -->
-        <div class="metrics-dashboard">
-            <div class="metrics-header">
-                <span class="metrics-title">This Week's Metrics</span>
-                <span class="metrics-date">Week of Mar 9, 2026</span>
-            </div>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-value warning" id="vig-min">&mdash;</div>
-                    <div class="metric-label">Vigorous Min</div>
-                    <div class="metric-target">Target: 75-90</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value good" id="resting-hr">54</div>
-                    <div class="metric-label">Resting HR</div>
-                    <div class="metric-target">Maintain &lt;56</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="sleep-avg">&mdash;</div>
-                    <div class="metric-label">Sleep Avg</div>
-                    <div class="metric-target">Target: 7-8 hrs</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="steps-avg">&mdash;</div>
-                    <div class="metric-label">Steps/Day</div>
-                    <div class="metric-target">Target: 8-10k</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="body-battery">&mdash;</div>
-                    <div class="metric-label">Body Battery</div>
-                    <div class="metric-target">End day &gt;20</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-value" id="weight">~152</div>
-                    <div class="metric-label">Weight (lbs)</div>
-                    <div class="metric-target">Target: 137-140</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Week Mode Toggle -->
-        <div class="week-mode-container">
-            <div class="week-mode-toggle">
-                <button class="mode-btn push active" onclick="setWeekMode('push')">
-                    Push Week
-                    <span class="mode-subtitle">3 vigorous | heavy strength</span>
-                </button>
-                <button class="mode-btn maintain" onclick="setWeekMode('maintain')">
-                    Maintain Week
-                    <span class="mode-subtitle">2 vigorous | moderate</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Program Phase Banner -->
-        <div class="phase-banner rampup" id="phase-banner">
-            <div class="phase-banner-title">Week 1: Ramp-Up (Post-Op)</div>
-            <div class="phase-banner-text">You're cleared for exercise but still healing internally. Avoiding heavy Valsalva, inversions, and swimming for 3 more weeks.</div>
-            <div class="phase-tags">
-                <span class="phase-tag caution">No Heavy Straining</span>
-                <span class="phase-tag caution">No Inversions</span>
-                <span class="phase-tag recovery">Moderate Intensity OK</span>
-            </div>
-        </div>
-
-        <!-- Weekly Targets -->
-        <div class="weekly-targets" id="weekly-targets">
-            <div class="targets-title">THIS WEEK'S TARGETS</div>
-            <div class="targets-grid">
-                <div class="target-item"><span class="target-value">2-3</span> vigorous days</div>
-                <div class="target-item"><span class="target-value">2</span> strength days</div>
-                <div class="target-item"><span class="target-value">50-70</span> vig. minutes</div>
-                <div class="target-item"><span class="target-value">Ramp up</span> gradually</div>
-            </div>
-        </div>
-
-        <!-- Workout Days -->
         <div id="workout-container"></div>
-
+        <!-- Post-Workout Rating Modal (hidden) -->
+        <div id="workout-done-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000;">
+            <div style="position:absolute; bottom:0; left:0; right:0; background:#fff; border-radius:20px 20px 0 0; padding:24px; max-height:80vh; overflow-y:auto;">
+                <div style="font-size:1.1rem; font-weight:700; margin-bottom:4px;">How did the weights feel?</div>
+                <div style="font-size:0.8rem; color:#8E8E93; margin-bottom:16px;">Rate each exercise so the AI can adjust next week.</div>
+                <div id="workout-rating-list"></div>
+                <div style="margin-top:12px;">
+                    <div style="font-size:0.78rem; color:#8E8E93; margin-bottom:4px;">Notes (optional)</div>
+                    <textarea id="workout-done-notes" placeholder="e.g. shoulder felt tight" style="width:100%; padding:10px; border:1px solid #E5E5EA; border-radius:10px; font-size:0.85rem; resize:none; height:60px; font-family:inherit;"></textarea>
+                </div>
+                <button onclick="submitWorkoutRatings()" style="width:100%; margin-top:16px; padding:14px; background:linear-gradient(135deg,#f093fb,#f5576c); color:white; border:none; border-radius:12px; font-size:0.95rem; font-weight:600; cursor:pointer;">Submit</button>
+                <button onclick="closeWorkoutModal()" style="width:100%; margin-top:8px; padding:10px; background:none; border:none; color:#8E8E93; font-size:0.85rem; cursor:pointer;">Cancel</button>
+            </div>
+        </div>
     </div>
 
     <!-- NUTRITION TAB -->
@@ -1421,11 +1356,15 @@
             const container = document.getElementById('workout-container');
             let html = '';
 
+            const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+
             plan.days.forEach((day, index) => {
                 const type = day.type || 'strength';
                 const badgeClass = type === 'vigorous' ? 'badge-vigorous' :
                                    type === 'strength' ? 'badge-strength' :
                                    type === 'rest' ? 'badge-rest' : 'badge-recovery';
+                const isToday = day.day && day.day.toLowerCase() === today.toLowerCase();
+                const doneBtn = isToday ? `<div style="padding:12px 16px; border-top:1px solid #F2F2F7;"><button onclick="openWorkoutDoneModal(${index})" style="width:100%; padding:12px; background:linear-gradient(135deg,#f093fb,#f5576c); color:white; border:none; border-radius:10px; font-size:0.9rem; font-weight:600; cursor:pointer;">I'm Done ✓</button></div>` : '';
 
                 html += `
                     <div class="day-card">
@@ -1443,16 +1382,15 @@
                         <div class="day-content" id="day-content-${index}">
                             ${renderAPIDayContent(day)}
                         </div>
+                        ${doneBtn}
                     </div>
                 `;
             });
 
             container.innerHTML = html;
 
-            // Update nutrition tab if available
-            if (plan.nutrition) {
-                updateNutritionFromPlan(plan.nutrition);
-            }
+            // Store plan days for modal use
+            window._currentPlanDays = plan.days;
         }
 
         function renderAPIDayContent(day) {
@@ -2241,6 +2179,87 @@
             }
 
             return html;
+        }
+
+        // ─── Workout Done Modal ──────────────────────────────────────
+        let _workoutDayIndex = null;
+
+        function openWorkoutDoneModal(dayIndex) {
+            _workoutDayIndex = dayIndex;
+            const days = window._currentPlanDays || [];
+            const day = days[dayIndex];
+            const ratingList = document.getElementById('workout-rating-list');
+            ratingList.innerHTML = '';
+            document.getElementById('workout-done-notes').value = '';
+
+            const exercises = day && day.exercises ? day.exercises : [];
+            if (exercises.length === 0) {
+                ratingList.innerHTML = '<div style="color:#8E8E93;font-size:0.85rem;margin-bottom:8px;">No exercises found for this day.</div>';
+            } else {
+                exercises.forEach((ex, i) => {
+                    const name = typeof ex === 'string' ? ex : ex.name;
+                    ratingList.innerHTML += `
+                        <div style="margin-bottom:14px;">
+                            <div style="font-size:0.88rem;font-weight:600;color:#1C1C1E;margin-bottom:6px;">${name}</div>
+                            <div style="display:flex;gap:6px;flex-wrap:wrap;" id="rating-row-${i}">
+                                ${['Good','Too Light','Too Heavy','Skipped'].map(r => `
+                                    <button onclick="selectRating(this)" data-exercise="${i}" data-rating="${r}"
+                                        style="padding:6px 12px;border:1px solid #E5E5EA;border-radius:20px;font-size:0.75rem;background:#F7F6F3;color:#3C3C43;cursor:pointer;">${r}</button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('workout-done-modal').style.display = 'block';
+        }
+
+        function selectRating(btn) {
+            const exerciseIdx = btn.dataset.exercise;
+            const row = document.getElementById(`rating-row-${exerciseIdx}`);
+            if (row) {
+                row.querySelectorAll('button').forEach(b => {
+                    b.style.background = '#F7F6F3';
+                    b.style.color = '#3C3C43';
+                    b.style.borderColor = '#E5E5EA';
+                    b.style.fontWeight = 'normal';
+                });
+            }
+            btn.style.background = 'linear-gradient(135deg,#f093fb,#f5576c)';
+            btn.style.color = 'white';
+            btn.style.borderColor = 'transparent';
+            btn.style.fontWeight = '600';
+        }
+
+        async function submitWorkoutRatings() {
+            const days = window._currentPlanDays || [];
+            const day = days[_workoutDayIndex];
+            const exercises = day && day.exercises ? day.exercises : [];
+            const notes = document.getElementById('workout-done-notes').value;
+            const ratings = [];
+            exercises.forEach((ex, i) => {
+                const name = typeof ex === 'string' ? ex : ex.name;
+                const row = document.getElementById(`rating-row-${i}`);
+                let rating = null;
+                if (row) {
+                    row.querySelectorAll('button').forEach(b => {
+                        if (b.style.fontWeight === '600' || b.style.color === 'white') rating = b.dataset.rating;
+                    });
+                }
+                ratings.push({ exercise: name, rating: rating || 'Good' });
+            });
+            await logWorkoutCompletion({ dayIndex: _workoutDayIndex, exercises: ratings, notes });
+            document.getElementById('workout-done-modal').style.display = 'none';
+            // Mark day done visually
+            const card = document.querySelector(`#workout-container .day-card:nth-child(${_workoutDayIndex + 1})`);
+            if (card) {
+                const header = card.querySelector('.day-header');
+                if (header) header.style.opacity = '0.6';
+            }
+        }
+
+        function closeWorkoutModal() {
+            document.getElementById('workout-done-modal').style.display = 'none';
         }
 
         async function photoUploaded(input, iconId) {
