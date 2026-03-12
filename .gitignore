@@ -31,3 +31,6 @@ assets/design-reference/
 # Private photos (not for public repo)
 docs/body-reference/
 docs/progress-photos/
+
+# Superpowers brainstorm sessions
+.superpowers/
