@@ -1059,164 +1059,49 @@
         </div>
     </div>
 
-    <!-- CHECK-IN TAB -->
-    <div id="checkin-tab" class="tab-content">
-
-        <div class="checkin-card">
-            <div class="checkin-title">Weekly Check-In</div>
-            <div class="checkin-status pending">
-                <span class="checkin-icon">&mdash;</span>
-                <div class="checkin-text">
-                    <div class="checkin-text-main">Next check-in: Sunday 6:00 PM</div>
-                    <div class="checkin-text-sub">Calendar reminder set</div>
-                </div>
+    <!-- PROGRESS TAB -->
+    <div id="progress-tab" class="tab-content">
+        <!-- AI Narrative -->
+        <div class="nutrition-card" id="progress-narrative-card">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                <svg width="22" height="22" viewBox="0 0 100 100" style="flex-shrink:0;">
+                    <defs><linearGradient id="pg-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#f093fb"/><stop offset="100%" style="stop-color:#f5576c"/></linearGradient></defs>
+                    <path d="M50 8 L82 38 L50 92 L18 38 Z" fill="url(#pg-grad)"/>
+                </svg>
+                <div style="font-size:0.6rem;color:#BCBCBC;letter-spacing:2px;text-transform:uppercase;">YOUR PROGRESS STORY</div>
             </div>
-
-            <div class="checkin-steps">
-                <div class="checkin-step">
-                    <span class="step-number">1</span>
-                    <span class="step-text"><strong>Garmin email arrives</strong> — Weekly summary to your Gmail</span>
-                </div>
-                <div class="checkin-step">
-                    <span class="step-number">2</span>
-                    <span class="step-text"><strong>Open Claude</strong> — Say "Check-in time" or "Weekly check-in"</span>
-                </div>
-                <div class="checkin-step">
-                    <span class="step-number">3</span>
-                    <span class="step-text"><strong>I pull your metrics</strong> — Search Gmail for Garmin summary</span>
-                </div>
-                <div class="checkin-step">
-                    <span class="step-number">4</span>
-                    <span class="step-text"><strong>You share quick update</strong> — Energy level, workouts done, how you feel</span>
-                </div>
-                <div class="checkin-step">
-                    <span class="step-number">5</span>
-                    <span class="step-text"><strong>Get your adjusted plan</strong> — Push or Maintain week + any modifications</span>
-                </div>
+            <div id="progress-narrative-text" style="font-size:0.88rem;color:#6B6B6B;line-height:1.7;">
+                Complete your first check-in on Sunday to see your personalized progress story.
             </div>
         </div>
 
-        <div class="goals-card">
-            <div class="goals-title">12-Week Goal</div>
-
-            <!-- Hero: Fitness Age -->
-            <div class="hero-row">
-                <div class="hero-age">30.5</div>
-                <div class="hero-detail">
-                    <div class="hero-label">Fitness Age</div>
-                    <div class="hero-sub">Goal: 28 in 12 weeks</div>
-                </div>
-            </div>
-            <div class="journey-track">
-                <div class="journey-traveled" style="width: 0%"></div>
-                <div class="journey-marker" style="left: 0%"></div>
-            </div>
-            <div class="journey-endpoints" style="margin-bottom: 4px;">
-                <span class="journey-start">30.5</span>
-                <span class="journey-end">28</span>
-            </div>
-
-            <!-- Journey metrics: marker slides along a range over 12 weeks -->
-            <div class="journey-goals">
-                <div class="journey-section-label">12-Week Journey</div>
-
-                <div class="journey-row">
-                    <div class="journey-top">
-                        <span class="journey-label">Weight</span>
-                        <span class="journey-current-value">152 lbs</span>
-                    </div>
-                    <div class="journey-track">
-                        <div class="journey-traveled" style="width: 0%"></div>
-                        <div class="journey-marker" style="left: 0%"></div>
-                    </div>
-                    <div class="journey-endpoints">
-                        <span class="journey-start">152 lbs</span>
-                        <span class="journey-end">138 lbs</span>
-                    </div>
-                </div>
-
-                <div class="journey-row">
-                    <div class="journey-top">
-                        <span class="journey-label">BMI</span>
-                        <span class="journey-current-value">25.1</span>
-                    </div>
-                    <div class="journey-track">
-                        <div class="journey-traveled" style="width: 0%"></div>
-                        <div class="journey-marker" style="left: 0%"></div>
-                    </div>
-                    <div class="journey-endpoints">
-                        <span class="journey-start">25.1</span>
-                        <span class="journey-end">22.4</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Weekly activity: fill bars that reset each week -->
-            <div class="weekly-goals">
-                <div class="weekly-section-label">This Week's Activity</div>
-
-                <div class="weekly-row">
-                    <span class="weekly-label">Vig. Min</span>
-                    <div class="weekly-bar-track">
-                        <div class="weekly-bar-fill" style="width: 44%"></div>
-                    </div>
-                    <span class="weekly-value">~36 <span class="weekly-target">/ 82</span></span>
-                </div>
-
-                <div class="weekly-row">
-                    <span class="weekly-label">Vig. Days</span>
-                    <div class="weekly-bar-track">
-                        <div class="weekly-bar-fill" style="width: 33%"></div>
-                    </div>
-                    <span class="weekly-value">1 <span class="weekly-target">/ 3</span></span>
-                </div>
+        <!-- What You Can Do Now -->
+        <div class="nutrition-card" id="progress-strength-card">
+            <div style="font-size:0.72rem;font-weight:700;color:#f5576c;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;">What You Can Do Now</div>
+            <div id="progress-strength-list">
+                <div style="font-size:0.85rem;color:#6B6B6B;line-height:1.6;">Strength gains will appear here after your first week of training.</div>
             </div>
         </div>
 
-        <div class="checkin-card">
-            <div class="checkin-title">Progress Photos</div>
-            <div class="note-box">
-                Take progress photos monthly — same lighting, same time of day, same poses. The scale lies; photos over time tell the truth.
+        <!-- Under the Surface -->
+        <div class="nutrition-card" id="progress-metrics-card">
+            <div style="font-size:0.72rem;font-weight:700;color:#5B7FBF;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:12px;">Under the Surface</div>
+            <div id="progress-metrics-list">
+                <div style="font-size:0.85rem;color:#6B6B6B;line-height:1.6;">Health metrics trends will appear after your first week.</div>
             </div>
-            <div class="photo-row" onclick="document.getElementById('photo-baseline').click()">
-                <input type="file" id="photo-baseline" accept="image/*" capture="environment" style="display:none" onchange="photoUploaded(this, 'icon-baseline')">
-                <span class="photo-icon" id="icon-baseline">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3.2"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
-                    <span class="photo-check" style="display:none">
-                        <svg viewBox="0 0 24 24" fill="#4CAF50"><circle cx="12" cy="12" r="12" fill="#4CAF50"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white"/></svg>
-                    </span>
-                </span>
-                <span><strong>Baseline:</strong> March 11, 2026</span>
+        </div>
+
+        <!-- Your 12 Weeks -->
+        <div class="nutrition-card" id="progress-journey-card">
+            <div style="font-size:0.72rem;font-weight:700;color:#1C1C1E;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:14px;">Your 12 Weeks</div>
+            <div id="progress-journey-chart" style="display:flex;gap:4px;align-items:flex-end;height:60px;">
+                <!-- Placeholder bars rendered by JS -->
             </div>
-            <div class="photo-row" onclick="document.getElementById('photo-month1').click()">
-                <input type="file" id="photo-month1" accept="image/*" capture="environment" style="display:none" onchange="photoUploaded(this, 'icon-month1')">
-                <span class="photo-icon" id="icon-month1">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3.2"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
-                    <span class="photo-check" style="display:none">
-                        <svg viewBox="0 0 24 24" fill="#4CAF50"><circle cx="12" cy="12" r="12" fill="#4CAF50"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white"/></svg>
-                    </span>
-                </span>
-                <span><strong>Month 1:</strong> April 11, 2026</span>
-            </div>
-            <div class="photo-row" onclick="document.getElementById('photo-month2').click()">
-                <input type="file" id="photo-month2" accept="image/*" capture="environment" style="display:none" onchange="photoUploaded(this, 'icon-month2')">
-                <span class="photo-icon" id="icon-month2">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3.2"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
-                    <span class="photo-check" style="display:none">
-                        <svg viewBox="0 0 24 24" fill="#4CAF50"><circle cx="12" cy="12" r="12" fill="#4CAF50"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white"/></svg>
-                    </span>
-                </span>
-                <span><strong>Month 2:</strong> May 11, 2026</span>
-            </div>
-            <div class="photo-row" onclick="document.getElementById('photo-month3').click()">
-                <input type="file" id="photo-month3" accept="image/*" capture="environment" style="display:none" onchange="photoUploaded(this, 'icon-month3')">
-                <span class="photo-icon" id="icon-month3">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3.2"/><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
-                    <span class="photo-check" style="display:none">
-                        <svg viewBox="0 0 24 24" fill="#4CAF50"><circle cx="12" cy="12" r="12" fill="#4CAF50"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white"/></svg>
-                    </span>
-                </span>
-                <span><strong>Month 3:</strong> June 11, 2026</span>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;font-size:0.65rem;">
+                <span style="display:flex;align-items:center;gap:4px;color:#6B6B6B;"><span style="width:10px;height:10px;border-radius:2px;background:#E5A100;display:inline-block;"></span>Ramp-Up</span>
+                <span style="display:flex;align-items:center;gap:4px;color:#6B6B6B;"><span style="width:10px;height:10px;border-radius:2px;background:linear-gradient(135deg,#f093fb,#f5576c);display:inline-block;"></span>Push</span>
+                <span style="display:flex;align-items:center;gap:4px;color:#6B6B6B;"><span style="width:10px;height:10px;border-radius:2px;background:#4CAF50;display:inline-block;"></span>Maintain</span>
+                <span style="display:flex;align-items:center;gap:4px;color:#6B6B6B;"><span style="width:10px;height:10px;border-radius:2px;background:#E5E5EA;display:inline-block;"></span>Upcoming</span>
             </div>
         </div>
     </div>
@@ -1404,6 +1289,77 @@
         function updateProgressDisplay(progress) {
             // Store progress data for the progress tab
             window._progressData = progress;
+        }
+
+        // ─── Progress Tab ────────────────────────────────────────────
+        async function loadProgressTab() {
+            const [narrative, strengthGains, trends, history] = await Promise.all([
+                apiFetch('/api/progress/narrative'),
+                apiFetch('/api/progress/strength-gains'),
+                apiFetch('/api/metrics/trends'),
+                apiFetch('/api/plan/history'),
+            ]);
+
+            // AI Narrative
+            if (narrative?.narrative) {
+                const el = document.getElementById('progress-narrative-text');
+                if (el) el.textContent = narrative.narrative;
+            }
+
+            // Strength Gains
+            if (strengthGains?.gains && strengthGains.gains.length > 0) {
+                const el = document.getElementById('progress-strength-list');
+                if (el) {
+                    el.innerHTML = strengthGains.gains.map(g => `
+                        <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #F2F2F7;">
+                            <span style="width:8px;height:8px;border-radius:50%;background:#f5576c;flex-shrink:0;"></span>
+                            <span style="font-size:0.88rem;color:#3C3C43;">${g}</span>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // Metrics Trends
+            if (trends?.metrics && trends.metrics.length > 0) {
+                const el = document.getElementById('progress-metrics-list');
+                if (el) {
+                    el.innerHTML = trends.metrics.map(m => {
+                        const arrow = m.trend === 'up' ? '↑' : m.trend === 'down' ? '↓' : '→';
+                        const arrowColor = m.positive_direction === m.trend ? '#4CAF50' : m.trend === 'flat' ? '#8E8E93' : '#f5576c';
+                        return `
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #F2F2F7;">
+                                <span style="font-size:0.85rem;color:#3C3C43;">${m.label}</span>
+                                <span style="font-size:0.88rem;font-weight:700;color:#5B7FBF;">${m.value} <span style="color:${arrowColor};">${arrow}</span></span>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            // 12-Week Journey Bar Chart
+            const chartEl = document.getElementById('progress-journey-chart');
+            if (chartEl) {
+                const weeks = history?.weeks || Array.from({length:12}, (_,i) => ({ week: i+1, mode: 'upcoming', completed: false }));
+                const modeColors = {
+                    rampup: '#E5A100',
+                    push: 'linear-gradient(135deg,#f093fb,#f5576c)',
+                    maintain: '#4CAF50',
+                    upcoming: '#E5E5EA',
+                };
+                chartEl.innerHTML = weeks.map(w => {
+                    const color = modeColors[w.mode] || '#E5E5EA';
+                    const height = w.completed ? '100%' : (w.mode === 'upcoming' ? '40%' : '70%');
+                    const isGradient = w.mode === 'push';
+                    return `
+                        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+                            <div style="width:100%;height:50px;display:flex;align-items:flex-end;">
+                                <div style="width:100%;height:${height};background:${isGradient ? '' : color};${isGradient ? 'background:linear-gradient(135deg,#f093fb,#f5576c);' : ''}border-radius:4px 4px 0 0;opacity:${w.completed ? 1 : 0.5};"></div>
+                            </div>
+                            <div style="font-size:0.55rem;color:#AEAEB2;">${w.week}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
         }
 
         // ─── Check-in submission ─────────────────────────────────────
