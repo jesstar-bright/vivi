@@ -124,4 +124,39 @@ metricsRouter.post('/fetch-from-gmail', async (c) => {
   return c.json({ success: true, parsed });
 });
 
+// GET /api/metrics/trends — first 7 days avg vs last 7 days avg for key metrics
+metricsRouter.get('/trends', async (c) => {
+  const allRows = await db
+    .select()
+    .from(schema.weeklyMetrics)
+    .orderBy(schema.weeklyMetrics.date);
+
+  if (allRows.length === 0) {
+    return c.json({ error: 'No metrics data available', code: 'NO_METRICS' }, 404);
+  }
+
+  const firstWeek = allRows.slice(0, 7);
+  const lastWeek = allRows.slice(-7);
+
+  const avgOver = (rows: typeof allRows, field: keyof typeof allRows[0]) => {
+    const vals = rows.map((r) => r[field] as number | null).filter((v): v is number => v !== null);
+    return vals.length > 0 ? +(vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(2) : null;
+  };
+
+  return c.json({
+    current: {
+      rhr: avgOver(lastWeek, 'rhr'),
+      hrv: avgOver(lastWeek, 'hrv'),
+      sleep_hours: avgOver(lastWeek, 'sleepHours'),
+      stress_avg: avgOver(lastWeek, 'stressAvg'),
+    },
+    first_week: {
+      rhr: avgOver(firstWeek, 'rhr'),
+      hrv: avgOver(firstWeek, 'hrv'),
+      sleep_hours: avgOver(firstWeek, 'sleepHours'),
+      stress_avg: avgOver(firstWeek, 'stressAvg'),
+    },
+  });
+});
+
 export { metricsRouter };
