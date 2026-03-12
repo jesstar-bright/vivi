@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vivi — Gentler Streak Theme Preview</title>
+    <title>Fitness Age 28</title>
     <style>
         * {
             box-sizing: border-box;
@@ -12,104 +12,75 @@
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #F7F6F3;
-            color: #1C1C1E;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #eee;
             min-height: 100vh;
-            padding: 16px;
-            padding-bottom: 90px;
+            padding: 12px;
+            padding-bottom: 80px;
         }
-
+        
         /* Header */
         .header {
             text-align: center;
-            margin-bottom: 20px;
-            padding-top: 8px;
-            position: relative;
-            overflow: visible;
-        }
-        .header-mascot {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-            top: -10px;
-            right: 20px;
-            opacity: 0.18;
-            pointer-events: none;
-            mix-blend-mode: multiply;
+            margin-bottom: 16px;
         }
         h1 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             margin-bottom: 4px;
             background: linear-gradient(90deg, #f093fb, #f5576c);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
         }
         .subtitle {
             font-size: 0.75rem;
-            color: #8E8E93;
-            letter-spacing: 0.3px;
+            color: #888;
         }
-
-        /* Tab Navigation - Floating Bubble */
+        
+        /* Tab Navigation - Bottom Bar */
         .tab-nav {
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 0;
+            left: 0;
+            right: 0;
             display: flex;
             justify-content: space-around;
-            background: #FFFFFF;
-            border-radius: 28px;
-            padding: 8px 12px;
+            background: #1e1e3f;
+            border-top: 1px solid #333;
+            padding: 8px 0 20px 0;
             z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.12), 0 1px 4px rgba(0,0,0,0.06);
-            width: calc(100% - 40px);
-            max-width: 340px;
         }
         .tab-btn {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3px;
-            padding: 6px 8px;
+            gap: 4px;
+            padding: 8px 0;
             border: none;
             background: transparent;
-            color: #8E8E93;
-            font-size: 0.6rem;
+            color: #666;
+            font-size: 0.65rem;
             cursor: pointer;
             transition: all 0.2s;
             font-weight: 500;
-            border-radius: 20px;
         }
         .tab-btn.active {
             color: #f5576c;
-            background: rgba(245,87,108,0.08);
         }
         .tab-icon {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        .tab-icon svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
+            font-size: 0.85rem;
+            font-weight: 700;
         }
         .tab-btn.active .tab-icon {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
+            background: linear-gradient(90deg, #f093fb, #f5576c);
             color: white;
-        }
-        .tab-btn.active .tab-icon svg {
-            fill: white;
         }
         .tab-content {
             display: none;
@@ -117,29 +88,29 @@
         .tab-content.active {
             display: block;
         }
-
+        
         /* Metrics Dashboard */
         .metrics-dashboard {
-            background: #FFFFFF;
-            border-radius: 16px;
-            padding: 16px;
+            background: #1e1e3f;
+            border-radius: 14px;
+            padding: 14px;
             margin-bottom: 16px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid #333;
         }
         .metrics-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
         .metrics-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #1C1C1E;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #f093fb;
         }
         .metrics-date {
             font-size: 0.7rem;
-            color: #8E8E93;
+            color: #666;
         }
         .metrics-grid {
             display: grid;
@@ -147,49 +118,49 @@
             gap: 8px;
         }
         .metric-card {
-            background: #F7F6F3;
-            border-radius: 12px;
-            padding: 12px 8px;
+            background: #2a2a4a;
+            border-radius: 10px;
+            padding: 10px 8px;
             text-align: center;
         }
         .metric-value {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #f5576c;
         }
-        .metric-value.good { color: #4CAF50; }
-        .metric-value.warning { color: #E5A100; }
+        .metric-value.good { color: #7dde7d; }
+        .metric-value.warning { color: #dede7d; }
         .metric-value.target { color: #f5576c; }
         .metric-label {
             font-size: 0.6rem;
-            color: #8E8E93;
-            margin-top: 3px;
+            color: #888;
+            margin-top: 2px;
             line-height: 1.2;
         }
         .metric-target {
             font-size: 0.55rem;
-            color: #AEAEB2;
+            color: #555;
             margin-top: 2px;
         }
-
+        
         /* Week Mode Toggle */
         .week-mode-container {
             margin-bottom: 16px;
         }
         .week-mode-toggle {
             display: flex;
-            background: #FFFFFF;
-            border-radius: 16px;
+            background: #1e1e3f;
+            border-radius: 14px;
             padding: 4px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid #333;
         }
         .mode-btn {
             flex: 1;
             padding: 12px 8px;
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
             background: transparent;
-            color: #8E8E93;
+            color: #888;
             font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.3s;
@@ -201,71 +172,73 @@
             font-weight: 600;
         }
         .mode-btn.active.maintain {
-            background: #5B7FBF;
+            background: linear-gradient(90deg, #7d7dde, #7dde7d);
             color: white;
             font-weight: 600;
         }
         .mode-subtitle {
             display: block;
             font-size: 0.65rem;
-            opacity: 0.85;
+            opacity: 0.8;
             margin-top: 2px;
         }
-
+        
         /* Program Phase Banner */
         .phase-banner {
-            background: #FFFFFF;
-            border-left: 4px solid #f5576c;
-            border-radius: 14px;
-            padding: 14px;
+            background: linear-gradient(90deg, rgba(245,87,108,0.15), rgba(240,147,251,0.1));
+            border: 1px solid rgba(245,87,108,0.3);
+            border-radius: 12px;
+            padding: 12px;
             margin-bottom: 16px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
         .phase-banner.rampup {
-            border-left-color: #E5A100;
+            background: linear-gradient(90deg, rgba(222,222,125,0.15), rgba(125,222,125,0.1));
+            border-color: rgba(222,222,125,0.3);
         }
         .phase-banner-title {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #1C1C1E;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #f5576c;
             margin-bottom: 4px;
         }
+        .phase-banner.rampup .phase-banner-title {
+            color: #dede7d;
+        }
         .phase-banner-text {
-            font-size: 0.78rem;
-            color: #6B6B6B;
-            line-height: 1.5;
+            font-size: 0.75rem;
+            color: #aaa;
+            line-height: 1.4;
         }
         .phase-tags {
             display: flex;
             gap: 6px;
-            margin-top: 10px;
+            margin-top: 8px;
             flex-wrap: wrap;
         }
         .phase-tag {
             font-size: 0.6rem;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 10px;
+            background: #2a2a4a;
+            font-weight: 500;
         }
-        .phase-tag.caution { background: #FFF3E0; color: #E5A100; }
-        .phase-tag.intensity { background: #FCE4EC; color: #f5576c; }
-        .phase-tag.recovery { background: #E8F5E9; color: #4CAF50; }
-
+        .phase-tag.caution { background: rgba(222,222,125,0.2); color: #dede7d; }
+        .phase-tag.intensity { background: rgba(245,87,108,0.2); color: #f5576c; }
+        .phase-tag.recovery { background: rgba(125,222,125,0.2); color: #7dde7d; }
+        
         /* Weekly Targets */
         .weekly-targets {
-            background: #FFFFFF;
-            border-radius: 14px;
-            padding: 14px;
+            background: #1e1e3f;
+            border-radius: 12px;
+            padding: 12px;
             margin-bottom: 16px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid #333;
         }
         .targets-title {
-            font-size: 0.72rem;
-            font-weight: 700;
+            font-size: 0.75rem;
+            font-weight: 600;
             color: #f093fb;
             margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
         }
         .targets-grid {
             display: grid;
@@ -277,23 +250,22 @@
             align-items: center;
             gap: 6px;
             font-size: 0.8rem;
-            color: #3C3C43;
         }
         .target-value {
             font-weight: 700;
             color: #f5576c;
         }
-
+        
         /* Day Cards */
         .day-card {
-            background: #FFFFFF;
-            border-radius: 16px;
+            background: #1e1e3f;
+            border-radius: 14px;
             margin-bottom: 10px;
             overflow: hidden;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid #333;
         }
         .day-header {
-            padding: 16px;
+            padding: 14px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
@@ -304,29 +276,32 @@
             opacity: 0.9;
         }
         .day-header.vigorous {
-            border-left: 4px solid #f5576c;
+            background: linear-gradient(90deg, rgba(245,87,108,0.2), rgba(240,147,251,0.1));
+            border-left: 3px solid #f5576c;
         }
         .day-header.strength {
-            border-left: 4px solid #5B7FBF;
+            background: linear-gradient(90deg, rgba(125,125,222,0.15), rgba(125,125,222,0.05));
+            border-left: 3px solid #7d7dde;
         }
         .day-header.recovery {
-            border-left: 4px solid #4CAF50;
+            background: linear-gradient(90deg, rgba(125,222,125,0.1), rgba(125,222,125,0.05));
+            border-left: 3px solid #7dde7d;
         }
         .day-header.rest {
-            border-left: 4px solid #AEAEB2;
+            background: rgba(255,255,255,0.02);
+            border-left: 3px solid #555;
         }
         .day-info {
             flex: 1;
         }
         .day-title {
-            font-weight: 700;
+            font-weight: 600;
             font-size: 0.95rem;
             margin-bottom: 2px;
-            color: #1C1C1E;
         }
         .day-subtitle {
             font-size: 0.75rem;
-            color: #8E8E93;
+            color: #888;
         }
         .day-right {
             display: flex;
@@ -335,41 +310,41 @@
         }
         .day-badge {
             font-size: 0.55rem;
-            padding: 4px 10px;
-            border-radius: 20px;
+            padding: 4px 8px;
+            border-radius: 10px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .badge-vigorous { background: #FDE8EE; color: #f5576c; }
-        .badge-strength { background: #EBF0F7; color: #5B7FBF; }
-        .badge-recovery { background: #E8F5E9; color: #4CAF50; }
-        .badge-rest { background: #F2F2F7; color: #8E8E93; }
+        .badge-vigorous { background: #f5576c; color: white; }
+        .badge-strength { background: #7d7dde; color: white; }
+        .badge-recovery { background: #7dde7d; color: #1a1a2e; }
+        .badge-rest { background: #444; color: #999; }
         .arrow {
             transition: transform 0.3s;
             font-size: 0.9rem;
-            color: #AEAEB2;
+            color: #666;
         }
         .arrow.open {
             transform: rotate(180deg);
         }
         .day-content {
             display: none;
-            padding: 16px;
-            border-top: 1px solid #F2F2F7;
+            padding: 14px;
+            border-top: 1px solid #2a2a4a;
         }
         .day-content.open {
             display: block;
         }
-
+        
         /* Exercise Sections */
         .section-title {
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: #f093fb;
-            margin: 16px 0 8px 0;
-            font-weight: 700;
+            margin: 14px 0 8px 0;
+            font-weight: 600;
         }
         .section-title:first-child {
             margin-top: 0;
@@ -378,8 +353,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 11px 0;
-            border-bottom: 1px solid #F2F2F7;
+            padding: 10px 0;
+            border-bottom: 1px solid #252545;
         }
         .exercise-row:last-child {
             border-bottom: none;
@@ -388,7 +363,6 @@
             font-size: 0.9rem;
             flex: 1;
             padding-right: 12px;
-            color: #3C3C43;
         }
         .exercise-sets {
             font-size: 0.85rem;
@@ -396,31 +370,31 @@
             font-weight: 600;
             white-space: nowrap;
         }
-
+        
         /* Special Boxes */
         .note-box {
-            background: #F7F6F3;
-            padding: 12px 14px;
-            border-radius: 10px;
+            background: #252545;
+            padding: 10px 12px;
+            border-radius: 8px;
             font-size: 0.8rem;
-            color: #6B6B6B;
+            color: #aaa;
             margin-bottom: 12px;
-            line-height: 1.5;
+            line-height: 1.4;
         }
         .caution-box {
-            background: #FFF8E1;
-            border-left: 3px solid #E5A100;
-            padding: 12px 14px;
-            border-radius: 10px;
+            background: rgba(222,222,125,0.1);
+            border: 1px solid rgba(222,222,125,0.3);
+            padding: 10px 12px;
+            border-radius: 8px;
             font-size: 0.8rem;
-            color: #8D6E00;
+            color: #dede7d;
             margin-bottom: 12px;
-            line-height: 1.5;
+            line-height: 1.4;
         }
         .vigorous-box {
-            background: #FFF0F3;
-            border-left: 3px solid #f5576c;
-            border-radius: 12px;
+            background: linear-gradient(90deg, rgba(245,87,108,0.15), rgba(240,147,251,0.1));
+            border: 1px solid #f5576c;
+            border-radius: 10px;
             padding: 14px;
             margin: 12px 0;
         }
@@ -434,9 +408,8 @@
         }
         .vigorous-content {
             font-size: 0.85rem;
-            line-height: 1.6;
+            line-height: 1.5;
             white-space: pre-line;
-            color: #3C3C43;
         }
         .vigorous-target {
             margin-top: 10px;
@@ -445,37 +418,36 @@
             font-weight: 600;
         }
         .finisher-box {
-            background: #EBF0F7;
-            border-left: 3px solid #5B7FBF;
-            border-radius: 12px;
-            padding: 12px 14px;
+            background: linear-gradient(90deg, rgba(125,125,222,0.15), rgba(240,147,251,0.1));
+            border: 1px solid #7d7dde;
+            border-radius: 10px;
+            padding: 12px;
             margin-top: 14px;
         }
         .finisher-title {
             font-size: 0.7rem;
-            color: #5B7FBF;
+            color: #7d7dde;
             margin-bottom: 6px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
         }
         .finisher-content {
             font-size: 0.85rem;
-            color: #3C3C43;
         }
         .superset-group {
-            background: #F7F6F3;
-            border-radius: 12px;
-            padding: 14px;
+            background: #252545;
+            border-radius: 10px;
+            padding: 12px;
             margin: 10px 0;
         }
         .superset-label {
             font-size: 0.65rem;
             color: #f093fb;
             margin-bottom: 8px;
-            font-weight: 700;
+            font-weight: 600;
             text-transform: uppercase;
         }
-
+        
         /* Rest Day */
         .rest-content {
             text-align: center;
@@ -486,32 +458,35 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 9px 0;
+            padding: 8px 0;
             font-size: 0.9rem;
-            color: #6B6B6B;
+            color: #aaa;
         }
         .rest-emoji {
             font-size: 1rem;
         }
         .rest-check {
-            color: #4CAF50;
+            color: #7dde7d;
             font-weight: bold;
             margin-right: 8px;
         }
-
+        
         /* Nutrition Tab */
         .nutrition-card {
-            background: #FFFFFF;
-            border-radius: 16px;
-            padding: 18px;
+            background: #1e1e3f;
+            border-radius: 14px;
+            padding: 16px;
             margin-bottom: 12px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid #333;
         }
         .nutrition-title {
-            font-size: 1.05rem;
-            font-weight: 700;
+            font-size: 1rem;
+            font-weight: 600;
             margin-bottom: 14px;
-            color: #1C1C1E;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .macro-grid {
             display: grid;
@@ -519,9 +494,9 @@
             gap: 10px;
         }
         .macro-item {
-            background: #F7F6F3;
+            background: #2a2a4a;
             padding: 14px 10px;
-            border-radius: 12px;
+            border-radius: 10px;
             text-align: center;
         }
         .macro-value {
@@ -531,19 +506,19 @@
         }
         .macro-label {
             font-size: 0.7rem;
-            color: #8E8E93;
+            color: #888;
             margin-top: 4px;
         }
         .plate-section {
             margin-top: 16px;
             padding-top: 16px;
-            border-top: 1px solid #F2F2F7;
+            border-top: 1px solid #333;
         }
         .plate-title {
             font-size: 0.9rem;
-            font-weight: 700;
+            font-weight: 600;
             margin-bottom: 12px;
-            color: #1C1C1E;
+            color: #f093fb;
         }
         .plate-item {
             display: flex;
@@ -551,7 +526,6 @@
             padding: 8px 0;
             font-size: 0.85rem;
             gap: 10px;
-            color: #3C3C43;
         }
         .plate-emoji {
             font-size: 1.1rem;
@@ -563,39 +537,39 @@
             justify-content: center;
             width: 28px;
             height: 28px;
-            background: #FDE8EE;
-            border-radius: 8px;
+            background: #2a2a4a;
+            border-radius: 6px;
             font-size: 0.7rem;
             font-weight: 700;
-            color: #f5576c;
+            color: #f093fb;
             flex-shrink: 0;
         }
         .rule-number {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 22px;
-            height: 22px;
-            background: linear-gradient(135deg, #f093fb, #f5576c);
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
             border-radius: 50%;
             font-size: 0.7rem;
             font-weight: 700;
             color: white;
             flex-shrink: 0;
         }
-
+        
         /* Sleep Tab */
         .sleep-card {
-            background: #FFFFFF;
-            border-radius: 16px;
-            padding: 18px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            background: #1e1e3f;
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid #333;
         }
         .sleep-title {
-            font-size: 1.05rem;
-            font-weight: 700;
+            font-size: 1rem;
+            font-weight: 600;
             margin-bottom: 14px;
-            color: #5B7FBF;
+            color: #7d7dde;
         }
         .sleep-timeline {
             position: relative;
@@ -608,7 +582,7 @@
             top: 10px;
             bottom: 10px;
             width: 2px;
-            background: linear-gradient(180deg, #5B7FBF, #4CAF50);
+            background: linear-gradient(180deg, #7d7dde, #7dde7d);
             border-radius: 1px;
         }
         .sleep-item {
@@ -623,57 +597,57 @@
             left: -14px;
             width: 8px;
             height: 8px;
-            background: #5B7FBF;
+            background: #7d7dde;
             border-radius: 50%;
         }
         .sleep-time {
             font-weight: 700;
-            color: #5B7FBF;
+            color: #7d7dde;
             min-width: 75px;
             font-size: 0.9rem;
         }
         .sleep-action {
             font-size: 0.85rem;
-            color: #6B6B6B;
+            color: #aaa;
         }
         .sleep-note {
-            background: #FFF8E1;
-            padding: 12px 14px;
-            border-radius: 10px;
+            background: #252545;
+            padding: 12px;
+            border-radius: 8px;
             font-size: 0.8rem;
-            color: #8D6E00;
+            color: #888;
             margin-top: 14px;
-            line-height: 1.5;
+            line-height: 1.4;
         }
-
+        
         /* Check-in Tab */
         .checkin-card {
-            background: #FFFFFF;
-            border-radius: 16px;
-            padding: 18px;
+            background: #1e1e3f;
+            border-radius: 14px;
+            padding: 16px;
             margin-bottom: 12px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid #333;
         }
         .checkin-title {
-            font-size: 1.05rem;
-            font-weight: 700;
+            font-size: 1rem;
+            font-weight: 600;
             margin-bottom: 12px;
-            color: #1C1C1E;
+            color: #f093fb;
         }
         .checkin-status {
             display: flex;
             align-items: center;
             gap: 10px;
             padding: 12px;
-            background: #F7F6F3;
-            border-radius: 12px;
+            background: #252545;
+            border-radius: 10px;
             margin-bottom: 14px;
         }
         .checkin-status.pending {
-            border-left: 3px solid #E5A100;
+            border: 1px solid rgba(222,222,125,0.3);
         }
         .checkin-status.complete {
-            border-left: 3px solid #4CAF50;
+            border: 1px solid rgba(125,222,125,0.3);
         }
         .checkin-icon {
             font-size: 1.5rem;
@@ -684,11 +658,11 @@
         .checkin-text-main {
             font-size: 0.9rem;
             font-weight: 600;
-            color: #1C1C1E;
+            color: #eee;
         }
         .checkin-text-sub {
             font-size: 0.75rem;
-            color: #8E8E93;
+            color: #888;
             margin-top: 2px;
         }
         .checkin-steps {
@@ -699,7 +673,7 @@
             align-items: flex-start;
             gap: 10px;
             padding: 10px 0;
-            border-bottom: 1px solid #F2F2F7;
+            border-bottom: 1px solid #252545;
         }
         .checkin-step:last-child {
             border-bottom: none;
@@ -710,57 +684,53 @@
             justify-content: center;
             width: 22px;
             height: 22px;
-            background: #FDE8EE;
+            background: #2a2a4a;
             border-radius: 50%;
             font-size: 0.75rem;
-            font-weight: 700;
-            color: #f5576c;
+            font-weight: 600;
+            color: #f093fb;
             flex-shrink: 0;
         }
         .step-text {
             font-size: 0.85rem;
-            color: #6B6B6B;
-            line-height: 1.5;
+            color: #aaa;
+            line-height: 1.4;
         }
-        .step-text strong {
-            color: #1C1C1E;
-        }
-
+        
         /* Goals Section */
         .goals-card {
-            background: #FFFFFF;
-            border-left: 4px solid #f5576c;
-            border-radius: 16px;
-            padding: 18px;
+            background: linear-gradient(135deg, rgba(245,87,108,0.1), rgba(240,147,251,0.05));
+            border: 1px solid rgba(245,87,108,0.2);
+            border-radius: 14px;
+            padding: 16px;
             margin-bottom: 12px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
         .goals-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #1C1C1E;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #f5576c;
             margin-bottom: 12px;
         }
         .goal-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 9px 0;
-            border-bottom: 1px solid #F2F2F7;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         .goal-row:last-child {
             border-bottom: none;
         }
         .goal-label {
             font-size: 0.85rem;
-            color: #6B6B6B;
+            color: #aaa;
         }
         .goal-values {
             text-align: right;
         }
         .goal-current {
             font-size: 0.85rem;
-            color: #8E8E93;
+            color: #888;
         }
         .goal-arrow {
             color: #f5576c;
@@ -776,30 +746,29 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <img src="../assets/mascot/chinchilla.png" alt="" class="header-mascot">
-        <h1>Vivi</h1>
+        <h1>Fitness Age 28</h1>
         <p class="subtitle">Garmin-Integrated | Push/Maintain | Post-Op Safe</p>
     </div>
-
-    <!-- Tab Navigation - Floating Bubble -->
+    
+    <!-- Tab Navigation - Bottom Bar -->
     <nav class="tab-nav">
         <button class="tab-btn active" onclick="showTab('workouts')">
-            <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14l1.43 1.43L2 7.71l1.43 1.43L2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22l1.43-1.43L16.29 22l2.14-2.14 1.43 1.43 1.43-1.43-1.43-1.43L22 16.29z"/></svg></span>
+            <span class="tab-icon">W</span>
             <span>Workouts</span>
         </button>
         <button class="tab-btn" onclick="showTab('nutrition')">
-            <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M16 6v8h3v8h2V2c-2.76 0-5 2.24-5 4zm-5 3H9V2H7v7H5V2H3v7c0 2.21 1.79 4 4 4v9h2v-9c2.21 0 4-1.79 4-4V2h-2v7z"/></svg></span>
+            <span class="tab-icon">N</span>
             <span>Nutrition</span>
         </button>
         <button class="tab-btn" onclick="showTab('checkin')">
-            <span class="tab-icon"><svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg></span>
+            <span class="tab-icon">C</span>
             <span>Check-In</span>
         </button>
     </nav>
-
+    
     <!-- WORKOUTS TAB -->
     <div id="workouts-tab" class="tab-content active">
-
+        
         <!-- Metrics Dashboard -->
         <div class="metrics-dashboard">
             <div class="metrics-header">
@@ -808,7 +777,7 @@
             </div>
             <div class="metrics-grid">
                 <div class="metric-card">
-                    <div class="metric-value warning" id="vig-min">&mdash;</div>
+                    <div class="metric-value warning" id="vig-min">—</div>
                     <div class="metric-label">Vigorous Min</div>
                     <div class="metric-target">Target: 75-90</div>
                 </div>
@@ -818,17 +787,17 @@
                     <div class="metric-target">Maintain &lt;56</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-value" id="sleep-avg">&mdash;</div>
+                    <div class="metric-value" id="sleep-avg">—</div>
                     <div class="metric-label">Sleep Avg</div>
                     <div class="metric-target">Target: 7-8 hrs</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-value" id="steps-avg">&mdash;</div>
+                    <div class="metric-value" id="steps-avg">—</div>
                     <div class="metric-label">Steps/Day</div>
                     <div class="metric-target">Target: 8-10k</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-value" id="body-battery">&mdash;</div>
+                    <div class="metric-value" id="body-battery">—</div>
                     <div class="metric-label">Body Battery</div>
                     <div class="metric-target">End day &gt;20</div>
                 </div>
@@ -839,7 +808,7 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- Week Mode Toggle -->
         <div class="week-mode-container">
             <div class="week-mode-toggle">
@@ -853,7 +822,7 @@
                 </button>
             </div>
         </div>
-
+        
         <!-- Program Phase Banner -->
         <div class="phase-banner rampup" id="phase-banner">
             <div class="phase-banner-title">Week 1: Ramp-Up (Post-Op)</div>
@@ -864,7 +833,7 @@
                 <span class="phase-tag recovery">Moderate Intensity OK</span>
             </div>
         </div>
-
+        
         <!-- Weekly Targets -->
         <div class="weekly-targets" id="weekly-targets">
             <div class="targets-title">THIS WEEK'S TARGETS</div>
@@ -875,12 +844,12 @@
                 <div class="target-item"><span class="target-value">Ramp up</span> gradually</div>
             </div>
         </div>
-
+        
         <!-- Workout Days -->
         <div id="workout-container"></div>
-
+        
     </div>
-
+    
     <!-- NUTRITION TAB -->
     <div id="nutrition-tab" class="tab-content">
         <div class="nutrition-card">
@@ -903,7 +872,7 @@
                     <div class="macro-label">Drinks/Week Max</div>
                 </div>
             </div>
-
+            
             <div class="plate-section">
                 <div class="plate-title">The Plate Method (No Tracking Needed)</div>
                 <div class="plate-item">
@@ -978,20 +947,20 @@
             </div>
         </div>
     </div>
-
+    
     <!-- CHECK-IN TAB -->
     <div id="checkin-tab" class="tab-content">
-
+        
         <div class="checkin-card">
             <div class="checkin-title">Weekly Check-In</div>
             <div class="checkin-status pending">
-                <span class="checkin-icon">&mdash;</span>
+                <span class="checkin-icon">—</span>
                 <div class="checkin-text">
                     <div class="checkin-text-main">Next check-in: Sunday 6:00 PM</div>
                     <div class="checkin-text-sub">Calendar reminder set</div>
                 </div>
             </div>
-
+            
             <div class="checkin-steps">
                 <div class="checkin-step">
                     <span class="step-number">1</span>
@@ -1015,14 +984,14 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="goals-card">
             <div class="goals-title">12-Week Goals</div>
             <div class="goal-row">
                 <span class="goal-label">Fitness Age</span>
                 <div class="goal-values">
                     <span class="goal-current">30.5</span>
-                    <span class="goal-arrow">&rarr;</span>
+                    <span class="goal-arrow">→</span>
                     <span class="goal-target">28</span>
                 </div>
             </div>
@@ -1030,7 +999,7 @@
                 <span class="goal-label">Weight</span>
                 <div class="goal-values">
                     <span class="goal-current">~152 lbs</span>
-                    <span class="goal-arrow">&rarr;</span>
+                    <span class="goal-arrow">→</span>
                     <span class="goal-target">137-140 lbs</span>
                 </div>
             </div>
@@ -1038,7 +1007,7 @@
                 <span class="goal-label">BMI</span>
                 <div class="goal-values">
                     <span class="goal-current">25.1</span>
-                    <span class="goal-arrow">&rarr;</span>
+                    <span class="goal-arrow">→</span>
                     <span class="goal-target">22.4</span>
                 </div>
             </div>
@@ -1046,7 +1015,7 @@
                 <span class="goal-label">Vigorous Min/Week</span>
                 <div class="goal-values">
                     <span class="goal-current">~36</span>
-                    <span class="goal-arrow">&rarr;</span>
+                    <span class="goal-arrow">→</span>
                     <span class="goal-target">75-90</span>
                 </div>
             </div>
@@ -1054,12 +1023,12 @@
                 <span class="goal-label">Vigorous Days/Week</span>
                 <div class="goal-values">
                     <span class="goal-current">1</span>
-                    <span class="goal-arrow">&rarr;</span>
+                    <span class="goal-arrow">→</span>
                     <span class="goal-target">3</span>
                 </div>
             </div>
         </div>
-
+        
         <div class="checkin-card">
             <div class="checkin-title">Progress Photos</div>
             <div class="note-box">
@@ -1085,7 +1054,7 @@
     </div>
 
     <script>
-        // Program data — identical to original
+        // Program data
         const programData = {
             rampup: {
                 week1: {
@@ -1239,6 +1208,20 @@
                             finisher: "35-40 min Zone 2: incline walk (12%, 3.2 mph) OR easy bike"
                         }
                     ]
+                },
+                week2: {
+                    title: "Week 2: Building",
+                    description: "Increasing intensity slightly. Still avoiding heavy Valsalva and inversions. Adding a third vigorous day.",
+                    tags: [
+                        { text: "Still Healing", class: "caution" },
+                        { text: "Ramping Up", class: "intensity" }
+                    ],
+                    targets: {
+                        vigorousDays: "3",
+                        strengthDays: "2",
+                        vigorousMin: "60-75",
+                        note: "Building toward full"
+                    }
                 }
             },
             push: {
@@ -1564,7 +1547,14 @@
         function setWeekMode(mode) {
             document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelector(`.mode-btn.${mode}`).classList.add('active');
-            if (currentMode === 'rampup') return;
+            
+            // If selecting push/maintain and we're in rampup, stay in rampup
+            // This is controlled by program phase
+            if (currentMode === 'rampup') {
+                // Still in ramp-up phase, don't change
+                return;
+            }
+            
             currentMode = mode;
             renderWorkouts();
         }
@@ -1583,7 +1573,8 @@
             } else {
                 data = programData[currentMode];
             }
-
+            
+            // Update phase banner
             const banner = document.getElementById('phase-banner');
             banner.className = currentMode === 'rampup' ? 'phase-banner rampup' : 'phase-banner';
             banner.innerHTML = `
@@ -1593,7 +1584,8 @@
                     ${data.tags.map(tag => `<span class="phase-tag ${tag.class}">${tag.text}</span>`).join('')}
                 </div>
             `;
-
+            
+            // Update targets
             const targets = document.getElementById('weekly-targets');
             targets.innerHTML = `
                 <div class="targets-title">THIS WEEK'S TARGETS</div>
@@ -1604,18 +1596,19 @@
                     <div class="target-item"><span class="target-value">${data.targets.note}</span></div>
                 </div>
             `;
-
+            
+            // Render workout days
             const container = document.getElementById('workout-container');
             let html = '';
-
+            
             data.days.forEach((day, index) => {
-                const badgeClass = day.type === 'vigorous' ? 'badge-vigorous' :
-                                   day.type === 'strength' ? 'badge-strength' :
+                const badgeClass = day.type === 'vigorous' ? 'badge-vigorous' : 
+                                   day.type === 'strength' ? 'badge-strength' : 
                                    day.type === 'rest' ? 'badge-rest' : 'badge-recovery';
-                const badgeText = day.type === 'vigorous' ? 'Vigorous' :
-                                  day.type === 'strength' ? 'Strength' :
+                const badgeText = day.type === 'vigorous' ? 'Vigorous' : 
+                                  day.type === 'strength' ? 'Strength' : 
                                   day.type === 'rest' ? 'Rest' : 'Zone 2';
-
+                
                 html += `
                     <div class="day-card">
                         <div class="day-header ${day.type}" onclick="toggleDay(${index})">
@@ -1634,7 +1627,7 @@
                     </div>
                 `;
             });
-
+            
             container.innerHTML = html;
         }
 
@@ -1704,7 +1697,9 @@
             }
 
             if (day.circuit) {
-                html += `<div class="section-title">${day.circuit.label}</div>`;
+                html += `
+                    <div class="section-title">${day.circuit.label}</div>
+                `;
                 day.circuit.exercises.forEach(ex => {
                     html += `
                         <div class="exercise-row">
@@ -1755,6 +1750,7 @@
             return html;
         }
 
+        // Initialize
         renderWorkouts();
     </script>
 </body>
