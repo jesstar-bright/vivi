@@ -27,3 +27,7 @@ Thumbs.db
 
 # Design reference (not part of the app)
 assets/design-reference/
+
+# Private photos (not for public repo)
+docs/body-reference/
+docs/progress-photos/
