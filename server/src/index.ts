@@ -47,7 +47,7 @@ app.route('/api/progress', progressRouter);
 
 // Serve prototype at root — accessible from phone on same WiFi
 app.get('/', (c) => {
-  const htmlPath = resolve(__dirname, '../../prototype/index.html');
+  const htmlPath = resolve(process.cwd(), '../prototype/index.html');
   try {
     const html = readFileSync(htmlPath, 'utf-8');
     return c.html(html);
