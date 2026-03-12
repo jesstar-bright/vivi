@@ -7,6 +7,9 @@ import { errorHandler } from './middleware/error-handler.js';
 import { computeCurrentWeek } from './utils.js';
 import { checkinRouter } from './routes/checkin.js';
 import { metricsRouter } from './routes/metrics.js';
+import { plansRouter } from './routes/plans.js';
+import { workoutsRouter } from './routes/workouts.js';
+import { progressRouter } from './routes/progress.js';
 
 const app = new Hono();
 
@@ -36,6 +39,9 @@ app.get('/api/health', (c) => {
 // Routes
 app.route('/api/checkin', checkinRouter);
 app.route('/api/metrics', metricsRouter);
+app.route('/api/plan', plansRouter);
+app.route('/api/workout', workoutsRouter);
+app.route('/api/progress', progressRouter);
 
 const port = parseInt(process.env.PORT || '3001');
 
