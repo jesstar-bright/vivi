@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    --background: 320 25% 97%;
+    --foreground: 280 30% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 280 30% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 280 30% 12%;
+
+    --primary: 330 65% 52%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 270 35% 95%;
+    --secondary-foreground: 270 30% 25%;
+
+    --muted: 280 15% 92%;
+    --muted-foreground: 280 10% 45%;
+
+    --accent: 330 50% 94%;
+    --accent-foreground: 330 60% 35%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 280 20% 90%;
+    --input: 280 15% 90%;
+    --ring: 330 65% 52%;
+
+    --radius: 1rem;
+
+    /* Workout type colors */
+    --type-strength: 250 55% 58%;
+    --type-vigorous: 350 70% 55%;
+    --type-recovery: 160 50% 45%;
+    --type-rest: 280 15% 70%;
+
+    /* Brand gradient */
+    --gradient-hero: linear-gradient(135deg, hsl(330 65% 52%), hsl(270 60% 58%), hsl(220 65% 55%));
+    --gradient-bg: linear-gradient(170deg, hsl(330 30% 96%) 0%, hsl(270 25% 95%) 40%, hsl(320 20% 97%) 100%);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--gradient-bg);
+    min-height: 100vh;
+  }
+
+  h1, h2 {
+    font-family: 'Syne', sans-serif;
+  }
+}
+
+@layer components {
+  .card-elevated {
+    @apply rounded-2xl border border-border bg-card p-5 shadow-sm;
+  }
+
+  .card-elevated-sm {
+    @apply rounded-xl border border-border bg-card p-3 shadow-sm;
+  }
+
+  .glass-tab-bar {
+    @apply fixed bottom-0 left-0 right-0 flex justify-around items-center py-2.5 px-4 z-50 border-t border-border bg-card/90;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .type-badge {
+    @apply text-[11px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-md;
+    font-family: 'Rajdhani', sans-serif;
+  }
+
+  .type-badge-strength {
+    background: hsl(var(--type-strength) / 0.12);
+    color: hsl(var(--type-strength));
+  }
+
+  .type-badge-vigorous {
+    background: hsl(var(--type-vigorous) / 0.12);
+    color: hsl(var(--type-vigorous));
+  }
+
+  .type-badge-recovery {
+    background: hsl(var(--type-recovery) / 0.12);
+    color: hsl(var(--type-recovery));
+  }
+
+  .type-badge-rest {
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+  }
+
+  .day-border-strength {
+    border-left: 4px solid hsl(var(--type-strength));
+  }
+
+  .day-border-vigorous {
+    border-left: 4px solid hsl(var(--type-vigorous));
+  }
+
+  .day-border-recovery {
+    border-left: 4px solid hsl(var(--type-recovery));
+  }
+
+  .day-border-rest {
+    border-left: 4px solid hsl(var(--type-rest));
+  }
+
+  .btn-primary {
+    @apply rounded-xl px-5 py-3 text-sm font-semibold text-primary-foreground transition-all active:scale-[0.97];
+    background: var(--gradient-hero);
+  }
+
+  .btn-ghost {
+    @apply rounded-xl px-4 py-2.5 text-sm font-medium text-foreground bg-secondary border border-border transition-all active:scale-[0.97];
+  }
+}
