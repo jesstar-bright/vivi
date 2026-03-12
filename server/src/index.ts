@@ -4,6 +4,7 @@ import { resolve } from 'path';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { serve } from '@hono/node-server';
+import { serveStatic } from '@hono/node-server/serve-static';
 import { authMiddleware } from './middleware/auth.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { computeCurrentWeek } from './utils.js';
@@ -45,14 +46,17 @@ app.route('/api/plan', plansRouter);
 app.route('/api/workout', workoutsRouter);
 app.route('/api/progress', progressRouter);
 
-// Serve prototype at root — accessible from phone on same WiFi
-app.get('/', (c) => {
-  const htmlPath = resolve(process.cwd(), '../prototype/index.html');
+// Serve React frontend build (static assets: JS, CSS, images)
+app.use('/*', serveStatic({ root: '../client/dist' }));
+
+// SPA fallback — serve index.html for client-side routes
+app.get('/*', (c) => {
+  const htmlPath = resolve(process.cwd(), '../client/dist/index.html');
   try {
     const html = readFileSync(htmlPath, 'utf-8');
     return c.html(html);
   } catch {
-    return c.text('Prototype not found — run from the server/ directory', 404);
+    return c.text('Frontend not built — run "npm run build" in client/', 404);
   }
 });
 
