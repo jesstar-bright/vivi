@@ -944,6 +944,94 @@
         <p class="week-subtitle">Week 1 of 12</p>
     </div>
 
+    <!-- Sunday Check-In Modal (blocking, no close button) -->
+    <div id="checkin-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:#fff; z-index:3000; overflow-y:auto; padding:32px 20px 40px;">
+        <!-- Step dots -->
+        <div style="display:flex;justify-content:center;gap:8px;margin-bottom:32px;margin-top:8px;" id="checkin-step-dots">
+            <div id="checkin-dot-0" style="width:8px;height:8px;border-radius:50%;background:#f5576c;transition:all 0.2s;"></div>
+            <div id="checkin-dot-1" style="width:8px;height:8px;border-radius:50%;background:#E5E5EA;transition:all 0.2s;"></div>
+            <div id="checkin-dot-2" style="width:8px;height:8px;border-radius:50%;background:#E5E5EA;transition:all 0.2s;"></div>
+        </div>
+
+        <!-- Step 1: Energy + Motivation -->
+        <div id="checkin-step-1">
+            <div style="text-align:center;margin-bottom:28px;">
+                <div style="font-size:1.3rem;font-weight:800;color:#1C1C1E;margin-bottom:6px;">Sunday Check-In</div>
+                <div style="font-size:0.85rem;color:#8E8E93;">How was your week? This adjusts next week's plan.</div>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <div style="font-size:0.9rem;font-weight:700;color:#1C1C1E;margin-bottom:12px;">Energy Level This Week</div>
+                <div id="checkin-energy-btns" style="display:flex;gap:8px;justify-content:center;"></div>
+            </div>
+
+            <div style="margin-bottom:24px;">
+                <div style="font-size:0.9rem;font-weight:700;color:#1C1C1E;margin-bottom:12px;">Motivation to Train</div>
+                <div id="checkin-motivation-btns" style="display:flex;gap:8px;justify-content:center;"></div>
+            </div>
+
+            <div style="margin-bottom:28px;">
+                <div style="font-size:0.78rem;color:#8E8E93;margin-bottom:6px;">Anything the AI should know? (optional)</div>
+                <textarea id="checkin-step1-notes" placeholder="e.g. knee bothering me, work stress high..." style="width:100%;padding:12px;border:1px solid #E5E5EA;border-radius:12px;font-size:0.85rem;resize:none;height:80px;font-family:inherit;"></textarea>
+            </div>
+
+            <button onclick="checkinGoToStep(2)" style="width:100%;padding:14px;background:linear-gradient(135deg,#f093fb,#f5576c);color:white;border:none;border-radius:14px;font-size:1rem;font-weight:700;cursor:pointer;">Next →</button>
+        </div>
+
+        <!-- Step 2: Progress Photo -->
+        <div id="checkin-step-2" style="display:none;">
+            <div style="text-align:center;margin-bottom:28px;">
+                <div style="font-size:1.3rem;font-weight:800;color:#1C1C1E;margin-bottom:6px;">Progress Photo</div>
+                <div style="font-size:0.85rem;color:#8E8E93;">Same pose, same lighting. The camera tells the real story.</div>
+            </div>
+
+            <input type="file" id="checkin-photo-input" accept="image/*" style="display:none" onchange="checkinPhotoSelected(this)">
+
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px;">
+                <button onclick="document.getElementById('checkin-photo-input').setAttribute('capture','environment'); document.getElementById('checkin-photo-input').click()"
+                    style="width:100%;padding:16px;background:#F7F6F3;border:2px dashed #E5E5EA;border-radius:14px;font-size:0.95rem;font-weight:600;color:#3C3C43;cursor:pointer;">
+                    📷 Take Photo Now
+                </button>
+                <button onclick="document.getElementById('checkin-photo-input').removeAttribute('capture'); document.getElementById('checkin-photo-input').click()"
+                    style="width:100%;padding:16px;background:#F7F6F3;border:2px dashed #E5E5EA;border-radius:14px;font-size:0.95rem;font-weight:600;color:#3C3C43;cursor:pointer;">
+                    🖼 Upload from Camera Roll
+                </button>
+            </div>
+
+            <div id="checkin-photo-status" style="text-align:center;font-size:0.8rem;color:#4CAF50;margin-bottom:16px;display:none;">Photo selected ✓</div>
+
+            <button onclick="checkinGoToStep(3)" style="width:100%;padding:14px;background:linear-gradient(135deg,#f093fb,#f5576c);color:white;border:none;border-radius:14px;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:10px;">Next →</button>
+            <button onclick="checkinGoToStep(3)" style="width:100%;padding:12px;background:none;border:none;color:#8E8E93;font-size:0.9rem;cursor:pointer;">Skip for now</button>
+        </div>
+
+        <!-- Step 3: Loading → Result -->
+        <div id="checkin-step-3" style="display:none;text-align:center;">
+            <div id="checkin-loading-state" style="padding:40px 0;">
+                <div id="checkin-diamond-pulse" style="margin:0 auto 20px;width:60px;height:64px;animation:pulse 1.2s ease-in-out infinite;">
+                    <svg width="60" height="64" viewBox="0 0 100 100">
+                        <defs><linearGradient id="ci-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#f093fb"/><stop offset="100%" style="stop-color:#f5576c"/></linearGradient></defs>
+                        <path d="M50 8 L82 38 L50 92 L18 38 Z" fill="url(#ci-grad)"/>
+                    </svg>
+                </div>
+                <div style="font-size:1rem;font-weight:700;color:#1C1C1E;margin-bottom:4px;">Analyzing your week…</div>
+                <div style="font-size:0.8rem;color:#8E8E93;">Setting up next week's plan</div>
+            </div>
+
+            <div id="checkin-result-state" style="display:none;padding:20px 0;">
+                <div id="checkin-result-mode-badge" style="display:inline-block;padding:10px 24px;border-radius:20px;font-size:1rem;font-weight:700;margin-bottom:10px;background:linear-gradient(135deg,#f093fb,#f5576c);color:white;"></div>
+                <div id="checkin-result-subtitle" style="font-size:0.88rem;color:#6B6B6B;margin-bottom:28px;line-height:1.6;"></div>
+                <button onclick="closeCheckinModal(); showTab('workouts', document.querySelector('.tab-btn[data-tab=workouts]'))" style="width:100%;padding:14px;background:linear-gradient(135deg,#f093fb,#f5576c);color:white;border:none;border-radius:14px;font-size:1rem;font-weight:700;cursor:pointer;margin-bottom:10px;">See My Workouts</button>
+                <button onclick="closeCheckinModal(); showTab('lifestyle', document.querySelector('.tab-btn[data-tab=lifestyle]'))" style="width:100%;padding:14px;background:#F7F6F3;color:#3C3C43;border:none;border-radius:14px;font-size:0.95rem;font-weight:600;cursor:pointer;">See My Lifestyle Plan</button>
+            </div>
+        </div>
+    </div>
+    <style>
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+        }
+    </style>
+
     <!-- Tab Navigation - Floating Bubble -->
     <nav class="tab-nav">
         <button class="tab-btn active" data-tab="workouts" onclick="showTab('workouts', this)">
@@ -1362,7 +1450,121 @@
             }
         }
 
-        // ─── Check-in submission ─────────────────────────────────────
+        // ─── Sunday Check-In Modal ───────────────────────────────────
+        let _checkinEnergy = null;
+        let _checkinMotivation = null;
+        let _checkinPhotoKey = null;
+
+        function initCheckinButtons() {
+            ['checkin-energy-btns', 'checkin-motivation-btns'].forEach(id => {
+                const container = document.getElementById(id);
+                if (!container) return;
+                container.innerHTML = '';
+                [1,2,3,4,5].forEach(val => {
+                    const btn = document.createElement('button');
+                    btn.textContent = val;
+                    btn.dataset.val = val;
+                    btn.style.cssText = 'width:52px;height:52px;border-radius:50%;border:2px solid #E5E5EA;background:#F7F6F3;font-size:1.1rem;font-weight:700;color:#3C3C43;cursor:pointer;transition:all 0.15s;';
+                    btn.onclick = () => {
+                        container.querySelectorAll('button').forEach(b => {
+                            b.style.background = '#F7F6F3';
+                            b.style.color = '#3C3C43';
+                            b.style.borderColor = '#E5E5EA';
+                        });
+                        btn.style.background = 'linear-gradient(135deg,#f093fb,#f5576c)';
+                        btn.style.color = 'white';
+                        btn.style.borderColor = 'transparent';
+                        if (id === 'checkin-energy-btns') _checkinEnergy = val;
+                        else _checkinMotivation = val;
+                    };
+                    container.appendChild(btn);
+                });
+            });
+        }
+
+        function openCheckinModal() {
+            _checkinEnergy = null;
+            _checkinMotivation = null;
+            _checkinPhotoKey = null;
+            const notesEl = document.getElementById('checkin-step1-notes');
+            if (notesEl) notesEl.value = '';
+            const photoStatus = document.getElementById('checkin-photo-status');
+            if (photoStatus) photoStatus.style.display = 'none';
+            initCheckinButtons();
+            checkinGoToStep(1);
+            document.getElementById('checkin-modal').style.display = 'block';
+        }
+
+        function closeCheckinModal() {
+            document.getElementById('checkin-modal').style.display = 'none';
+        }
+
+        function checkinGoToStep(step) {
+            [1,2,3].forEach(s => {
+                const el = document.getElementById(`checkin-step-${s}`);
+                if (el) el.style.display = s === step ? 'block' : 'none';
+                const dot = document.getElementById(`checkin-dot-${s-1}`);
+                if (dot) dot.style.background = s === step ? '#f5576c' : (s < step ? '#f093fb' : '#E5E5EA');
+            });
+            if (step === 3) {
+                submitCheckinFlow();
+            }
+        }
+
+        async function checkinPhotoSelected(input) {
+            if (input.files && input.files[0]) {
+                const photoKey = await uploadProgressPhoto(input.files[0]);
+                if (photoKey) {
+                    _checkinPhotoKey = photoKey;
+                    const statusEl = document.getElementById('checkin-photo-status');
+                    if (statusEl) statusEl.style.display = 'block';
+                }
+            }
+        }
+
+        async function submitCheckinFlow() {
+            // Show loading
+            const loading = document.getElementById('checkin-loading-state');
+            const result = document.getElementById('checkin-result-state');
+            if (loading) loading.style.display = 'block';
+            if (result) result.style.display = 'none';
+
+            const notes = document.getElementById('checkin-step1-notes')?.value || '';
+            const data = {
+                energy: _checkinEnergy,
+                motivation: _checkinMotivation,
+                notes,
+                photo_key: _checkinPhotoKey || undefined,
+            };
+
+            const response = await apiFetch('/api/checkin/submit', {
+                method: 'POST',
+                body: JSON.stringify(data),
+            });
+
+            if (loading) loading.style.display = 'none';
+            if (result) result.style.display = 'block';
+
+            const badgeEl = document.getElementById('checkin-result-mode-badge');
+            const subtitleEl = document.getElementById('checkin-result-subtitle');
+            if (response) {
+                const modeLabel = response.mode === 'push' ? 'Push Week' : response.mode === 'maintain' ? 'Maintain Week' : response.mode || 'Plan Updated';
+                if (badgeEl) badgeEl.textContent = modeLabel;
+                if (subtitleEl) subtitleEl.textContent = response.trainer_message || response.reasoning || 'Your next week has been set. Tap below to see your updated plan.';
+                loadLiveData();
+            } else {
+                if (badgeEl) badgeEl.textContent = 'Plan Updated';
+                if (subtitleEl) subtitleEl.textContent = 'Check-in saved. Tap below to see your plan.';
+            }
+        }
+
+        function checkForPendingCheckin(plan) {
+            if (plan?.needs_checkin) {
+                openCheckinModal();
+            }
+        }
+
+        // ─── Check-in submission (legacy) ────────────────────────────
         async function submitCheckin(data) {
             const result = await apiFetch('/api/checkin/submit', {
                 method: 'POST',
