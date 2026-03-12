@@ -102,171 +102,6 @@
             display: block;
         }
 
-        /* Metrics Dashboard */
-        .metrics-dashboard {
-            background: #FFFFFF;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        }
-        .metrics-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-        .metrics-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #1C1C1E;
-        }
-        .metrics-date {
-            font-size: 0.7rem;
-            color: #8E8E93;
-        }
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-        }
-        .metric-card {
-            background: #F7F6F3;
-            border-radius: 12px;
-            padding: 12px 8px;
-            text-align: center;
-        }
-        .metric-value {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: #f5576c;
-        }
-        .metric-value.good { color: #4CAF50; }
-        .metric-value.warning { color: #E5A100; }
-        .metric-value.target { color: #f5576c; }
-        .metric-label {
-            font-size: 0.6rem;
-            color: #8E8E93;
-            margin-top: 3px;
-            line-height: 1.2;
-        }
-        .metric-target {
-            font-size: 0.55rem;
-            color: #AEAEB2;
-            margin-top: 2px;
-        }
-
-        /* Week Mode Toggle */
-        .week-mode-container {
-            margin-bottom: 16px;
-        }
-        .week-mode-toggle {
-            display: flex;
-            background: #FFFFFF;
-            border-radius: 16px;
-            padding: 4px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        }
-        .mode-btn {
-            flex: 1;
-            padding: 12px 8px;
-            border: none;
-            border-radius: 14px;
-            background: transparent;
-            color: #8E8E93;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-        .mode-btn.active.push {
-            background: linear-gradient(90deg, #f5576c, #f093fb);
-            color: white;
-            font-weight: 600;
-        }
-        .mode-btn.active.maintain {
-            background: linear-gradient(90deg, #5B7FBF, #4CAF50);
-            color: white;
-            font-weight: 600;
-        }
-        .mode-subtitle {
-            display: block;
-            font-size: 0.65rem;
-            opacity: 0.85;
-            margin-top: 2px;
-        }
-
-        /* Program Phase Banner */
-        .phase-banner {
-            background: #FFFFFF;
-            border-left: 4px solid #f5576c;
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        }
-        .phase-banner.rampup {
-            border-left-color: #E5A100;
-        }
-        .phase-banner-title {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #1C1C1E;
-            margin-bottom: 4px;
-        }
-        .phase-banner-text {
-            font-size: 0.78rem;
-            color: #6B6B6B;
-            line-height: 1.5;
-        }
-        .phase-tags {
-            display: flex;
-            gap: 6px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-        .phase-tag {
-            font-size: 0.6rem;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-        .phase-tag.caution { background: #FFF3E0; color: #E5A100; }
-        .phase-tag.intensity { background: #FCE4EC; color: #f5576c; }
-        .phase-tag.recovery { background: #E8F5E9; color: #4CAF50; }
-
-        /* Weekly Targets */
-        .weekly-targets {
-            background: #FFFFFF;
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        }
-        .targets-title {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #f093fb;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-        .targets-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
-        .target-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.8rem;
-            color: #3C3C43;
-        }
-        .target-value {
-            font-weight: 700;
-            color: #f5576c;
-        }
 
         /* Day Cards */
         .day-card {
@@ -554,19 +389,6 @@
             color: #f5576c;
             flex-shrink: 0;
         }
-        .rule-number {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 22px;
-            height: 22px;
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-            border-radius: 50%;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: white;
-            flex-shrink: 0;
-        }
 
         /* Sleep Tab */
         .sleep-card {
@@ -630,255 +452,6 @@
             line-height: 1.5;
         }
 
-        /* Check-in Tab */
-        .checkin-card {
-            background: #FFFFFF;
-            border-radius: 16px;
-            padding: 18px;
-            margin-bottom: 12px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        }
-        .checkin-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #1C1C1E;
-        }
-        .checkin-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px;
-            background: #F7F6F3;
-            border-radius: 12px;
-            margin-bottom: 14px;
-        }
-        .checkin-status.pending {
-            border-left: 3px solid #E5A100;
-        }
-        .checkin-status.complete {
-            border-left: 3px solid #4CAF50;
-        }
-        .checkin-icon {
-            font-size: 1.5rem;
-        }
-        .checkin-text {
-            flex: 1;
-        }
-        .checkin-text-main {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #1C1C1E;
-        }
-        .checkin-text-sub {
-            font-size: 0.75rem;
-            color: #8E8E93;
-            margin-top: 2px;
-        }
-        .checkin-steps {
-            margin-top: 12px;
-        }
-        .checkin-step {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            padding: 10px 0;
-            border-bottom: 1px solid #F2F2F7;
-        }
-        .checkin-step:last-child {
-            border-bottom: none;
-        }
-        .step-number {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 22px;
-            height: 22px;
-            background: #FDE8EE;
-            border-radius: 50%;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #f5576c;
-            flex-shrink: 0;
-        }
-        .step-text {
-            font-size: 0.85rem;
-            color: #6B6B6B;
-            line-height: 1.5;
-        }
-        .step-text strong {
-            color: #1C1C1E;
-        }
-
-        /* Goals Section */
-        /* Hero Goal Card */
-        .goals-card {
-            background: #FFFFFF;
-            border-radius: 16px;
-            padding: 20px 18px 18px;
-            margin-bottom: 12px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-        }
-        .goals-title {
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #f093fb;
-            margin-bottom: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-        }
-        .hero-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-bottom: 14px;
-        }
-        .hero-age {
-            font-size: 2.4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1;
-        }
-        .hero-detail {
-            flex: 1;
-        }
-        .hero-label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #1C1C1E;
-        }
-        .hero-sub {
-            font-size: 0.7rem;
-            color: #8E8E93;
-            margin-top: 1px;
-        }
-        /* Journey metrics — marker on range */
-        .journey-goals {
-            border-top: 1px solid #F2F2F7;
-            padding-top: 16px;
-            margin-bottom: 4px;
-        }
-        .journey-section-label {
-            font-size: 0.6rem;
-            font-weight: 600;
-            color: #AEAEB2;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin-bottom: 10px;
-        }
-        .journey-row {
-            padding: 10px 0;
-        }
-        .journey-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 6px;
-        }
-        .journey-label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #3C3C43;
-        }
-        .journey-current-value {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #1C1C1E;
-        }
-        .journey-track {
-            position: relative;
-            height: 6px;
-            background: #F2F2F7;
-            border-radius: 3px;
-            margin-bottom: 4px;
-        }
-        .journey-traveled {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            border-radius: 3px;
-            background: linear-gradient(90deg, #f093fb, #f5576c);
-            transition: width 1s ease;
-        }
-        .journey-marker {
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 14px;
-            height: 14px;
-            background: #FFFFFF;
-            border: 3px solid #f5576c;
-            border-radius: 50%;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-            transition: left 1s ease;
-        }
-        .journey-endpoints {
-            display: flex;
-            justify-content: space-between;
-        }
-        .journey-start, .journey-end {
-            font-size: 0.6rem;
-            color: #AEAEB2;
-        }
-        .journey-end {
-            color: #f5576c;
-            font-weight: 600;
-        }
-
-        /* Weekly activity metrics — fill bars */
-        .weekly-goals {
-            border-top: 1px solid #F2F2F7;
-            padding-top: 16px;
-        }
-        .weekly-section-label {
-            font-size: 0.6rem;
-            font-weight: 600;
-            color: #AEAEB2;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin-bottom: 10px;
-        }
-        .weekly-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 7px 0;
-        }
-        .weekly-label {
-            font-size: 0.75rem;
-            color: #6B6B6B;
-            min-width: 70px;
-            text-align: left;
-        }
-        .weekly-bar-track {
-            flex: 1;
-            height: 8px;
-            background: #F2F2F7;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .weekly-bar-fill {
-            height: 100%;
-            border-radius: 4px;
-            background: linear-gradient(90deg, #f093fb, #f5576c);
-            transition: width 1s ease;
-        }
-        .weekly-value {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #1C1C1E;
-            min-width: 55px;
-            text-align: right;
-        }
-        .weekly-target {
-            font-size: 0.65rem;
-            color: #AEAEB2;
-            font-weight: 400;
-        }
         /* Progress Photo Rows */
         .photo-row {
             display: flex;
@@ -1219,44 +792,14 @@
 
         // ─── Load live data on startup ───────────────────────────────
         async function loadLiveData() {
-            const [health, metrics, plan, progress] = await Promise.all([
+            const [health, plan] = await Promise.all([
                 apiFetch('/health'),
-                apiFetch('/api/metrics/weekly'),
                 apiFetch('/api/plan/current'),
-                apiFetch('/api/progress/summary'),
             ]);
 
             // Update week subtitle
             if (health?.week) {
                 document.querySelector('.week-subtitle').textContent = `Week ${health.week} of 12`;
-            }
-
-            // Populate metrics dashboard
-            if (metrics?.averages) {
-                const avg = metrics.averages;
-                if (avg.vigorousMinutes != null) {
-                    const el = document.getElementById('vig-min');
-                    el.textContent = Math.round(avg.vigorousMinutes);
-                    el.className = 'metric-value ' + (avg.vigorousMinutes >= 75 ? 'good' : 'warning');
-                }
-                if (avg.rhr != null) {
-                    document.getElementById('resting-hr').textContent = Math.round(avg.rhr);
-                }
-                if (avg.sleepHours != null) {
-                    const el = document.getElementById('sleep-avg');
-                    el.textContent = avg.sleepHours.toFixed(1);
-                    el.className = 'metric-value ' + (avg.sleepHours >= 7 ? 'good' : 'warning');
-                }
-                if (avg.steps != null) {
-                    const el = document.getElementById('steps-avg');
-                    el.textContent = Math.round(avg.steps).toLocaleString();
-                    el.className = 'metric-value ' + (avg.steps >= 8000 ? 'good' : '');
-                }
-                if (avg.bodyBattery != null) {
-                    const el = document.getElementById('body-battery');
-                    el.textContent = Math.round(avg.bodyBattery);
-                    el.className = 'metric-value ' + (avg.bodyBattery >= 40 ? 'good' : 'warning');
-                }
             }
 
             // Load AI-generated plan if available
@@ -1271,11 +814,6 @@
                     if (el('ls-water')) el('ls-water').textContent = nutrition.hydration || '80-100 oz';
                     if (el('ls-focus')) el('ls-focus').textContent = nutrition.focus || 'Anti-inflammatory';
                 }
-            }
-
-            // Update progress stats
-            if (progress) {
-                updateProgressDisplay(progress);
             }
 
             // Load progress tab data
@@ -1372,11 +910,6 @@
             }
 
             return html || '<div class="note-box">Rest day — listen to your body.</div>';
-        }
-
-        function updateProgressDisplay(progress) {
-            // Store progress data for the progress tab
-            window._progressData = progress;
         }
 
         // ─── Progress Tab ────────────────────────────────────────────
@@ -1562,21 +1095,6 @@
             if (plan?.needs_checkin) {
                 openCheckinModal();
             }
-        }
-
-        // ─── Check-in submission (legacy) ────────────────────────────
-        async function submitCheckin(data) {
-            const result = await apiFetch('/api/checkin/submit', {
-                method: 'POST',
-                body: JSON.stringify(data),
-            });
-            if (result) {
-                alert(`Check-in complete! Mode: ${result.mode}\n\n${result.trainer_message || result.reasoning}`);
-                loadLiveData(); // Refresh all data
-            } else {
-                alert('Check-in failed — is the server running?');
-            }
-            return result;
         }
 
         // ─── Photo upload ────────────────────────────────────────────
@@ -2080,14 +1598,6 @@
             currentTab = tabName;
         }
 
-        function setWeekMode(mode) {
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.mode-btn.${mode}`).classList.add('active');
-            if (currentMode === 'rampup') return;
-            currentMode = mode;
-            renderWorkouts();
-        }
-
         function toggleDay(index) {
             const content = document.getElementById(`day-content-${index}`);
             const arrow = document.getElementById(`arrow-${index}`);
@@ -2102,27 +1612,6 @@
             } else {
                 data = programData[currentMode];
             }
-
-            const banner = document.getElementById('phase-banner');
-            banner.className = currentMode === 'rampup' ? 'phase-banner rampup' : 'phase-banner';
-            banner.innerHTML = `
-                <div class="phase-banner-title">${data.title}</div>
-                <div class="phase-banner-text">${data.description}</div>
-                <div class="phase-tags">
-                    ${data.tags.map(tag => `<span class="phase-tag ${tag.class}">${tag.text}</span>`).join('')}
-                </div>
-            `;
-
-            const targets = document.getElementById('weekly-targets');
-            targets.innerHTML = `
-                <div class="targets-title">THIS WEEK'S TARGETS</div>
-                <div class="targets-grid">
-                    <div class="target-item"><span class="target-value">${data.targets.vigorousDays}</span> vigorous days</div>
-                    <div class="target-item"><span class="target-value">${data.targets.strengthDays}</span> strength days</div>
-                    <div class="target-item"><span class="target-value">${data.targets.vigorousMin}</span> vig. minutes</div>
-                    <div class="target-item"><span class="target-value">${data.targets.note}</span></div>
-                </div>
-            `;
 
             const container = document.getElementById('workout-container');
             let html = '';
