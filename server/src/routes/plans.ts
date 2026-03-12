@@ -3,6 +3,7 @@ import { eq, desc } from 'drizzle-orm';
 import { db, schema } from '../db/index.js';
 import { computeCurrentWeek } from '../utils.js';
 import { generateWeeklyPlan } from '../services/plan-generator.js';
+import { getWeek1FallbackPlan } from '../data/week1-plan.js';
 
 const plansRouter = new Hono();
 
@@ -42,15 +43,22 @@ plansRouter.get('/current', async (c) => {
       ? 'Week 1 — auto-generated Ramp-Up plan. Easing back in safely.'
       : 'Auto-generated Maintain week — missed check-in. Recovery-first approach.';
 
-    const autoPlan = await generateWeeklyPlan({
-      mode,
-      weekNumber,
-      focusAreas: [],
-      exerciseHistory: [],
-      userConditions: user.conditions || '',
-      postOpCleared: user.postOpCleared ?? false,
-      modeReasoning: reasoning,
-    });
+    let autoPlan;
+    try {
+      autoPlan = await generateWeeklyPlan({
+        mode,
+        weekNumber,
+        focusAreas: [],
+        exerciseHistory: [],
+        userConditions: user.conditions || '',
+        postOpCleared: user.postOpCleared ?? false,
+        modeReasoning: reasoning,
+      });
+    } catch (err) {
+      // If AI generation fails (e.g. no API key), use hardcoded Week 1 plan
+      console.error('Plan generation failed, using fallback:', (err as Error).message);
+      autoPlan = getWeek1FallbackPlan(weekNumber);
+    }
 
     await db.insert(schema.workoutPlans).values({
       weekNumber,
