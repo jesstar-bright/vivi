@@ -6,6 +6,7 @@ import { fetchLatestGarminEmail, parseGarminEmail } from '../services/garmin-par
 import { analyzeProgressPhoto } from '../services/photo-analyzer.js';
 import { assessRecovery } from '../services/recovery-assessment.js';
 import { generateWeeklyPlan } from '../services/plan-generator.js';
+import { generateProgressNarrative } from '../services/narrative-generator.js';
 import { computeCurrentWeek } from '../utils.js';
 
 const checkinRouter = new Hono();
@@ -197,7 +198,78 @@ checkinRouter.post('/submit', async (c) => {
     modeReasoning: assessment.reasoning,
   });
 
-  // 7. Store check-in and plan
+  // 7. Generate progress narrative (non-critical)
+  let progressNarrative: string | null = null;
+  try {
+    // Gather all metrics for trends
+    const allMetrics = await db
+      .select()
+      .from(schema.weeklyMetrics)
+      .orderBy(schema.weeklyMetrics.date);
+
+    const firstWeekMetrics = allMetrics.slice(0, 7);
+    const lastWeekMetrics = allMetrics.slice(-7);
+
+    const metricAvg = (rows: typeof allMetrics, field: keyof typeof allMetrics[0]) => {
+      const vals = rows.map((r) => r[field] as number | null).filter((v): v is number => v !== null);
+      return vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+    };
+
+    // Gather strength gains (top 6 exercises by frequency)
+    const allLogs = await db.select().from(schema.exerciseLogs).orderBy(desc(schema.exerciseLogs.date));
+    const grouped: Record<string, typeof allLogs> = {};
+    for (const log of allLogs) {
+      if (!grouped[log.exerciseName]) grouped[log.exerciseName] = [];
+      grouped[log.exerciseName].push(log);
+    }
+    const top6 = Object.entries(grouped).sort((a, b) => b[1].length - a[1].length).slice(0, 6);
+    const strengthGains = top6.map(([exercise, logs]) => {
+      const goodLogs = logs.filter((l) => l.weightRating === 'good' || l.weightRating === 'too_light');
+      const currentLog = goodLogs[0] || logs[0];
+      const oldestLog = logs[logs.length - 1];
+      const currentWeight = currentLog.actualWeightUsed || currentLog.suggestedWeight || '0';
+      const startWeight = oldestLog.actualWeightUsed || oldestLog.suggestedWeight || '0';
+      const diff = parseFloat(currentWeight) - parseFloat(startWeight);
+      const change = !isNaN(diff) ? (diff >= 0 ? `+${diff.toFixed(1)} lbs` : `${diff.toFixed(1)} lbs`) : 'N/A';
+      return { exercise, current_weight: currentWeight, start_weight: startWeight, change, sessions: logs.length };
+    });
+
+    // Mode history from check-ins
+    const allCheckIns = await db.select({ modeDecision: schema.checkIns.modeDecision }).from(schema.checkIns).orderBy(schema.checkIns.weekNumber);
+    const modeHistory = allCheckIns.map((ci) => ci.modeDecision);
+
+    // Energy / motivation averages
+    const allCheckInsForAvg = await db.select({ selfReportEnergy: schema.checkIns.selfReportEnergy, selfReportMotivation: schema.checkIns.selfReportMotivation }).from(schema.checkIns);
+    const energyVals = allCheckInsForAvg.map((ci) => ci.selfReportEnergy).filter((v): v is number => v !== null);
+    const motivationVals = allCheckInsForAvg.map((ci) => ci.selfReportMotivation).filter((v): v is number => v !== null);
+    const energyAvg = energyVals.length > 0 ? energyVals.reduce((a, b) => a + b, 0) / energyVals.length : null;
+    const motivationAvg = motivationVals.length > 0 ? motivationVals.reduce((a, b) => a + b, 0) / motivationVals.length : null;
+
+    progressNarrative = await generateProgressNarrative({
+      weekNumber,
+      mode: assessment.mode,
+      currentMetrics: {
+        rhr: metricAvg(lastWeekMetrics, 'rhr'),
+        hrv: metricAvg(lastWeekMetrics, 'hrv'),
+        sleepHours: metricAvg(lastWeekMetrics, 'sleepHours'),
+        stressAvg: metricAvg(lastWeekMetrics, 'stressAvg'),
+      },
+      firstWeekMetrics: {
+        rhr: metricAvg(firstWeekMetrics, 'rhr'),
+        hrv: metricAvg(firstWeekMetrics, 'hrv'),
+        sleepHours: metricAvg(firstWeekMetrics, 'sleepHours'),
+        stressAvg: metricAvg(firstWeekMetrics, 'stressAvg'),
+      },
+      strengthGains,
+      modeHistory,
+      energyAvg,
+      motivationAvg,
+    });
+  } catch (err) {
+    console.error('Progress narrative generation failed (non-critical):', err);
+  }
+
+  // 8. Store check-in and plan
   const dateStr = new Date().toISOString().split('T')[0];
 
   await db.insert(schema.checkIns).values({
@@ -219,9 +291,10 @@ checkinRouter.post('/submit', async (c) => {
     planJson: plan as any,
     nutritionJson: plan.nutrition as any,
     focusAreas: focusAreas as any,
+    progressNarrative,
   });
 
-  // 8. Return results
+  // 9. Return results
   return c.json({
     week: weekNumber,
     mode: assessment.mode,
