@@ -1305,6 +1305,267 @@
     </div>
 
     <script>
+        // ─── API Configuration ───────────────────────────────────────
+        const API_BASE = 'http://localhost:3001';
+        const API_TOKEN = localStorage.getItem('crea_api_token') || '';
+
+        async function apiFetch(path, options = {}) {
+            try {
+                const res = await fetch(`${API_BASE}${path}`, {
+                    ...options,
+                    headers: {
+                        ...(options.headers || {}),
+                        ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+                        ...(API_TOKEN ? { 'Authorization': `Bearer ${API_TOKEN}` } : {}),
+                    },
+                });
+                if (!res.ok) return null;
+                return await res.json();
+            } catch {
+                return null; // Server not running — fall back to static data
+            }
+        }
+
+        // ─── Load live data on startup ───────────────────────────────
+        async function loadLiveData() {
+            const [health, metrics, plan, progress] = await Promise.all([
+                apiFetch('/health'),
+                apiFetch('/api/metrics/weekly'),
+                apiFetch('/api/plan/current'),
+                apiFetch('/api/progress/summary'),
+            ]);
+
+            // Update week subtitle
+            if (health?.week) {
+                document.querySelector('.week-subtitle').textContent = `Week ${health.week} of 12`;
+            }
+
+            // Populate metrics dashboard
+            if (metrics?.averages) {
+                const avg = metrics.averages;
+                if (avg.vigorousMinutes != null) {
+                    const el = document.getElementById('vig-min');
+                    el.textContent = Math.round(avg.vigorousMinutes);
+                    el.className = 'metric-value ' + (avg.vigorousMinutes >= 75 ? 'good' : 'warning');
+                }
+                if (avg.rhr != null) {
+                    document.getElementById('resting-hr').textContent = Math.round(avg.rhr);
+                }
+                if (avg.sleepHours != null) {
+                    const el = document.getElementById('sleep-avg');
+                    el.textContent = avg.sleepHours.toFixed(1);
+                    el.className = 'metric-value ' + (avg.sleepHours >= 7 ? 'good' : 'warning');
+                }
+                if (avg.steps != null) {
+                    const el = document.getElementById('steps-avg');
+                    el.textContent = Math.round(avg.steps).toLocaleString();
+                    el.className = 'metric-value ' + (avg.steps >= 8000 ? 'good' : '');
+                }
+                if (avg.bodyBattery != null) {
+                    const el = document.getElementById('body-battery');
+                    el.textContent = Math.round(avg.bodyBattery);
+                    el.className = 'metric-value ' + (avg.bodyBattery >= 40 ? 'good' : 'warning');
+                }
+            }
+
+            // Load AI-generated plan if available
+            if (plan?.plan?.days) {
+                renderAPIPlan(plan);
+            }
+
+            // Update progress stats in check-in tab
+            if (progress) {
+                updateProgressDisplay(progress);
+            }
+        }
+
+        // ─── Render AI-generated plan ────────────────────────────────
+        function renderAPIPlan(planData) {
+            const plan = planData.plan;
+            const mode = planData.mode;
+            const week = planData.week;
+
+            // Update mode toggle
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            const modeBtn = document.querySelector(`.mode-btn.${mode}`);
+            if (modeBtn) modeBtn.classList.add('active');
+
+            // Update phase banner
+            const banner = document.getElementById('phase-banner');
+            banner.className = mode === 'rampup' ? 'phase-banner rampup' : 'phase-banner';
+            banner.innerHTML = `
+                <div class="phase-banner-title">Week ${week}: ${mode.charAt(0).toUpperCase() + mode.slice(1)} Week</div>
+                <div class="phase-banner-text">${plan.trainer_message || ''}</div>
+                <div class="phase-tags">
+                    <span class="phase-tag ${mode === 'push' ? 'intensity' : 'recovery'}">${mode.toUpperCase()}</span>
+                    ${planData.auto_generated ? '<span class="phase-tag caution">Auto-Generated</span>' : ''}
+                </div>
+            `;
+
+            // Update weekly targets from cardio data
+            if (plan.weekly_cardio) {
+                const targets = document.getElementById('weekly-targets');
+                targets.innerHTML = `
+                    <div class="targets-title">THIS WEEK'S TARGETS</div>
+                    <div class="targets-grid">
+                        <div class="target-item"><span class="target-value">${plan.weekly_cardio.zone2_sessions}</span> Zone 2 sessions</div>
+                        <div class="target-item"><span class="target-value">${plan.weekly_cardio.zone2_duration}</span> duration</div>
+                        <div class="target-item"><span class="target-value">${plan.weekly_cardio.vigorous_target}</span> vigorous</div>
+                        <div class="target-item"><span class="target-value">${plan.days.length}</span> training days</div>
+                    </div>
+                `;
+            }
+
+            // Render days
+            const container = document.getElementById('workout-container');
+            let html = '';
+
+            plan.days.forEach((day, index) => {
+                const type = day.type || 'strength';
+                const badgeClass = type === 'vigorous' ? 'badge-vigorous' :
+                                   type === 'strength' ? 'badge-strength' :
+                                   type === 'rest' ? 'badge-rest' : 'badge-recovery';
+
+                html += `
+                    <div class="day-card">
+                        <div class="day-header ${type}" onclick="toggleDay(${index})">
+                            <div class="day-info">
+                                <div class="day-title">${day.day}</div>
+                                <div class="day-subtitle">${day.title}</div>
+                            </div>
+                            <div class="day-right">
+                                <span class="day-badge ${badgeClass}">${type}</span>
+                                <span class="day-duration" style="font-size:0.7rem;color:#8E8E93;">${day.estimated_duration || ''}</span>
+                                <span class="arrow" id="arrow-${index}">▼</span>
+                            </div>
+                        </div>
+                        <div class="day-content" id="day-content-${index}">
+                            ${renderAPIDayContent(day)}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            // Update nutrition tab if available
+            if (plan.nutrition) {
+                updateNutritionFromPlan(plan.nutrition);
+            }
+        }
+
+        function renderAPIDayContent(day) {
+            let html = '';
+
+            // Warmup
+            if (day.warmup && day.warmup.length > 0) {
+                html += `<div class="section-title">Warm-Up</div>`;
+                day.warmup.forEach(item => {
+                    html += `<div class="exercise-row"><span class="exercise-name">${item}</span></div>`;
+                });
+            }
+
+            // Exercises
+            if (day.exercises && day.exercises.length > 0) {
+                html += `<div class="section-title">Main Work</div>`;
+                day.exercises.forEach(ex => {
+                    const weightInfo = ex.suggested_weight ? ` <span style="color:#8E8E93;font-size:0.75rem;">(${ex.suggested_weight})</span>` : '';
+                    html += `
+                        <div class="exercise-row">
+                            <span class="exercise-name">${ex.name}${weightInfo}</span>
+                            <span class="exercise-sets">${ex.sets} × ${ex.reps}</span>
+                        </div>
+                    `;
+                    if (ex.notes) {
+                        html += `<div style="font-size:0.7rem;color:#8E8E93;padding:0 0 8px 0;">${ex.notes}</div>`;
+                    }
+                });
+            }
+
+            // Cooldown
+            if (day.cooldown && day.cooldown.length > 0) {
+                html += `<div class="section-title">Cool-Down</div>`;
+                day.cooldown.forEach(item => {
+                    html += `<div class="exercise-row"><span class="exercise-name">${item}</span></div>`;
+                });
+            }
+
+            return html || '<div class="note-box">Rest day — listen to your body.</div>';
+        }
+
+        function updateNutritionFromPlan(nutrition) {
+            const macroGrid = document.querySelector('#nutrition-tab .macro-grid');
+            if (macroGrid && nutrition) {
+                macroGrid.innerHTML = `
+                    <div class="macro-item">
+                        <div class="macro-value">${nutrition.protein_g}g</div>
+                        <div class="macro-label">Protein</div>
+                    </div>
+                    <div class="macro-item">
+                        <div class="macro-value">${nutrition.calories}</div>
+                        <div class="macro-label">Calories</div>
+                    </div>
+                    <div class="macro-item">
+                        <div class="macro-value">${nutrition.hydration || '80-100 oz'}</div>
+                        <div class="macro-label">Water</div>
+                    </div>
+                    <div class="macro-item">
+                        <div class="macro-value">${nutrition.focus || 'Anti-inflammatory'}</div>
+                        <div class="macro-label">Focus</div>
+                    </div>
+                `;
+            }
+        }
+
+        function updateProgressDisplay(progress) {
+            // Update check-in status
+            const statusEl = document.querySelector('.checkin-status');
+            if (statusEl && progress.check_ins_completed > 0) {
+                statusEl.className = 'checkin-status complete';
+                statusEl.innerHTML = `
+                    <span class="checkin-icon" style="color:#4CAF50;font-size:1.2rem;font-weight:700;">✓</span>
+                    <div class="checkin-text">
+                        <div class="checkin-text-main">${progress.check_ins_completed} check-in${progress.check_ins_completed > 1 ? 's' : ''} completed</div>
+                        <div class="checkin-text-sub">Week ${progress.current_week} of ${progress.total_weeks}</div>
+                    </div>
+                `;
+            }
+        }
+
+        // ─── Check-in submission ─────────────────────────────────────
+        async function submitCheckin(data) {
+            const result = await apiFetch('/api/checkin/submit', {
+                method: 'POST',
+                body: JSON.stringify(data),
+            });
+            if (result) {
+                alert(`Check-in complete! Mode: ${result.mode}\n\n${result.trainer_message || result.reasoning}`);
+                loadLiveData(); // Refresh all data
+            } else {
+                alert('Check-in failed — is the server running?');
+            }
+            return result;
+        }
+
+        // ─── Photo upload ────────────────────────────────────────────
+        async function uploadProgressPhoto(file) {
+            const formData = new FormData();
+            formData.append('photo', file);
+            const result = await apiFetch('/api/checkin/photo', {
+                method: 'POST',
+                body: formData,
+            });
+            return result?.photo_key || null;
+        }
+
+        // ─── Workout completion logging ──────────────────────────────
+        async function logWorkoutCompletion(exercises) {
+            return await apiFetch('/api/workout/complete', {
+                method: 'POST',
+                body: JSON.stringify({ exercises }),
+            });
+        }
+
         // Program data — identical to original
         const programData = {
             rampup: {
@@ -1975,15 +2236,23 @@
             return html;
         }
 
-        function photoUploaded(input, iconId) {
+        async function photoUploaded(input, iconId) {
             if (input.files && input.files[0]) {
                 const icon = document.getElementById(iconId);
                 icon.classList.add('uploaded');
                 icon.querySelector('.photo-check').style.display = 'block';
+
+                // Upload to API if available
+                const photoKey = await uploadProgressPhoto(input.files[0]);
+                if (photoKey) {
+                    input.dataset.photoKey = photoKey;
+                }
             }
         }
 
+        // Initial render with static data, then overlay live data
         renderWorkouts();
+        loadLiveData();
     </script>
 </body>
 </html>
