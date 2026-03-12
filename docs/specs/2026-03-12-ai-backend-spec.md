@@ -1,6 +1,6 @@
-# Vivi AI Backend — Design Spec
+# Crea AI Backend — Design Spec
 
-> The backend service that powers Vivi's intelligent training: analyzing progress photos, ingesting Garmin health metrics, and generating personalized weekly workout and nutrition plans.
+> The backend service that powers Crea's intelligent training: analyzing progress photos, ingesting Garmin health metrics, and generating personalized weekly workout and nutrition plans.
 
 **Status:** Draft
 **Date:** 2026-03-12
@@ -10,7 +10,7 @@
 
 ## Problem
 
-The current Vivi prototype is a static HTML app. Workouts are hardcoded, weeks don't advance, and there's no connection between the user's real-world data (body composition, recovery metrics, activity levels) and the training plan. For Vivi to actually function as a personal trainer, it needs a backend that:
+The current Crea prototype is a static HTML app. Workouts are hardcoded, weeks don't advance, and there's no connection between the user's real-world data (body composition, recovery metrics, activity levels) and the training plan. For Crea to actually function as a personal trainer, it needs a backend that:
 
 1. Reads health metrics from Garmin
 2. Analyzes progress photos against the goal physique
@@ -24,7 +24,7 @@ The current Vivi prototype is a static HTML app. Workouts are hardcoded, weeks d
 
 ```
 ┌─────────────┐     ┌──────────────────┐     ┌─────────────┐
-│  Vivi App    │────▶│  Vivi API Server  │────▶│  Claude API  │
+│  Crea App    │────▶│  Crea API Server  │────▶│  Claude API  │
 │  (Frontend)  │◀────│                  │◀────│  (Vision +   │
 └─────────────┘     │  - Photo Upload  │     │   Text)      │
                     │  - Photo Storage │     └─────────────┘
@@ -85,7 +85,7 @@ The current Vivi prototype is a static HTML app. Workouts are hardcoded, weeks d
 
 **How it works:**
 1. User takes a photo via the Check-In tab (camera opens, photo is captured)
-2. Photo is uploaded to Vivi API → stored in private cloud storage (S3/R2), never served back to the frontend
+2. Photo is uploaded to Crea API → stored in private cloud storage (S3/R2), never served back to the frontend
 3. API sends the photo to Claude Vision along with:
    - The goal physique reference images (stored server-side)
    - The user's previous check-in photo (if available)
