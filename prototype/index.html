@@ -1306,7 +1306,8 @@
 
     <script>
         // ─── API Configuration ───────────────────────────────────────
-        const API_BASE = 'http://localhost:3001';
+        // Auto-detect host — works from phone over WiFi (same origin when served by Hono)
+        const API_BASE = window.location.origin;
         const API_TOKEN = localStorage.getItem('crea_api_token') || '';
 
         async function apiFetch(path, options = {}) {
