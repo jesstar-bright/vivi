@@ -8,6 +8,8 @@ import { serveStatic } from '@hono/node-server/serve-static';
 import { authMiddleware } from './middleware/auth.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { computeCurrentWeek } from './utils.js';
+import { db } from './db/index.js';
+import * as schema from './db/schema.js';
 import { checkinRouter } from './routes/checkin.js';
 import { metricsRouter } from './routes/metrics.js';
 import { plansRouter } from './routes/plans.js';
@@ -62,5 +64,37 @@ app.get('/*', (c) => {
 
 const port = parseInt(process.env.PORT || '3001');
 
-console.log(`Crea API server starting on port ${port}`);
-serve({ fetch: app.fetch, port, hostname: '0.0.0.0' });
+// Run migrations + seed on startup, then start server
+async function start() {
+  try {
+    const { runMigrations } = await import('./db/migrate.js');
+    await runMigrations();
+  } catch (err) {
+    console.error('Migration warning:', (err as Error).message);
+  }
+
+  // Seed user profile if DB is empty
+  try {
+    const [user] = await db.select().from(schema.userProfiles).limit(1);
+    if (!user) {
+      await db.insert(schema.userProfiles).values({
+        name: 'Jessica',
+        startDate: '2026-03-09',
+        height: 67,
+        conditions: 'PCOS, Mirena IUD',
+        goalWeight: 140,
+        currentWeight: 152,
+        postOpDate: '2026-03-09',
+        postOpCleared: false,
+      });
+      console.log('Seeded initial user profile.');
+    }
+  } catch (err) {
+    console.error('Seed warning:', (err as Error).message);
+  }
+
+  console.log(`Crea API server starting on port ${port}`);
+  serve({ fetch: app.fetch, port, hostname: '0.0.0.0' });
+}
+
+start();
