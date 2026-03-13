@@ -1,4 +1,6 @@
 FROM node:22-slim AS client-build
+ARG VITE_API_TOKEN
+ENV VITE_API_TOKEN=$VITE_API_TOKEN
 WORKDIR /app/client
 COPY client/package.json client/package-lock.json ./
 RUN npm install
