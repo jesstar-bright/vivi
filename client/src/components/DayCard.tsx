@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, AlertTriangle, Info, Zap } from "lucide-react";
+import { ChevronDown, AlertTriangle, Info, Zap, CheckCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { DayData } from "@/data/workoutData";
 
@@ -7,6 +7,7 @@ interface DayCardProps {
   data: DayData;
   isToday?: boolean;
   onDone?: () => void;
+  completedDates: Set<string>;
 }
 
 const borderClass: Record<string, string> = {
@@ -47,9 +48,9 @@ const ExerciseList = ({ items }: { items: string[] }) => (
 
       return (
         <div key={i} className="flex items-baseline justify-between py-1.5 px-3 rounded-lg hover:bg-secondary/50 transition-colors">
-          <span className="text-sm font-medium text-foreground">{name}</span>
+          <span className="text-base font-medium text-foreground">{name}</span>
           {detail && (
-            <span className="text-xs font-semibold text-muted-foreground ml-3 shrink-0">{detail}</span>
+            <span className="text-sm font-semibold text-muted-foreground ml-3 shrink-0">{detail}</span>
           )}
         </div>
       );
@@ -57,26 +58,35 @@ const ExerciseList = ({ items }: { items: string[] }) => (
   </div>
 );
 
-const DayCard = ({ data, isToday, onDone }: DayCardProps) => {
-  const [open, setOpen] = useState(isToday ?? false);
+const DayCard = ({ data, isToday, onDone, completedDates }: DayCardProps) => {
+  const isCompleted = completedDates.has(data.date);
+  const [open, setOpen] = useState(isCompleted ? false : (isToday ?? false));
 
   return (
-    <div className={`card-elevated ${borderClass[data.type]} overflow-hidden ${isToday ? 'ring-2 ring-primary/20' : ''}`}>
+    <div className={`card-elevated ${borderClass[data.type]} overflow-hidden ${isToday && !isCompleted ? 'ring-2 ring-primary/20' : ''} ${isCompleted ? 'opacity-80' : ''}`}>
       <button
         onClick={() => setOpen(!open)}
         className="w-full text-left"
       >
         <div className="flex items-start justify-between">
-          <div className="space-y-1.5">
-            <span className={badgeClass[data.type]}>{typeLabel[data.type]}</span>
-            <div className="flex items-baseline gap-2">
-              <span className="text-lg font-bold text-foreground">{data.day}</span>
-              <span className="text-sm text-muted-foreground">{data.date}</span>
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2">
+              <span className={badgeClass[data.type]}>{typeLabel[data.type]}</span>
               {isToday && (
                 <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-md">Today</span>
               )}
+              {isCompleted && (
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md flex items-center gap-1">
+                  <CheckCircle size={10} /> Done
+                </span>
+              )}
             </div>
-            <p className="text-sm text-muted-foreground font-medium">{data.subtitle}</p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-lg font-bold text-foreground">{data.day}</span>
+              <span className="text-sm text-muted-foreground">{data.date}</span>
+              <span className="text-sm text-muted-foreground">&middot;</span>
+              <span className="text-sm text-muted-foreground font-medium">{data.subtitle}</span>
+            </div>
           </div>
           <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }} className="mt-2">
             <ChevronDown size={20} className="text-muted-foreground" />
@@ -175,7 +185,7 @@ const DayCard = ({ data, isToday, onDone }: DayCardProps) => {
                 </>
               )}
 
-              {isToday && onDone && (
+              {isToday && onDone && !isCompleted && (
                 <button onClick={(e) => { e.stopPropagation(); onDone(); }} className="btn-primary w-full text-center mt-4">
                   Complete Workout ✓
                 </button>

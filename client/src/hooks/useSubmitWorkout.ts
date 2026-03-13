@@ -16,6 +16,7 @@ export function useSubmitWorkout() {
       api.post<{ success: boolean; logged: number }>("/api/workout/complete", data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["progress"] });
+      qc.invalidateQueries({ queryKey: ["workout", "completed-days"] });
     },
   });
 }

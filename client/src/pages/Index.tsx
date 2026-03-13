@@ -7,6 +7,7 @@ import ProfileTab from "@/components/ProfileTab";
 import CheckInModal from "@/components/CheckInModal";
 import PostWorkoutModal from "@/components/PostWorkoutModal";
 import { useCurrentPlan } from "@/hooks/useCurrentPlan";
+import { useCompletedDays } from "@/hooks/useCompletedDays";
 import { transformPlanDays, transformNutrition } from "@/lib/transformPlan";
 
 type Tab = "workouts" | "lifestyle" | "profile";
@@ -16,6 +17,7 @@ const Index = () => {
   const [checkInOpen, setCheckInOpen] = useState(false);
   const [postWorkoutOpen, setPostWorkoutOpen] = useState(false);
   const { data: planResponse, isLoading, error } = useCurrentPlan();
+  const { data: completedDaysData } = useCompletedDays();
 
   const days = planResponse?.plan
     ? transformPlanDays(planResponse.plan)
@@ -26,6 +28,12 @@ const Index = () => {
   const weekNumber = planResponse?.week ?? 1;
   const mode = planResponse?.mode ?? "";
   const needsCheckin = planResponse?.needs_checkin ?? false;
+  const completedDates = new Set(
+    (completedDaysData?.dates || []).map((isoDate) => {
+      const d = new Date(isoDate + "T00:00:00");
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    })
+  );
 
   // Find today's exercises for post-workout modal
   const todayName = new Date().toLocaleDateString("en-US", { weekday: "long" });
@@ -54,6 +62,7 @@ const Index = () => {
             needsCheckin={needsCheckin}
             onCheckin={handleCheckinNeeded}
             onDone={() => setPostWorkoutOpen(true)}
+            completedDates={completedDates}
           />
         )}
         {tab === "lifestyle" && (

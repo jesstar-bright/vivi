@@ -11,6 +11,7 @@ interface WorkoutsTabProps {
   needsCheckin: boolean;
   onCheckin: () => void;
   onDone: () => void;
+  completedDates: Set<string>;
 }
 
 const modeLabel: Record<string, string> = {
@@ -28,6 +29,7 @@ const WorkoutsTab = ({
   needsCheckin,
   onCheckin,
   onDone,
+  completedDates,
 }: WorkoutsTabProps) => {
   if (isLoading) {
     return (
@@ -104,7 +106,7 @@ const WorkoutsTab = ({
         </div>
       </div>
       {days.map((day, i) => (
-        <DayCard key={day.day} data={day} isToday={i === 0} onDone={onDone} />
+        <DayCard key={day.day} data={day} isToday={i === 0} onDone={onDone} completedDates={completedDates} />
       ))}
     </div>
   );

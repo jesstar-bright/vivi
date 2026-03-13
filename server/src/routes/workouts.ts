@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, sql } from 'drizzle-orm';
 import { db, schema } from '../db/index.js';
 import { computeCurrentWeek } from '../utils.js';
 
@@ -106,6 +106,17 @@ workoutsRouter.get('/history/:exercise', async (c) => {
     trend,
     total_sessions: logs.length,
   });
+});
+
+// GET /api/workout/completed-days — return dates that have exercise logs
+workoutsRouter.get('/completed-days', async (c) => {
+  const rows = await db
+    .selectDistinct({ date: schema.exerciseLogs.date })
+    .from(schema.exerciseLogs)
+    .orderBy(desc(schema.exerciseLogs.date));
+
+  const dates = rows.map((r) => r.date);
+  return c.json({ dates });
 });
 
 export { workoutsRouter };
