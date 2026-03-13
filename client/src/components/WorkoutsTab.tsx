@@ -105,9 +105,16 @@ const WorkoutsTab = ({
           </h1>
         </div>
       </div>
-      {days.map((day, i) => (
-        <DayCard key={day.day} data={day} isToday={i === 0} onDone={onDone} completedDates={completedDates} />
-      ))}
+      {(() => {
+        const todayName = new Date().toLocaleDateString("en-US", { weekday: "long" });
+        const todayIdx = days.findIndex((d) => d.day === todayName);
+        const sorted = todayIdx > 0
+          ? [...days.slice(todayIdx), ...days.slice(0, todayIdx)]
+          : days;
+        return sorted.map((day) => (
+          <DayCard key={day.day} data={day} isToday={day.day === todayName} onDone={onDone} completedDates={completedDates} />
+        ));
+      })()}
     </div>
   );
 };
