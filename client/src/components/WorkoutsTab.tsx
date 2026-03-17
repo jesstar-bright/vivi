@@ -12,6 +12,8 @@ interface WorkoutsTabProps {
   onCheckin: () => void;
   onDone: () => void;
   completedDates: Set<string>;
+  generating?: boolean;
+  fallbackWeek?: number;
 }
 
 const modeLabel: Record<string, string> = {
@@ -30,6 +32,8 @@ const WorkoutsTab = ({
   onCheckin,
   onDone,
   completedDates,
+  generating,
+  fallbackWeek,
 }: WorkoutsTabProps) => {
   if (isLoading) {
     return (
@@ -105,6 +109,14 @@ const WorkoutsTab = ({
           </h1>
         </div>
       </div>
+      {generating && (
+        <div className="card-elevated bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 px-4 py-3 rounded-xl flex items-center gap-3">
+          <div className="w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+          <p className="text-sm text-amber-800 dark:text-amber-200 font-medium">
+            Generating your Week {weekNumber} plan... Showing Week {fallbackWeek} in the meantime.
+          </p>
+        </div>
+      )}
       {(() => {
         const todayName = new Date().toLocaleDateString("en-US", { weekday: "long" });
         const todayIdx = days.findIndex((d) => d.day === todayName);

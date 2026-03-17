@@ -6,6 +6,8 @@ export interface APIPlan {
   mode?: string;
   needs_checkin?: boolean;
   auto_generated?: boolean;
+  generating?: boolean;
+  fallback_week?: number;
 }
 
 interface APIWeeklyPlan {

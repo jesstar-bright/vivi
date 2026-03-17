@@ -8,9 +8,41 @@ import CheckInModal from "@/components/CheckInModal";
 import PostWorkoutModal from "@/components/PostWorkoutModal";
 import { useCurrentPlan } from "@/hooks/useCurrentPlan";
 import { useCompletedDays } from "@/hooks/useCompletedDays";
+import { useWeeklyMetrics } from "@/hooks/useWeeklyMetrics";
+import type { MetricDay, MetricsAverages } from "@/hooks/useWeeklyMetrics";
 import { transformPlanDays, transformNutrition } from "@/lib/transformPlan";
 
 type Tab = "workouts" | "lifestyle" | "profile";
+
+function determineTrend(
+  days: MetricDay[]
+): "improving" | "declining" | "stable" {
+  const withSleep = days.filter((d) => d.sleepHours != null);
+  if (withSleep.length < 6) return "stable";
+
+  const first3 = withSleep.slice(0, 3);
+  const last3 = withSleep.slice(-3);
+
+  const avgFirst =
+    first3.reduce((s, d) => s + (d.sleepHours ?? 0), 0) / first3.length;
+  const avgLast =
+    last3.reduce((s, d) => s + (d.sleepHours ?? 0), 0) / last3.length;
+
+  const diff = avgLast - avgFirst;
+  if (diff >= 0.5) return "improving";
+  if (diff <= -0.5) return "declining";
+  return "stable";
+}
+
+function generateSleepTip(averages: MetricsAverages): string {
+  if (averages.sleep_hours >= 8) {
+    return "Your sleep is solid this week. Keep the routine.";
+  }
+  if (averages.sleep_hours >= 7) {
+    return "Good sleep base. Try dimming lights 30 min earlier.";
+  }
+  return "Sleep is low — prioritize your wind-down routine tonight.";
+}
 
 const Index = () => {
   const [tab, setTab] = useState<Tab>("workouts");
@@ -18,6 +50,15 @@ const Index = () => {
   const [postWorkoutOpen, setPostWorkoutOpen] = useState(false);
   const { data: planResponse, isLoading, error } = useCurrentPlan();
   const { data: completedDaysData } = useCompletedDays();
+  const { data: metricsData } = useWeeklyMetrics();
+
+  const sleepInsight = metricsData
+    ? {
+        avgHours: Math.round(metricsData.averages.sleep_hours * 10) / 10,
+        trend: determineTrend(metricsData.days),
+        tip: generateSleepTip(metricsData.averages),
+      }
+    : undefined;
 
   const days = planResponse?.plan
     ? transformPlanDays(planResponse.plan)
@@ -63,10 +104,12 @@ const Index = () => {
             onCheckin={handleCheckinNeeded}
             onDone={() => setPostWorkoutOpen(true)}
             completedDates={completedDates}
+            generating={planResponse?.generating}
+            fallbackWeek={planResponse?.fallback_week}
           />
         )}
         {tab === "lifestyle" && (
-          <LifestyleTab nutrition={nutrition} isLoading={isLoading} />
+          <LifestyleTab nutrition={nutrition} isLoading={isLoading} sleepInsight={sleepInsight} />
         )}
         {tab === "profile" && <ProfileTab />}
       </div>

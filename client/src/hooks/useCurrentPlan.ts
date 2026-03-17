@@ -7,5 +7,7 @@ export function useCurrentPlan() {
     queryKey: ["plan", "current"],
     queryFn: () => api.get<APIPlan>("/api/plan/current"),
     staleTime: 5 * 60 * 1000,
+    refetchInterval: (query) =>
+      query.state.data?.generating ? 15000 : false,
   });
 }

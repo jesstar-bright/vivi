@@ -8,6 +8,13 @@
       "when": 1773361425490,
       "tag": "0000_wide_gargoyle",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773723598759,
+      "tag": "0001_solid_micromacro",
+      "breakpoints": true
     }
   ]
 }

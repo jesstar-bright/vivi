@@ -51,6 +51,15 @@ export const workoutPlans = pgTable('workout_plans', {
   generatedAt: timestamp('generated_at').defaultNow(),
 });
 
+export const mealPlans = pgTable('meal_plans', {
+  id: serial('id').primaryKey(),
+  date: date('date').notNull().unique(),
+  planJson: jsonb('plan_json').notNull(),
+  calorieTarget: integer('calorie_target'),
+  proteinTarget: integer('protein_target'),
+  generatedAt: timestamp('generated_at').defaultNow(),
+});
+
 export const exerciseLogs = pgTable('exercise_logs', {
   id: serial('id').primaryKey(),
   date: date('date').notNull(),

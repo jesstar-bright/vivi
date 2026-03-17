@@ -55,8 +55,20 @@ plansRouter.get('/current', async (c) => {
         modeReasoning: reasoning,
       });
     } catch (err) {
-      // If AI generation fails (e.g. no API key), use hardcoded Week 1 plan
       console.error('Plan generation failed, using fallback:', (err as Error).message);
+
+      // If a previous plan exists, return it as a temporary fallback (don't persist)
+      if (latestPlan) {
+        return c.json({
+          week: weekNumber,
+          plan: latestPlan.planJson,
+          mode: latestPlan.mode,
+          generating: true,
+          fallback_week: latestPlan.weekNumber,
+        });
+      }
+
+      // No previous plan at all — use hardcoded Week 1 plan
       autoPlan = getWeek1FallbackPlan(weekNumber);
     }
 
@@ -72,6 +84,19 @@ plansRouter.get('/current', async (c) => {
   }
 
   return c.json({ week: weekNumber, needs_checkin: true });
+});
+
+// GET /api/plan/status/:week — check if a plan exists for a given week (for client polling)
+plansRouter.get('/status/:week', async (c) => {
+  const week = parseInt(c.req.param('week'));
+
+  const [plan] = await db
+    .select({ weekNumber: schema.workoutPlans.weekNumber, mode: schema.workoutPlans.mode })
+    .from(schema.workoutPlans)
+    .where(eq(schema.workoutPlans.weekNumber, week))
+    .limit(1);
+
+  return c.json({ week, exists: !!plan, mode: plan?.mode ?? null });
 });
 
 // GET /api/plan/:week — get a specific week's plan

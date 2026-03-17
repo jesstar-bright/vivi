@@ -1,42 +1,54 @@
-import Anthropic from '@anthropic-ai/sdk';
+import { z } from 'zod';
 import { loadTrainerInstructions } from '../utils.js';
+import { generateWithSchema } from './ai-generate.js';
 
-export interface WeeklyPlan {
-  week_number: number;
-  mode: string;
-  date_range: { start: string; end: string };
-  days: Array<{
-    day: string;
-    title: string;
-    type: string;
-    warmup: string[];
-    exercises: Array<{
-      name: string;
-      sets: number;
-      reps: string;
-      suggested_weight: string;
-      suggested_weight_reasoning: string;
-      rest: string;
-      notes: string;
-    }>;
-    cooldown: string[];
-    estimated_duration: string;
-  }>;
-  weekly_cardio: {
-    zone2_sessions: number;
-    zone2_duration: string;
-    vigorous_target: string;
-    notes: string;
-  };
-  nutrition: {
-    calories: number;
-    protein_g: number;
-    carb_timing: string;
-    hydration: string;
-    focus: string;
-  };
-  trainer_message: string;
-}
+// --- Zod schema: single source of truth for the workout plan shape ---
+
+const ExerciseSchema = z.object({
+  name: z.string(),
+  sets: z.number(),
+  reps: z.string(),
+  suggested_weight: z.string(),
+  suggested_weight_reasoning: z.string(),
+  rest: z.string(),
+  notes: z.string(),
+});
+
+const PlanDaySchema = z.object({
+  day: z.string(), // "Monday", "Tuesday", etc.
+  title: z.string(),
+  type: z.enum(['strength', 'vigorous', 'recovery', 'rest']),
+  warmup: z.array(z.string()),
+  exercises: z.array(ExerciseSchema),
+  cooldown: z.array(z.string()),
+  estimated_duration: z.string(),
+});
+
+const WeeklyPlanSchema = z.object({
+  week_number: z.number(),
+  mode: z.enum(['push', 'maintain', 'rampup']),
+  date_range: z.object({ start: z.string(), end: z.string() }),
+  days: z.array(PlanDaySchema).min(7).max(7),
+  weekly_cardio: z.object({
+    zone2_sessions: z.number(),
+    zone2_duration: z.string(),
+    vigorous_target: z.string(),
+    notes: z.string(),
+  }),
+  nutrition: z.object({
+    calories: z.number(),
+    protein_g: z.number(),
+    carb_timing: z.string(),
+    hydration: z.string(),
+    focus: z.string(),
+  }),
+  trainer_message: z.string(),
+});
+
+export type WeeklyPlan = z.infer<typeof WeeklyPlanSchema>;
+export { WeeklyPlanSchema };
+
+// --- Plan generation ---
 
 export async function generateWeeklyPlan(params: {
   mode: 'push' | 'maintain' | 'rampup';
@@ -47,7 +59,6 @@ export async function generateWeeklyPlan(params: {
   postOpCleared: boolean;
   modeReasoning: string;
 }): Promise<WeeklyPlan> {
-  const client = new Anthropic();
   const trainerInstructions = loadTrainerInstructions();
 
   const startDate = new Date('2026-03-09');
@@ -86,25 +97,54 @@ IMPORTANT:
 - Include nutrition targets (1750 cal, 135g protein, anti-inflammatory focus for PCOS)
 - End with a trainer_message — encouraging, direct, following the persona guidelines
 
-Return ONLY valid JSON matching the WeeklyPlan structure. No markdown wrapping.`;
+Return ONLY valid JSON matching this EXACT structure (no markdown, no extra fields):
+{
+  "week_number": <number>,
+  "mode": "<push|maintain|rampup>",
+  "date_range": { "start": "YYYY-MM-DD", "end": "YYYY-MM-DD" },
+  "days": [
+    {
+      "day": "<day name e.g. Monday>",
+      "title": "<session title e.g. Upper Body>",
+      "type": "<strength|vigorous|recovery|rest>",
+      "warmup": ["<exercise description string>", ...],
+      "exercises": [
+        {
+          "name": "<exercise name>",
+          "sets": <number>,
+          "reps": "<string e.g. 12 or 10 each>",
+          "suggested_weight": "<string e.g. 70 lbs or bodyweight>",
+          "suggested_weight_reasoning": "<string>",
+          "rest": "<string e.g. 60s>",
+          "notes": "<string>"
+        }
+      ],
+      "cooldown": ["<cooldown activity string>", ...],
+      "estimated_duration": "<string e.g. 55 min>"
+    }
+  ],
+  "weekly_cardio": {
+    "zone2_sessions": <number>,
+    "zone2_duration": "<string>",
+    "vigorous_target": "<string>",
+    "notes": "<string>"
+  },
+  "nutrition": {
+    "calories": <number>,
+    "protein_g": <number>,
+    "carb_timing": "<string>",
+    "hydration": "<string>",
+    "focus": "<string>"
+  },
+  "trainer_message": "<string>"
+}
 
-  const response = await client.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 6000,
+There must be EXACTLY 7 days. Each day's "warmup", "exercises", and "cooldown" MUST be FLAT arrays — no nested objects or supersets. The "day" field MUST be a day name string like "Monday", NOT a number.`;
+
+  return generateWithSchema({
     system: trainerInstructions,
-    messages: [{ role: 'user', content: prompt }],
+    prompt,
+    schema: WeeklyPlanSchema,
+    label: 'WeeklyPlan',
   });
-
-  const text = response.content[0];
-  if (text.type !== 'text') {
-    throw new Error('Unexpected response type from Claude');
-  }
-
-  // Strip markdown code fences if present
-  let jsonStr = text.text.trim();
-  if (jsonStr.startsWith('```')) {
-    jsonStr = jsonStr.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
-  }
-
-  return JSON.parse(jsonStr) as WeeklyPlan;
 }
