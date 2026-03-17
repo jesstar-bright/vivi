@@ -27,6 +27,105 @@ const defaultTimeline = [
 const defaultSleepNote =
   "Poor sleep = high cortisol = fat storage. You can't out-train it.";
 
+const CUP_OZ = 32;
+const DAILY_TARGET_OZ = 96; // 3 cups of 32oz
+const CUPS_TARGET = Math.ceil(DAILY_TARGET_OZ / CUP_OZ);
+
+function getTodayKey() {
+  return `crea-water-${new Date().toISOString().split("T")[0]}`;
+}
+
+const TumblerSvg = ({ filled }: { filled: boolean }) => (
+  <svg width="44" height="56" viewBox="0 0 44 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Lid */}
+    <rect x="8" y="2" width="28" height="8" rx="4" fill={filled ? "#A3D977" : "#D4D4D4"} />
+    {/* Straw */}
+    <rect x="26" y="0" width="3" height="14" rx="1.5" fill={filled ? "#A3D977" : "#C0C0C0"} transform="rotate(-12 26 0)" />
+    {/* Body */}
+    <path d="M6 10 L8 50 C8 53 12 56 22 56 C32 56 36 53 36 50 L38 10 Z" fill={filled ? "#E87FAD" : "#E0E0E0"} />
+    {/* Handle */}
+    <path d="M38 18 C46 18 46 36 38 36" stroke={filled ? "#F4925E" : "#C8C8C8"} strokeWidth="4" strokeLinecap="round" fill="none" />
+    {/* Water level shine */}
+    {filled && <ellipse cx="18" cy="32" rx="6" ry="12" fill="white" opacity="0.15" />}
+  </svg>
+);
+
+const HydrationTracker = () => {
+  const [count, setCount] = useState(() => {
+    try {
+      return parseInt(localStorage.getItem(getTodayKey()) || "0", 10);
+    } catch {
+      return 0;
+    }
+  });
+  const [animating, setAnimating] = useState(false);
+
+  const addCup = () => {
+    const next = count + 1;
+    setCount(next);
+    localStorage.setItem(getTodayKey(), String(next));
+    setAnimating(true);
+    setTimeout(() => setAnimating(false), 300);
+  };
+
+  const removeCup = () => {
+    if (count <= 0) return;
+    const next = count - 1;
+    setCount(next);
+    localStorage.setItem(getTodayKey(), String(next));
+  };
+
+  const totalOz = count * CUP_OZ;
+  const met = count >= CUPS_TARGET;
+
+  return (
+    <div className="card-elevated-sm bg-secondary/50">
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+            <Droplets size={16} className="text-primary" />
+          </div>
+          <span className="text-[11px] font-medium text-muted-foreground">
+            Hydration
+          </span>
+        </div>
+        <span className={`text-xs font-bold ${met ? "text-green-600" : "text-foreground"}`}>
+          {totalOz} oz{met ? " ✓" : ` / ${DAILY_TARGET_OZ} oz`}
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
+        {Array.from({ length: CUPS_TARGET }, (_, i) => (
+          <button
+            key={i}
+            onClick={i < count ? removeCup : addCup}
+            className={`transition-transform ${
+              animating && i === count - 1 ? "scale-110" : ""
+            }`}
+            aria-label={i < count ? "Remove cup" : "Add cup"}
+          >
+            <TumblerSvg filled={i < count} />
+          </button>
+        ))}
+        {count > CUPS_TARGET && (
+          <button onClick={addCup} className="transition-transform">
+            <TumblerSvg filled />
+          </button>
+        )}
+        <button
+          onClick={addCup}
+          className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 text-primary font-bold text-lg ml-auto"
+          aria-label="Add another cup"
+        >
+          +
+        </button>
+      </div>
+      <p className="text-[10px] text-muted-foreground mt-1.5">
+        Tap a cup to fill it ({CUP_OZ} oz each)
+      </p>
+    </div>
+  );
+};
+
 const ExpandableNutritionCard = ({
   icon: Icon,
   label,
@@ -91,14 +190,10 @@ const NutritionGrid = ({ data }: { data: NutritionData }) => (
       ))}
     </div>
 
-    {/* Hydration & Focus — expandable full-width cards */}
+    {/* Hydration tracker + Focus */}
     <div className="mt-2.5 space-y-2">
-      {[
-        { icon: Droplets, label: "Hydration", value: data.water },
-        { icon: Leaf, label: "Focus", value: data.focus },
-      ].map(({ icon: Icon, label, value }) => (
-        <ExpandableNutritionCard key={label} icon={Icon} label={label} value={value} />
-      ))}
+      <HydrationTracker />
+      <ExpandableNutritionCard icon={Leaf} label="Focus" value={data.focus} />
     </div>
 
     <p className="text-xs text-muted-foreground mt-3 font-medium italic">
