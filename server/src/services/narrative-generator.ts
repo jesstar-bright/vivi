@@ -42,7 +42,7 @@ export async function generateProgressNarrative(input: NarrativeInput): Promise<
     ? input.modeHistory.join(', ')
     : 'No prior mode history.';
 
-  const prompt = `Write a 3-paragraph progress narrative for a client currently on Week ${input.weekNumber} of their fitness program.
+  const prompt = `Write a short progress note for a client currently on Week ${input.weekNumber} of their fitness program.
 
 CURRENT PROGRAM MODE: ${input.mode}
 
@@ -68,20 +68,23 @@ TRAINING HISTORY:
 - Average motivation (1-10): ${input.motivationAvg?.toFixed(1) ?? 'N/A'}
 
 NARRATIVE RULES:
+- Maximum 5-6 sentences total — NOT paragraphs, sentences
+- Conversational and warm, like a text from your trainer
 - Write in second person ("you", "your")
-- Exactly 3 paragraphs
-- Use a warm but direct trainer voice
-- Weave in specific numbers from the data above
-- Paragraph 1: what you've accomplished physically so far
-- Paragraph 2: how your body has adapted (metrics changes)
-- Paragraph 3: forward-looking insight — where you're headed next
+- Lead with one specific win or insight pulled from the data above
+- Then one forward-looking sentence about what's next
+- End with a WEEKLY INTENTION: 1-2 sentences giving her something specific to focus on or remember this week. This should feel like a mantra or mindset anchor — something she can come back to when motivation dips. Examples: "This week, remember: every rep you do in ramp-up is teaching your body to trust the process again." or "Your intention this week: prioritize protein at every meal — it's the one thing that protects your muscle while the fat comes off."
+- Weave in 1-2 specific numbers naturally
 - Plain text only — no markdown, no headers, no bullet points
+
+Example of the right length and tone:
+"Two weeks in and you're already building the foundation — your sleep is averaging 9.4 hours and your body battery is recovering well between sessions. The ramp-up phase is doing exactly what it should: getting your muscles used to load without pushing recovery. Next week we start adding real weight."
 
 Write the narrative now.`;
 
   const response = await client.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 1000,
+    max_tokens: 300,
     system: trainerInstructions,
     messages: [{ role: 'user', content: prompt }],
   });
