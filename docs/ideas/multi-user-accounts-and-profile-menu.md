@@ -46,8 +46,7 @@ Based on the UI mockup, tapping the avatar opens a menu with:
 - Beta testers can use it first with manual profile setup before full self-serve onboarding
 
 ## UI Reference
-![Profile menu mockup](../../Desktop/Screenshot%202026-03-18%20at%202.00.01%20PM.png)
-Profile avatar (top-right) with dropdown: Settings, Recipes, Pantry, Photo Album, Integrations, Account
+Profile avatar (top-right circle) shows user's first initial (e.g. "J" for Jessica). Tapping it opens a **dropdown menu** overlaying the current screen with links to: Settings, Recipes, Pantry, Photo Album, Integrations, Account. Tapping a link navigates to that sub-page. Tapping outside the dropdown closes it.
 
 ## Notes
 - Clerk or Supabase Auth are the fastest paths to OAuth
