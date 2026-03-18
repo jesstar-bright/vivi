@@ -1,17 +1,30 @@
 # LLC Setup & Optimization
 
 ## Current Status (as of 2026-03-18)
-- **Existing LLC:** Fay & Fauna LLC (Utah)
-- **Registered Agent:** Northwest Registered Agent LLC ($125/year — 120 DAYS OVERDUE)
-- **Invoice:** #29Z9HC9G, $125, due 2026-02-15 — UNPAID
-- **Address on file:** 970 W 880 N, Orem, UT 84057
-- **Recommendation:** Form new "Crea Health LLC" in Utah, dissolve Fay & Fauna
 
-## Outstanding Questions
-- [ ] Does Jessica still live in Utah? (Can self-register as agent, save $125/year)
-- [ ] Does she have the EIN for Fay & Fauna?
-- [ ] Was Fay & Fauna ever used for revenue or tax filing?
-- [ ] Confirm desired name: "Crea Health LLC"?
+### Bright Studio LLC — ACTIVE
+- **Entity:** Bright Studio LLC (Wyoming Domestic LLC)
+- **Filed:** 2026-03-18
+- **State:** Wyoming
+- **Registered Agent:** Northwest Registered Agent LLC
+- **Agent Address:** 30 N Gould St, STE 7001, Sheridan, WY 82801
+- **Annual Report Due:** March 1 each year (first one: March 1, 2027)
+- **Docs on file:** Articles of Organization, Receipt, What's Next guide
+
+### Fay & Fauna LLC — TO BE DISSOLVED
+- **Entity:** Fay & Fauna LLC (Utah)
+- **Status:** Overdue registered agent invoice ($125, 120 days past due)
+- **Action:** Let lapse or formally dissolve with Utah (~$10)
+
+## Immediate Next Steps
+- [x] Form Bright Studio LLC in Wyoming
+- [x] Set up Northwest as registered agent
+- [ ] **Get EIN from IRS** — https://www.irs.gov/businesses/small-businesses-self-employed/apply-for-an-employer-identification-number-ein-online
+- [ ] **File BOI Report with FinCEN** — https://fincen.gov/boi (required for all new LLCs)
+- [ ] **Open Mercury business bank account** — https://mercury.com
+- [ ] **Add email whitelist:** SOS_AnnualReports@wyo.gov and Business@wyo.gov
+- [ ] Dissolve or let lapse Fay & Fauna LLC (Utah)
+- [ ] Write Operating Agreement (single-member template)
 
 ## Decision: Revive Old LLC vs. New LLC
 

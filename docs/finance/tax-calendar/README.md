@@ -18,7 +18,14 @@
 | Apr 15 | Personal return + Q1 estimate | Schedule C for sole prop / single-member LLC |
 | State varies | Annual LLC report | Check your state's requirement |
 
+## Wyoming Annual Report
+| Deadline | What | Cost |
+|----------|------|------|
+| March 1, 2027 | First annual report for Bright Studio LLC | $60 |
+| March 1 each year | Annual report renewal | $60 |
+
 ## Notes
 - Estimated taxes are required if you expect to owe >$1,000
 - Safe harbor: pay 100% of prior year tax (or 110% if AGI >$150K)
 - Underpayment penalty: ~8% annualized (2026 rate TBD)
+- Add SOS_AnnualReports@wyo.gov and Business@wyo.gov to email contacts (not spam)
