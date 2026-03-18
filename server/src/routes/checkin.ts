@@ -7,6 +7,9 @@ import { analyzeProgressPhoto } from '../services/photo-analyzer.js';
 import { assessRecovery } from '../services/recovery-assessment.js';
 import { generateWeeklyPlan } from '../services/plan-generator.js';
 import { generateProgressNarrative } from '../services/narrative-generator.js';
+import { generateWeeklyMealPlan } from '../services/meal-generator.js';
+import { consultNutritionist } from '../services/gemini-nutritionist.js';
+import { upsertWeeklyMealPlans } from '../services/meal-storage.js';
 import { computeCurrentWeek } from '../utils.js';
 
 const checkinRouter = new Hono();
@@ -294,7 +297,100 @@ checkinRouter.post('/submit', async (c) => {
     progressNarrative,
   });
 
-  // 9. Return results
+  // 9. Auto-generate weekly meal plan (non-blocking)
+  const nutrition = plan.nutrition || {};
+  const mealCalories = nutrition.calories ?? 1750;
+  const mealProtein = nutrition.protein_g ?? 135;
+  const mealFocus = nutrition.focus ?? 'anti-inflammatory';
+
+  // Fire-and-forget: generate weekly meals in background
+  (async () => {
+    try {
+      // Consult Gemini nutritionist
+      let geminiGuidance;
+      try {
+        geminiGuidance = await consultNutritionist({
+          weekPlan: {
+            days: plan.days.map((d: any) => ({
+              day: d.day,
+              title: d.title,
+              exercises: d.main?.map((e: any) => e.exercise || e.name) || [],
+            })),
+            nutrition: { calories: mealCalories, protein_g: mealProtein, focus: mealFocus },
+            mode: assessment.mode,
+          },
+          weekNumber,
+        });
+      } catch (err) {
+        console.error('Gemini consultation failed in auto-trigger, using defaults:', err);
+        const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        geminiGuidance = {
+          weekly_focus: `Week ${weekNumber} — ${mealFocus}`,
+          day_guidance: dayNames.map((day) => ({
+            day,
+            workout_type: 'standard',
+            calorie_adjustment: 0,
+            carb_timing: 'Complex carbs with meals',
+            protein_priority: `Aim for ${Math.round(mealProtein / 3)}g per meal`,
+            hydration_oz: 96,
+            special_notes: '',
+          })),
+          pcos_considerations: 'Focus on anti-inflammatory foods, blood sugar stability, and adequate fiber.',
+          supplement_notes: 'Add protein powder to breakfast smoothies to hit protein targets.',
+        };
+      }
+
+      // Get recipes and pantry
+      const recipes = await db.select().from(schema.recipes);
+      const pantry = await db.select().from(schema.userPantry);
+
+      // Calculate Monday of current week
+      const now = new Date();
+      const dow = now.getDay();
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - ((dow + 6) % 7));
+      const startDate = monday.toISOString().split('T')[0];
+
+      const weeklyPlan = await generateWeeklyMealPlan({
+        calories: mealCalories,
+        protein_g: mealProtein,
+        focus: mealFocus,
+        weekNumber,
+        startDate,
+        geminiGuidance,
+        recipes: recipes.map((r) => ({
+          name: r.name,
+          source: r.source,
+          category: r.category,
+          ingredients: (r.ingredients as any[]) || [],
+          tags: (r.tags as string[]) || [],
+          macrosPerServing: r.macrosPerServing as any,
+          notes: r.notes,
+        })),
+        pantry: pantry.map((p) => ({
+          name: p.name,
+          brand: p.brand,
+          flavor: p.flavor,
+          nutritionPerServing: p.nutritionPerServing as any,
+          notes: p.notes,
+        })),
+      });
+
+      // Store each day
+      await upsertWeeklyMealPlans(weeklyPlan.days, {
+        calories: mealCalories,
+        protein_g: mealProtein,
+        weekNumber,
+        geminiGuidance,
+      });
+
+      console.log(`Auto-generated weekly meal plan for week ${weekNumber}`);
+    } catch (err) {
+      console.error('Auto meal plan generation failed (non-critical):', err);
+    }
+  })();
+
+  // 10. Return results
   return c.json({
     week: weekNumber,
     mode: assessment.mode,

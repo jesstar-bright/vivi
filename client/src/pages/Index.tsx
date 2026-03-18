@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import TabBar from "@/components/TabBar";
+import type { Tab } from "@/components/TabBar";
 import WorkoutsTab from "@/components/WorkoutsTab";
 import LifestyleTab from "@/components/LifestyleTab";
+import MenuTab from "@/components/MenuTab";
 import ProfileTab from "@/components/ProfileTab";
 import CheckInModal from "@/components/CheckInModal";
 import PostWorkoutModal from "@/components/PostWorkoutModal";
@@ -11,8 +13,6 @@ import { useCompletedDays } from "@/hooks/useCompletedDays";
 import { useWeeklyMetrics } from "@/hooks/useWeeklyMetrics";
 import type { MetricDay, MetricsAverages } from "@/hooks/useWeeklyMetrics";
 import { transformPlanDays, transformNutrition } from "@/lib/transformPlan";
-
-type Tab = "workouts" | "lifestyle" | "profile";
 
 function determineTrend(
   days: MetricDay[]
@@ -111,7 +111,10 @@ const Index = () => {
         {tab === "lifestyle" && (
           <LifestyleTab nutrition={nutrition} isLoading={isLoading} sleepInsight={sleepInsight} />
         )}
-        {tab === "profile" && <ProfileTab />}
+        {tab === "menu" && (
+          <MenuTab weekNumber={weekNumber} mode={mode} />
+        )}
+        {tab === "progress" && <ProfileTab />}
       </div>
 
       <TabBar active={tab} onChange={setTab} />
@@ -123,7 +126,7 @@ const Index = () => {
             onClose={() => setCheckInOpen(false)}
             onComplete={(t) => {
               setCheckInOpen(false);
-              setTab(t);
+              setTab(t as Tab);
             }}
           />
         )}

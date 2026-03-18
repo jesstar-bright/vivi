@@ -1,16 +1,35 @@
-import { Dumbbell, Heart, User } from "lucide-react";
+import { Dumbbell, Heart, TrendingUp } from "lucide-react";
 
-type Tab = 'workouts' | 'lifestyle' | 'profile';
+export type Tab = 'workouts' | 'lifestyle' | 'menu' | 'progress';
 
 interface TabBarProps {
   active: Tab;
   onChange: (tab: Tab) => void;
 }
 
-const tabs: { id: Tab; icon: typeof Dumbbell; label: string }[] = [
+const BowlIcon = ({ size = 22, strokeWidth = 1.5 }: { size?: number; strokeWidth?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={strokeWidth}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    {/* Rim */}
+    <ellipse cx="12" cy="10" rx="9" ry="3.5" />
+    {/* Bowl body */}
+    <path d="M3 10 C3 10 4.5 20 12 20 C19.5 20 21 10 21 10" />
+  </svg>
+);
+
+const tabs: { id: Tab; icon: typeof Dumbbell | typeof BowlIcon; label: string }[] = [
   { id: 'workouts', icon: Dumbbell, label: 'Workouts' },
   { id: 'lifestyle', icon: Heart, label: 'Lifestyle' },
-  { id: 'profile', icon: User, label: 'Profile' },
+  { id: 'menu', icon: BowlIcon, label: 'Menu' },
+  { id: 'progress', icon: TrendingUp, label: 'Progress' },
 ];
 
 const TabBar = ({ active, onChange }: TabBarProps) => (

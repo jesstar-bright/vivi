@@ -9,12 +9,8 @@ import {
   TrendingUp,
   TrendingDown,
   Minus,
-  UtensilsCrossed,
-  Loader2,
 } from "lucide-react";
 import type { NutritionData } from "@/data/workoutData";
-import { useTodayMeals } from "@/hooks/useTodayMeals";
-import type { Meal } from "@/hooks/useTodayMeals";
 
 const defaultTimeline = [
   { time: "8:00 PM", label: "Last caffeine cutoff" },
@@ -254,147 +250,6 @@ const SleepCard = ({ sleepInsight }: { sleepInsight?: SleepInsight }) => (
   </div>
 );
 
-const mealSlots = [
-  { key: "breakfast", label: "BREAKFAST" },
-  { key: "lunch", label: "LUNCH" },
-  { key: "dinner", label: "DINNER" },
-] as const;
-
-const MealRow = ({
-  label,
-  meal,
-  isLast,
-}: {
-  label: string;
-  meal: Meal;
-  isLast: boolean;
-}) => {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <div className={isLast ? "" : "border-b border-border/40"}>
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center gap-3 py-3 text-left"
-      >
-        <div className="flex-1 min-w-0">
-          <span className="text-[10px] font-semibold text-muted-foreground tracking-wider block">
-            {label}
-          </span>
-          <span className="text-sm font-medium text-foreground line-clamp-1">
-            {meal.name}
-          </span>
-        </div>
-        <div className="text-right shrink-0 mr-1">
-          <span className="text-xs font-semibold text-foreground block">
-            {meal.calories} cal
-          </span>
-          <span className="text-[10px] font-medium text-muted-foreground">
-            {meal.protein_g}g protein
-          </span>
-        </div>
-        <ChevronDown
-          size={14}
-          className={`text-muted-foreground shrink-0 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
-        />
-      </button>
-
-      {expanded && (
-        <div className="pb-3 space-y-2">
-          <div>
-            <p className="text-[10px] font-semibold text-muted-foreground tracking-wider mb-1">
-              INGREDIENTS
-            </p>
-            <div className="flex flex-wrap gap-1">
-              {meal.ingredients.map((item) => (
-                <span
-                  key={item}
-                  className="text-xs font-medium text-foreground bg-secondary/60 px-2 py-0.5 rounded-md"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p className="text-[10px] font-semibold text-muted-foreground tracking-wider mb-1">
-              QUICK STEPS
-            </p>
-            <p className="text-xs font-medium text-foreground leading-relaxed">
-              {meal.quick_steps}
-            </p>
-          </div>
-          <p className="text-[10px] text-muted-foreground">
-            Prep: {meal.prep_time}
-          </p>
-        </div>
-      )}
-    </div>
-  );
-};
-
-const MenuCard = () => {
-  const { data, isLoading, isError } = useTodayMeals();
-
-  if (isLoading) {
-    return (
-      <div className="card-elevated flex items-center justify-center py-10 gap-2">
-        <Loader2 size={16} className="text-primary animate-spin" />
-        <p className="text-sm font-medium text-muted-foreground">
-          Preparing your menu...
-        </p>
-      </div>
-    );
-  }
-
-  if (isError || !data) {
-    return (
-      <div className="card-elevated flex items-center justify-center py-10">
-        <p className="text-sm font-medium text-muted-foreground">
-          Menu unavailable
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="card-elevated">
-      <div className="flex items-center gap-2 mb-3">
-        <UtensilsCrossed size={18} className="text-primary" />
-        <h2 className="text-lg font-bold text-foreground">Today's Menu</h2>
-        <span className="text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full ml-auto">
-          Blue Zone
-        </span>
-      </div>
-
-      <div>
-        {mealSlots.map(({ key, label }, i) => (
-          <MealRow
-            key={key}
-            label={label}
-            meal={data[key]}
-            isLast={i === mealSlots.length - 1}
-          />
-        ))}
-      </div>
-
-      <div className="mt-3 pt-3 border-t border-border/40 flex items-center justify-between">
-        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-          Daily Totals
-        </span>
-        <div className="flex items-center gap-3">
-          <span className="text-sm font-bold text-foreground">
-            {data.daily_totals.calories} cal
-          </span>
-          <span className="text-sm font-bold text-primary">
-            {data.daily_totals.protein_g}g protein
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 interface LifestyleTabProps {
   nutrition: NutritionData | null;
   isLoading: boolean;
@@ -424,7 +279,6 @@ const LifestyleTab = ({
       </div>
     )}
     <SleepCard sleepInsight={sleepInsight} />
-    <MenuCard />
   </div>
 );
 

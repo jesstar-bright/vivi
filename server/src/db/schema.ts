@@ -57,7 +57,36 @@ export const mealPlans = pgTable('meal_plans', {
   planJson: jsonb('plan_json').notNull(),
   calorieTarget: integer('calorie_target'),
   proteinTarget: integer('protein_target'),
+  weekNumber: integer('week_number'),
+  weeklyContext: jsonb('weekly_context'),
   generatedAt: timestamp('generated_at').defaultNow(),
+});
+
+export const recipes = pgTable('recipes', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  source: text('source').notNull(),
+  category: text('category').notNull(), // breakfast|lunch|dinner|side|dessert|smoothie
+  ingredients: jsonb('ingredients').notNull(), // [{name, quantity, unit}]
+  steps: jsonb('steps').notNull(), // string[]
+  prepTime: text('prep_time'),
+  cookTime: text('cook_time'),
+  servings: integer('servings'),
+  macrosPerServing: jsonb('macros_per_serving'), // {calories, protein_g, carbs_g, fat_g}
+  tags: jsonb('tags'), // string[]
+  notes: text('notes'),
+  createdBy: integer('created_by'),
+});
+
+export const userPantry = pgTable('user_pantry', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id'),
+  name: text('name').notNull(),
+  brand: text('brand'),
+  category: text('category').notNull(), // protein-powder|supplement|staple
+  nutritionPerServing: jsonb('nutrition_per_serving'), // {calories, protein_g, carbs_g, fat_g, serving_size, serving_unit}
+  flavor: text('flavor'),
+  notes: text('notes'),
 });
 
 export const exerciseLogs = pgTable('exercise_logs', {

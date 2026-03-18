@@ -8,6 +8,7 @@ interface DayCardProps {
   isToday?: boolean;
   onDone?: () => void;
   completedDates: Set<string>;
+  defaultOpen?: boolean;
 }
 
 const borderClass: Record<string, string> = {
@@ -58,9 +59,9 @@ const ExerciseList = ({ items }: { items: string[] }) => (
   </div>
 );
 
-const DayCard = ({ data, isToday, onDone, completedDates }: DayCardProps) => {
+const DayCard = ({ data, isToday, onDone, completedDates, defaultOpen }: DayCardProps) => {
   const isCompleted = completedDates.has(data.date);
-  const [open, setOpen] = useState(isCompleted ? false : (isToday ?? false));
+  const [open, setOpen] = useState(defaultOpen ?? (isCompleted ? false : (isToday ?? false)));
 
   return (
     <div className={`card-elevated ${borderClass[data.type]} overflow-hidden ${isToday && !isCompleted ? 'ring-2 ring-primary/20' : ''} ${isCompleted ? 'opacity-80' : ''}`}>
