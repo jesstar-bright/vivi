@@ -19,6 +19,7 @@ Crea's team of AI agents — each with a defined role, personality, and set of r
 | AI Sales Leader | Conversion optimization, pricing experiments, partnerships | TBD | Planned |
 | AI Engineering | Code review, test generation, performance monitoring | TBD | Planned |
 | AI Partnerships | Affiliate curation, content co-creation, brand partnerships | TBD | Planned |
+| AI CFO & Tax | Deduction optimization, quarterly estimates, compliance, financial planning | TBD | Planned |
 
 ## Architecture Principles
 - Each agent has a **system prompt** that defines its expertise and personality
