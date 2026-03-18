@@ -1,16 +1,17 @@
 # LLC Setup & Optimization
 
-## Current Status
-- Jessica has an old LLC but unsure if it's set up correctly
-- Need to evaluate: revive the old one or start fresh
+## Current Status (as of 2026-03-18)
+- **Existing LLC:** Fay & Fauna LLC (Utah)
+- **Registered Agent:** Northwest Registered Agent LLC ($125/year — 120 DAYS OVERDUE)
+- **Invoice:** #29Z9HC9G, $125, due 2026-02-15 — UNPAID
+- **Address on file:** 970 W 880 N, Orem, UT 84057
+- **Recommendation:** Form new "Crea Health LLC" in Utah, dissolve Fay & Fauna
 
-## Questions to Answer First
-- [ ] What state was the old LLC registered in?
-- [ ] Is it still active or has it been dissolved/suspended for non-filing?
-- [ ] Was it a single-member LLC or multi-member?
-- [ ] Does it have an EIN (Employer Identification Number)?
-- [ ] Has it ever filed taxes?
-- [ ] What name is it under? Can we use it for Crea or do we need a DBA?
+## Outstanding Questions
+- [ ] Does Jessica still live in Utah? (Can self-register as agent, save $125/year)
+- [ ] Does she have the EIN for Fay & Fauna?
+- [ ] Was Fay & Fauna ever used for revenue or tax filing?
+- [ ] Confirm desired name: "Crea Health LLC"?
 
 ## Decision: Revive Old LLC vs. New LLC
 
