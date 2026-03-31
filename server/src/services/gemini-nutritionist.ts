@@ -56,7 +56,15 @@ PATIENT PROFILE:
 THIS WEEK'S WORKOUT PLAN:
 ${workoutSummary}
 
-Provide a structured weekly nutritional guidance plan. For each day, consider the workout intensity and type to adjust nutrition.
+MENSTRUAL CYCLE CONTEXT:
+This user recently regained her period (significant for PCOS). Her cycle follows a 28-day pattern starting March 23, 2026.
+Adjust nutrition based on cycle phase:
+- Menstrual (Days 1-5): Increase iron-rich foods (spinach, lentils, red meat). Anti-inflammatory focus. Gentle on digestion.
+- Follicular (Days 6-14): Body handles carbs well — can increase complex carb intake around workouts. Energy is high.
+- Ovulatory (Days 14-16): Peak metabolism. Maintain balanced macros.
+- Luteal (Days 17-28): Cravings increase (progesterone). Add 50-100 cal from complex carbs to prevent binge cycles. Magnesium-rich foods help with PMS. Calcium and B6 support mood.
+
+Provide a structured weekly nutritional guidance plan. For each day, consider the workout intensity, type, AND menstrual cycle phase to adjust nutrition.
 
 Return ONLY valid JSON with this structure:
 {

@@ -50,6 +50,43 @@ export { WeeklyPlanSchema };
 
 // --- Plan generation ---
 
+// Menstrual cycle phase calculation
+// Day 1 = first day of period. Reference: March 23, 2026
+const CYCLE_DAY_1_REF = new Date('2026-03-23');
+const CYCLE_LENGTH = 28;
+
+function getCyclePhase(weekStartDate: Date): { day: number; phase: string; trainingGuidance: string } {
+  const diffMs = weekStartDate.getTime() - CYCLE_DAY_1_REF.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const cycleDay = ((diffDays % CYCLE_LENGTH) + CYCLE_LENGTH) % CYCLE_LENGTH + 1; // 1-indexed
+
+  if (cycleDay <= 5) {
+    return {
+      day: cycleDay,
+      phase: 'Menstrual',
+      trainingGuidance: `MENSTRUAL PHASE (Cycle Day ${cycleDay}): Energy and iron levels are lower. Reduce intensity — lighter weights, fewer sets, more recovery and mobility work. Include gentle movement (walking, yoga, stretching). Avoid maximal lifts. Prioritize iron-rich foods this week. This is NOT a lazy week — it's a strategic recovery phase that supports hormonal health.`,
+    };
+  } else if (cycleDay <= 14) {
+    return {
+      day: cycleDay,
+      phase: 'Follicular',
+      trainingGuidance: `FOLLICULAR PHASE (Cycle Day ${cycleDay}): Estrogen is rising — this is the BEST window for pushing hard. Higher volume (4 sets), heavier weights, compound movements, progressive overload. Energy and recovery capacity are at their peak. Try new exercises, attempt PRs, increase weights from last cycle. The body is primed for performance.`,
+    };
+  } else if (cycleDay <= 16) {
+    return {
+      day: cycleDay,
+      phase: 'Ovulatory',
+      trainingGuidance: `OVULATORY PHASE (Cycle Day ${cycleDay}): Peak power output — can go hardest this phase. BUT ligament laxity is higher due to estrogen peak, so warm up thoroughly and be extra careful with form on heavy compound lifts. This is a great time for strength PRs but prioritize controlled movements over explosive ones.`,
+    };
+  } else {
+    return {
+      day: cycleDay,
+      phase: 'Luteal',
+      trainingGuidance: `LUTEAL PHASE (Cycle Day ${cycleDay}): Progesterone is dominant — energy gradually decreases. Moderate intensity, maintain weights don't increase them. Focus on isolation work and mind-muscle connection over maximal loads. More rest between sets. Cravings may increase — the AI Dietician adjusts for this with more complex carbs. This is a consolidation phase, not a regression.`,
+    };
+  }
+}
+
 export async function generateWeeklyPlan(params: {
   mode: 'push' | 'maintain' | 'rampup';
   weekNumber: number;
@@ -66,6 +103,9 @@ export async function generateWeeklyPlan(params: {
   const endDate = new Date(startDate);
   endDate.setDate(endDate.getDate() + 6);
 
+  // Calculate menstrual cycle phase for this week
+  const cyclePhase = getCyclePhase(startDate);
+
   const historyContext = params.exerciseHistory.length > 0
     ? `Recent exercise history (for weight suggestions and rotation):\n${params.exerciseHistory.map((e) => `- ${e.exercise_name}: ${e.weight} (${e.date})`).join('\n')}`
     : 'No prior exercise history available — suggest starting weights for a woman at ~152 lbs with moderate training experience.';
@@ -81,12 +121,17 @@ REASONING: ${params.modeReasoning}
 
 FOCUS AREAS (give these muscle groups extra volume): ${params.focusAreas.length > 0 ? params.focusAreas.join(', ') : 'balanced — no specific focus from photo analysis'}
 
+MENSTRUAL CYCLE PHASE:
+${cyclePhase.trainingGuidance}
+Note: This cycle phase guidance should INFORM the training intensity alongside the MODE above. If the cycle phase suggests lower intensity but the MODE is "push", defer to the cycle phase — hormonal alignment beats arbitrary programming.
+
 USER PROFILE:
-- Female, age 30, ~152 lbs, goal 137-140 lbs
+- Female, age 32, ~152 lbs, goal 137-140 lbs
 - Conditions: ${params.userConditions}
 - Post-op cleared: ${params.postOpCleared ? 'Yes' : 'No — respect restrictions'}
 - Schedule: Sunday = tennis (counts as vigorous cardio). Plan rest days around this.
 - Available equipment: Full gym access (barbells, dumbbells, cables, machines)
+- Menstrual cycle: ${cyclePhase.phase} phase (Day ${cyclePhase.day} of 28)
 
 ${historyContext}
 
