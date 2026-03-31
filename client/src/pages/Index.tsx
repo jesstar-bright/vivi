@@ -108,13 +108,9 @@ const Index = () => {
             fallbackWeek={planResponse?.fallback_week}
           />
         )}
-        {tab === "lifestyle" && (
-          <LifestyleTab nutrition={nutrition} isLoading={isLoading} sleepInsight={sleepInsight} />
-        )}
         {tab === "menu" && (
           <MenuTab weekNumber={weekNumber} mode={mode} />
         )}
-        {tab === "progress" && <ProfileTab />}
       </div>
 
       <TabBar active={tab} onChange={setTab} />

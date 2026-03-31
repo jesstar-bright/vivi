@@ -1,6 +1,6 @@
-import { Dumbbell, Heart, TrendingUp } from "lucide-react";
+import { Dumbbell } from "lucide-react";
 
-export type Tab = 'workouts' | 'lifestyle' | 'menu' | 'progress';
+export type Tab = 'workouts' | 'menu';
 
 interface TabBarProps {
   active: Tab;
@@ -27,9 +27,7 @@ const BowlIcon = ({ size = 22, strokeWidth = 1.5 }: { size?: number; strokeWidth
 
 const tabs: { id: Tab; icon: typeof Dumbbell | typeof BowlIcon; label: string }[] = [
   { id: 'workouts', icon: Dumbbell, label: 'Workouts' },
-  { id: 'lifestyle', icon: Heart, label: 'Lifestyle' },
   { id: 'menu', icon: BowlIcon, label: 'Menu' },
-  { id: 'progress', icon: TrendingUp, label: 'Progress' },
 ];
 
 const TabBar = ({ active, onChange }: TabBarProps) => (
