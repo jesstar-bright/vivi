@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer, real, date, timestamp, boolean, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, integer, real, date, timestamp, boolean, jsonb, primaryKey } from 'drizzle-orm/pg-core';
 
 export const userProfiles = pgTable('user_profiles', {
   id: serial('id').primaryKey(),
@@ -99,4 +99,38 @@ export const exerciseLogs = pgTable('exercise_logs', {
   repsCompleted: text('reps_completed'),
   weightRating: text('weight_rating'), // 'good' | 'too_heavy' | 'too_light' | 'incomplete'
   notes: text('notes'),
+});
+
+export const trainerMemory = pgTable('trainer_memory', {
+  userId: integer('user_id').notNull(),
+  key: text('key').notNull(),
+  value: jsonb('value').notNull(),
+  lastUpdated: timestamp('last_updated').defaultNow().notNull(),
+}, (table) => ({
+  pk: primaryKey({ columns: [table.userId, table.key] }),
+}));
+
+export const trainingBlocks = pgTable('training_blocks', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull(),
+  blockNumber: integer('block_number').notNull(),
+  weeks: integer('weeks').notNull(),         // typically 4; can be 3, 6, or 8
+  theme: text('theme').notNull(),            // e.g. 'strength + mobility'
+  focusAreas: jsonb('focus_areas').notNull(), // string[]
+  intentReasoning: text('intent_reasoning').notNull(),
+  status: text('status').notNull(),          // 'proposed' | 'active' | 'completed' | 'cancelled'
+  startedAt: timestamp('started_at'),
+  completedAt: timestamp('completed_at'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const workoutModifications = pgTable('workout_modifications', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull(),
+  date: date('date').notNull(),              // the date of the session being modified
+  exerciseLogId: integer('exercise_log_id'), // nullable: edit might be pre-completion
+  modificationType: text('modification_type').notNull(), // 'swap_exercise' | 'change_weight' | 'skip_set' | 'skip_block' | 'move_day' | 'cancel_replace' | 'regenerate_day'
+  payload: jsonb('payload').notNull(),       // shape varies by type
+  source: text('source').notNull(),          // 'user_initiated' | 'agent_initiated'
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 });

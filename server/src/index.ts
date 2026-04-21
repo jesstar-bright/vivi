@@ -16,6 +16,7 @@ import { plansRouter } from './routes/plans.js';
 import { workoutsRouter } from './routes/workouts.js';
 import { progressRouter } from './routes/progress.js';
 import { mealsRouter } from './routes/meals.js';
+import { agentsRouter } from './routes/agents.js';
 
 const app = new Hono();
 
@@ -49,6 +50,7 @@ app.route('/api/plan', plansRouter);
 app.route('/api/workout', workoutsRouter);
 app.route('/api/progress', progressRouter);
 app.route('/api/meals', mealsRouter);
+app.route('/api/agents', agentsRouter);
 
 // Serve React frontend build (static assets: JS, CSS, images)
 app.use('/*', serveStatic({ root: '../client/dist' }));
