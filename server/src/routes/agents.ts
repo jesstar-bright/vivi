@@ -46,10 +46,10 @@ agentsRouter.post('/trainer/invoke', async (c) => {
   };
 
   try {
-    const response = await invokeTrainer(invocation);
+    const result = await invokeTrainer(invocation);
     return c.json({
       invocation_id: invocation.invocation_id,
-      response,
+      response: result.response,
     });
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Unknown error';

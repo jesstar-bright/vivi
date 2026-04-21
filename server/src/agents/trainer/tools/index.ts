@@ -7,6 +7,7 @@ import { getBlockStatusTool } from './get-block-status.js';
 import { getCheckInsTool } from './get-check-ins.js';
 import { getWorkoutLogsSinceTool } from './get-workout-logs-since.js';
 import { getMetricsSinceTool } from './get-metrics-since.js';
+import { getWorkoutModificationsTool } from './get-workout-modifications.js';
 import { getTrainerMemoryTool } from './get-trainer-memory.js';
 import { proposeTrainingBlockTool } from './propose-training-block.js';
 import { proposeNextWeekTool } from './propose-next-week.js';
@@ -21,6 +22,7 @@ export {
   getCheckInsTool,
   getWorkoutLogsSinceTool,
   getMetricsSinceTool,
+  getWorkoutModificationsTool,
   getTrainerMemoryTool,
   proposeTrainingBlockTool,
   proposeNextWeekTool,
@@ -40,6 +42,7 @@ export const allTools: Tool[] = [
   getCheckInsTool,
   getWorkoutLogsSinceTool,
   getMetricsSinceTool,
+  getWorkoutModificationsTool,
   getTrainerMemoryTool,
   proposeTrainingBlockTool,
   proposeNextWeekTool,

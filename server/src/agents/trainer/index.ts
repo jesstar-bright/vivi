@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
-import type { Invocation, TrainerResponse } from '../shared/types.js';
+import type { Invocation, LoopResult } from '../shared/types.js';
 import { runAgentLoop } from '../shared/loop.js';
 import { loadMemory } from '../shared/memory.js';
 import { logError } from '../shared/observability.js';
@@ -58,26 +58,27 @@ function buildSystemPrompt(): string {
 }
 
 /**
- * Invoke the Trainer agent for a single invocation. Returns the validated
- * TrainerResponse the agent emitted via `respond_to_user`.
+ * Invoke the Trainer agent for a single invocation. Returns the full
+ * LoopResult (response + iterations + tool_calls) so callers can introspect
+ * the run — HTTP handlers pull `.response`, the eval harness uses `.tool_calls`
+ * and `.iterations` for assertions.
  *
  * Throws if the loop fails to terminate, the response fails schema
  * validation, or any tool dispatch error bubbles up unhandled.
  */
 export async function invokeTrainer(
   invocation: Invocation,
-): Promise<TrainerResponse> {
+): Promise<LoopResult> {
   const systemPrompt = buildSystemPrompt();
   const memory = await loadMemory(invocation.user_id);
 
   try {
-    const result = await runAgentLoop({
+    return await runAgentLoop({
       systemPrompt,
       tools: allTools,
       invocation,
       memory,
     });
-    return result.response;
   } catch (err) {
     logError(err, 'invokeTrainer');
     throw err;

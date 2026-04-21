@@ -31,6 +31,7 @@ import { loadMemory } from '../agents/shared/memory.js';
 import {
   TrainerResponseSchema,
   type Invocation,
+  type LoopResult,
   type TrainerResponse,
 } from '../agents/shared/types.js';
 
@@ -72,14 +73,18 @@ function checkBannedPhrases(message: string): string[] {
 
 /**
  * Run every expectation for a scenario against the response. Also accepts
- * the post-run memory blob so must_pattern_detect can look at trainer_memory
- * entries written mid-loop, not just patterns_noticed on the response.
+ * the post-run memory blob (so must_pattern_detect can look at trainer_memory
+ * entries written mid-loop) and the tool_calls log (so custom_assertion can
+ * introspect what the agent actually called).
  */
 function evaluateExpectations(
   scenario: EvalScenario,
-  response: TrainerResponse,
+  loopResult: LoopResult,
   postMemory: Record<string, unknown>,
 ): string[] {
+  const response = loopResult.response;
+  const toolCalls = loopResult.tool_calls;
+  const iterations = loopResult.iterations;
   const failures: string[] = [];
   const exp = scenario.expectations;
 
@@ -154,21 +159,27 @@ function evaluateExpectations(
     }
   }
 
-  // 7. custom_assertion.
+  // 7. custom_assertion (now receives tool_calls for tool-level introspection).
   if (exp.custom_assertion) {
-    const { pass, detail } = exp.custom_assertion(response);
+    const { pass, detail } = exp.custom_assertion(response, toolCalls);
     if (!pass) {
       failures.push(`custom: ${detail}`);
     }
   }
 
-  // NOTE on iterations:
-  //   invokeTrainer() deliberately returns only TrainerResponse (not iteration
-  //   count). Per-scenario min/max iteration expectations are therefore NOT
-  //   enforced here. To enforce them we'd need to call runAgentLoop directly,
-  //   which the task brief told us to avoid. The field is kept on the scenario
-  //   type as a TODO for when the invokeTrainer contract widens.
-  //   (Silent skip — documented here rather than shouting on every scenario.)
+  // 8. min_iterations / max_iterations — sanity that the loop actually ran
+  //    tools (or didn't thrash). invokeTrainer now widens its return to the
+  //    full LoopResult so we can enforce these.
+  if (exp.min_iterations !== undefined && iterations < exp.min_iterations) {
+    failures.push(
+      `iterations ${iterations} below min_iterations ${exp.min_iterations}`,
+    );
+  }
+  if (exp.max_iterations !== undefined && iterations > exp.max_iterations) {
+    failures.push(
+      `iterations ${iterations} above max_iterations ${exp.max_iterations}`,
+    );
+  }
 
   return failures;
 }
@@ -219,9 +230,9 @@ async function runScenario(
   };
 
   try {
-    const response = await invokeTrainer(invocation);
+    const loopResult = await invokeTrainer(invocation);
     const postMemory = await loadMemory(EVAL_USER_ID);
-    const failures = evaluateExpectations(scenario, response, postMemory);
+    const failures = evaluateExpectations(scenario, loopResult, postMemory);
     return { pass: failures.length === 0, failures };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);

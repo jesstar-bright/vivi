@@ -110,6 +110,22 @@ export const getMetricsSinceDef: ToolDefinition = {
   },
 };
 
+export const getWorkoutModificationsDef: ToolDefinition = {
+  name: 'get_workout_modifications',
+  description:
+    "Use this to fetch user-initiated workout modifications — exercise swaps, weight changes, skipped sets/blocks, moved days, cancel/replace events. Call this when detecting recurring user preferences (e.g., 'user swapped Back Squat for Goblet Squat three sessions in a row') that should inform next week's plan or block theme. Pair with `get_workout_logs_since` for the full picture: what was prescribed, what was modified, what was actually executed.",
+  input_schema: {
+    type: 'object',
+    properties: {
+      since_date: {
+        type: 'string',
+        description:
+          'Optional ISO 8601 date (YYYY-MM-DD) lower bound. Omit to fetch all modifications for this user.',
+      },
+    },
+  },
+};
+
 export const getTrainerMemoryDef: ToolDefinition = {
   name: 'get_trainer_memory',
   description:
@@ -422,6 +438,7 @@ export const allToolDefinitions: ToolDefinition[] = [
   getCheckInsDef,
   getWorkoutLogsSinceDef,
   getMetricsSinceDef,
+  getWorkoutModificationsDef,
   getTrainerMemoryDef,
   // Act tools
   proposeTrainingBlockDef,
