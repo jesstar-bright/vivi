@@ -23,6 +23,14 @@ interface CheckinResponse {
   plan_summary: Array<{ day: string; title: string; duration: string }>;
 }
 
+/**
+ * @deprecated Use `useAgentInvoke` from `@/hooks/useAgentInvoke` with
+ * `invocation_type: 'check_in'` instead. This hook posts to the legacy
+ * `/api/checkin/submit` endpoint which is being phased out once all
+ * call-sites migrate to the new Trainer agent endpoint
+ * (`/api/agents/trainer/invoke`). Retained temporarily so other call-sites
+ * keep working during the migration.
+ */
 export function useCheckin() {
   const qc = useQueryClient();
   return useMutation({
