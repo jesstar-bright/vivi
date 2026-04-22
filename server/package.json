@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsc && cp src/agents/trainer/system-prompt.md dist/agents/trainer/system-prompt.md",
     "start": "node dist/index.js",
     "test": "vitest run"
   },
