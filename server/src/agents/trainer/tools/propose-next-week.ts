@@ -34,7 +34,7 @@ type ProposeNextWeekInput = {
  */
 export const proposeNextWeekTool: Tool = {
   definition: proposeNextWeekDef,
-  execute: async (input: ProposeNextWeekInput) => {
+  execute: async (input: ProposeNextWeekInput, ctx) => {
     const planJson = {
       sessions: input.sessions,
       block_id: input.block_id,
@@ -44,6 +44,7 @@ export const proposeNextWeekTool: Tool = {
     const [inserted] = await db
       .insert(schema.workoutPlans)
       .values({
+        userId: ctx.invocation.user_id,
         weekNumber: input.week_number,
         mode: input.mode,
         planJson,

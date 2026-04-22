@@ -14,6 +14,7 @@ export const userProfiles = pgTable('user_profiles', {
 
 export const weeklyMetrics = pgTable('weekly_metrics', {
   id: serial('id').primaryKey(),
+  userId: integer('user_id'),
   date: date('date').notNull().unique(),
   rhr: real('rhr'),
   hrv: real('hrv'),
@@ -28,6 +29,7 @@ export const weeklyMetrics = pgTable('weekly_metrics', {
 
 export const checkIns = pgTable('check_ins', {
   id: serial('id').primaryKey(),
+  userId: integer('user_id'),
   weekNumber: integer('week_number').notNull(),
   date: date('date').notNull(),
   photoUrl: text('photo_url'),
@@ -42,6 +44,7 @@ export const checkIns = pgTable('check_ins', {
 
 export const workoutPlans = pgTable('workout_plans', {
   id: serial('id').primaryKey(),
+  userId: integer('user_id'),
   weekNumber: integer('week_number').notNull(),
   mode: text('mode').notNull(), // 'push' | 'maintain' | 'rampup'
   planJson: jsonb('plan_json').notNull(),
@@ -91,6 +94,7 @@ export const userPantry = pgTable('user_pantry', {
 
 export const exerciseLogs = pgTable('exercise_logs', {
   id: serial('id').primaryKey(),
+  userId: integer('user_id'),
   date: date('date').notNull(),
   exerciseName: text('exercise_name').notNull(),
   suggestedWeight: text('suggested_weight'),

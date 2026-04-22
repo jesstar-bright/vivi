@@ -1,4 +1,4 @@
-import { desc } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { db, schema } from '../../../db/index.js';
 import type { Tool } from '../../shared/types.js';
 import { getCheckInsDef } from '../tool-definitions.js';
@@ -13,17 +13,17 @@ type GetCheckInsInput = {
  * Default of 4 covers a single 4-week block; callers can ask for more when
  * investigating multi-block patterns (e.g., repeated deload drift).
  *
- * Note: the check_ins table doesn't currently carry a user_id column, so the
- * scoping is implicitly global. When that column is added the .where here
- * should pick up `eq(checkIns.userId, ctx.invocation.user_id)`.
+ * Scoped by `ctx.invocation.user_id` so parallel eval scenarios don't see
+ * each other's data.
  */
 export const getCheckInsTool: Tool = {
   definition: getCheckInsDef,
-  execute: async (input: GetCheckInsInput) => {
+  execute: async (input: GetCheckInsInput, ctx) => {
     const lastN = input?.last_n ?? 4;
     const rows = await db
       .select()
       .from(schema.checkIns)
+      .where(eq(schema.checkIns.userId, ctx.invocation.user_id))
       .orderBy(desc(schema.checkIns.date))
       .limit(lastN);
     return rows;

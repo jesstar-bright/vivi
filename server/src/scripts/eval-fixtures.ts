@@ -1,18 +1,16 @@
 /**
  * Eval fixture helpers for the Crea Trainer agent eval harness.
  *
- * These helpers own DB seeding and teardown for a single designated eval user
- * (id = 999 — intentionally far from Jessica's real user_id = 1 so that a
- * rogue reset can't nuke real data). Every eval scenario gets a clean slate
- * before being seeded with its specific fixture.
+ * These helpers own DB seeding and teardown for eval users (a range of
+ * user_ids reserved for the harness — see EVAL_USER_BASE in eval-trainer.ts,
+ * intentionally far from Jessica's real user_id = 1 so a rogue reset can't
+ * nuke real data). Every eval scenario gets a clean slate before being
+ * seeded with its specific fixture.
  *
- * Notes on scoping:
- * - `user_profiles.id = 999` is used as the eval user id.
- * - `check_ins` and `weekly_metrics` currently have NO `user_id` column in
- *   the Drizzle schema. Reset deletes everything in those tables; seeding
- *   inserts without a user_id predicate. This is acceptable for an isolated
- *   eval run against a dev DB but MUST be revisited once multi-tenant
- *   scoping is added to those tables.
+ * All four legacy tables (check_ins, exercise_logs, weekly_metrics,
+ * workout_plans) now have a user_id column, so reset and seed are fully
+ * scoped per user. That makes it safe to run scenarios concurrently against
+ * disjoint user_ids.
  */
 
 import { eq } from 'drizzle-orm';
@@ -97,12 +95,10 @@ export type MemoryFixture = Record<string, unknown>;
 /**
  * Wipe all agent-related state for the given user.
  *
- * Scoped by user_id where possible. For tables without a user_id column
- * (check_ins, weekly_metrics) we delete ALL rows — this is safe for an
- * isolated eval DB and unsafe otherwise. Document this in the caller.
+ * Every table is scoped by user_id, so concurrent scenarios running against
+ * disjoint user_ids do not interfere with each other or with real users.
  */
 export async function resetEvalUser(userId: number): Promise<void> {
-  // Per-user tables: scoped deletes.
   await db
     .delete(schema.trainerMemory)
     .where(eq(schema.trainerMemory.userId, userId));
@@ -112,12 +108,16 @@ export async function resetEvalUser(userId: number): Promise<void> {
   await db
     .delete(schema.workoutModifications)
     .where(eq(schema.workoutModifications.userId, userId));
-
-  // Tables currently without user_id: global deletes. See file header.
-  await db.delete(schema.checkIns);
-  await db.delete(schema.workoutPlans);
-  await db.delete(schema.exerciseLogs);
-  await db.delete(schema.weeklyMetrics);
+  await db.delete(schema.checkIns).where(eq(schema.checkIns.userId, userId));
+  await db
+    .delete(schema.workoutPlans)
+    .where(eq(schema.workoutPlans.userId, userId));
+  await db
+    .delete(schema.exerciseLogs)
+    .where(eq(schema.exerciseLogs.userId, userId));
+  await db
+    .delete(schema.weeklyMetrics)
+    .where(eq(schema.weeklyMetrics.userId, userId));
 }
 
 // ---------------------------------------------------------------------------
@@ -166,17 +166,17 @@ export async function seedProfile(
 }
 
 /**
- * Seed check_ins rows. check_ins currently has no user_id — inserts are
- * global. resetEvalUser() already wiped the table, so this is deterministic.
+ * Seed check_ins rows scoped to the given user.
  */
 export async function seedCheckIns(
-  _userId: number,
+  userId: number,
   fixtures: CheckInFixture[],
 ): Promise<void> {
   if (fixtures.length === 0) return;
 
   await db.insert(schema.checkIns).values(
     fixtures.map((f) => ({
+      userId,
       weekNumber: f.week_number,
       date: f.date,
       photoUrl: f.photo_url ?? null,
@@ -192,16 +192,17 @@ export async function seedCheckIns(
 }
 
 /**
- * Seed exercise_logs rows. Table has no user_id column — inserts are global.
+ * Seed exercise_logs rows scoped to the given user.
  */
 export async function seedWorkoutLogs(
-  _userId: number,
+  userId: number,
   fixtures: ExerciseLogFixture[],
 ): Promise<void> {
   if (fixtures.length === 0) return;
 
   await db.insert(schema.exerciseLogs).values(
     fixtures.map((f) => ({
+      userId,
       date: f.date,
       exerciseName: f.exercise_name,
       suggestedWeight: f.suggested_weight ?? null,
@@ -215,17 +216,19 @@ export async function seedWorkoutLogs(
 }
 
 /**
- * Seed weekly_metrics rows. Table has no user_id column.
- * `date` is UNIQUE in weekly_metrics, so fixtures must use distinct dates.
+ * Seed weekly_metrics rows scoped to the given user.
+ * `date` is UNIQUE per user in weekly_metrics, so fixtures must use distinct
+ * dates within a single user's seed set.
  */
 export async function seedMetrics(
-  _userId: number,
+  userId: number,
   fixtures: WeeklyMetricFixture[],
 ): Promise<void> {
   if (fixtures.length === 0) return;
 
   await db.insert(schema.weeklyMetrics).values(
     fixtures.map((f) => ({
+      userId,
       date: f.date,
       rhr: f.rhr ?? null,
       hrv: f.hrv ?? null,

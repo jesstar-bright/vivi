@@ -19,9 +19,18 @@
  * Exit code:
  *   0 if all scenarios pass, 1 if any scenario fails.
  *
- * Eval user id:
- *   Uses user_id = 999. Intentionally far from Jessica's real user_id = 1
- *   so a rogue reset cannot nuke her data.
+ * Eval user ids:
+ *   Each scenario gets a unique user_id of `EVAL_USER_BASE + index` (e.g.
+ *   1000–1019 for the current 20 scenarios). The base is intentionally far
+ *   from Jessica's real user_id = 1 so a rogue reset cannot nuke her data,
+ *   and disjoint per-scenario ids let scenarios run concurrently against the
+ *   same dev DB without colliding on rows.
+ *
+ * Concurrency:
+ *   Up to CONCURRENCY scenarios run in parallel via a small promise pool
+ *   (see runAllScenarios). With CONCURRENCY = 5, wall time drops from the
+ *   ~5 min sequential baseline to roughly ~1 min, with no change in
+ *   Anthropic API spend.
  */
 
 import 'dotenv/config';
@@ -51,7 +60,14 @@ import {
   type EvalScenario,
 } from './eval-scenarios.js';
 
-const EVAL_USER_ID = 999;
+// Each scenario gets `EVAL_USER_BASE + index` as its user_id so they can run
+// concurrently without data collision. 1000 keeps us well clear of real users.
+const EVAL_USER_BASE = 1000;
+
+// Cap concurrent scenarios to stay comfortably inside Anthropic rate limits.
+// Each scenario fans out into multiple messages.create calls; 5 in flight
+// gives a ~5x wall-time win without thrashing the rate limiter.
+const CONCURRENCY = 5;
 
 // ---------------------------------------------------------------------------
 // Assertion helpers
@@ -188,8 +204,10 @@ function evaluateExpectations(
 // Seeding
 // ---------------------------------------------------------------------------
 
-async function seedScenario(scenario: EvalScenario): Promise<void> {
-  const userId = EVAL_USER_ID;
+async function seedScenario(
+  scenario: EvalScenario,
+  userId: number,
+): Promise<void> {
   await resetEvalUser(userId);
   await seedProfile(userId, scenario.fixture.profile ?? {});
 
@@ -219,19 +237,20 @@ async function seedScenario(scenario: EvalScenario): Promise<void> {
 
 async function runScenario(
   scenario: EvalScenario,
+  userId: number,
 ): Promise<{ pass: boolean; failures: string[] }> {
-  await seedScenario(scenario);
+  await seedScenario(scenario, userId);
 
   const invocation: Invocation = {
     invocation_id: `eval_${scenario.id}_${Date.now()}`,
-    user_id: EVAL_USER_ID,
+    user_id: userId,
     invocation_type: scenario.invocation.invocation_type,
     trigger_payload: scenario.invocation.trigger_payload,
   };
 
   try {
     const loopResult = await invokeTrainer(invocation);
-    const postMemory = await loadMemory(EVAL_USER_ID);
+    const postMemory = await loadMemory(userId);
     const failures = evaluateExpectations(scenario, loopResult, postMemory);
     return { pass: failures.length === 0, failures };
   } catch (err) {
@@ -243,29 +262,52 @@ async function runScenario(
   }
 }
 
-async function main(): Promise<void> {
-  console.log(`\nCrea Trainer Eval Harness`);
-  console.log('='.repeat(40));
-  console.log(`Scenarios: ${scenarios.length}`);
-  console.log(`Eval user: ${EVAL_USER_ID}`);
-  console.log('');
+type ScenarioResult = { id: string; pass: boolean; failures: string[] };
 
-  const results: Array<{ id: string; pass: boolean; failures: string[] }> = [];
+/**
+ * Run all scenarios with a bounded promise pool so that at most CONCURRENCY
+ * scenarios are in flight at once. Results are written back into a
+ * pre-allocated array at the scenario's original index, so the Summary
+ * section can still print them in definition order even though they finish
+ * out of order.
+ */
+async function runAllScenarios(): Promise<ScenarioResult[]> {
+  const results: ScenarioResult[] = new Array(scenarios.length);
+  let nextIndex = 0;
 
-  for (const scenario of scenarios) {
-    process.stdout.write(`[${scenario.id}] running... `);
-    const { pass, failures } = await runScenario(scenario);
-    results.push({ id: scenario.id, pass, failures });
-
-    if (pass) {
-      console.log('✓ PASS');
-    } else {
-      console.log('✗ FAIL');
-      for (const f of failures) {
-        console.log(`    - ${f}`);
+  async function worker(): Promise<void> {
+    while (true) {
+      const i = nextIndex++;
+      if (i >= scenarios.length) return;
+      const scenario = scenarios[i];
+      const userId = EVAL_USER_BASE + i;
+      process.stdout.write(`[${scenario.id}] (user=${userId}) starting...\n`);
+      const { pass, failures } = await runScenario(scenario, userId);
+      results[i] = { id: scenario.id, pass, failures };
+      const mark = pass ? '✓' : '✗';
+      process.stdout.write(`[${scenario.id}] ${mark} ${pass ? 'PASS' : 'FAIL'}\n`);
+      if (!pass) {
+        for (const f of failures) process.stdout.write(`    - ${f}\n`);
       }
     }
   }
+
+  const workers = Array.from({ length: CONCURRENCY }, () => worker());
+  await Promise.all(workers);
+  return results;
+}
+
+async function main(): Promise<void> {
+  console.log(`\nCrea Trainer Eval Harness`);
+  console.log('='.repeat(40));
+  console.log(`Scenarios:   ${scenarios.length}`);
+  console.log(
+    `Eval users:  ${EVAL_USER_BASE}–${EVAL_USER_BASE + scenarios.length - 1}`,
+  );
+  console.log(`Concurrency: ${CONCURRENCY}`);
+  console.log('');
+
+  const results = await runAllScenarios();
 
   // --- Final report ---
   const passed = results.filter((r) => r.pass).length;

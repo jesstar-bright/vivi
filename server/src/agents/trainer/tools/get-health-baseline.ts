@@ -1,4 +1,4 @@
-import { gte, desc } from 'drizzle-orm';
+import { and, gte, desc, eq } from 'drizzle-orm';
 import { db, schema } from '../../../db/index.js';
 import type { Tool } from '../../shared/types.js';
 import { getHealthBaselineDef } from '../tool-definitions.js';
@@ -14,10 +14,13 @@ type HealthBaselineInput = {
  * spot intra-window dips without re-querying. If the window is empty we
  * short-circuit with a `note` so the model can adapt without hallucinating
  * an "improving HRV trend" off zero data points.
+ *
+ * Scoped by `ctx.invocation.user_id` so parallel eval scenarios don't see
+ * each other's data.
  */
 export const getHealthBaselineTool: Tool = {
   definition: getHealthBaselineDef,
-  execute: async (input: HealthBaselineInput) => {
+  execute: async (input: HealthBaselineInput, ctx) => {
     const days = input?.days ?? 30;
     const since = new Date();
     since.setDate(since.getDate() - days);
@@ -26,7 +29,12 @@ export const getHealthBaselineTool: Tool = {
     const rows = await db
       .select()
       .from(schema.weeklyMetrics)
-      .where(gte(schema.weeklyMetrics.date, sinceStr))
+      .where(
+        and(
+          eq(schema.weeklyMetrics.userId, ctx.invocation.user_id),
+          gte(schema.weeklyMetrics.date, sinceStr),
+        ),
+      )
       .orderBy(desc(schema.weeklyMetrics.date));
 
     if (rows.length === 0) {
