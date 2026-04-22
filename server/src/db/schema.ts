@@ -10,6 +10,28 @@ export const userProfiles = pgTable('user_profiles', {
   currentWeight: real('current_weight'),
   postOpDate: date('post_op_date'),
   postOpCleared: boolean('post_op_cleared').default(false),
+  // Life-stage + cycle context (all nullable; populated as we learn)
+  dateOfBirth: date('date_of_birth'),
+  // 'cycling' | 'irregular' | 'perimenopause' | 'menopause' | 'pregnancy' | 'not_applicable'
+  menstrualStatus: text('menstrual_status'),
+  lastPeriodStart: date('last_period_start'),
+  cycleLengthDays: integer('cycle_length_days'),
+  menopauseOnsetDate: date('menopause_onset_date'),
+  medications: text('medications'),
+  sensitivities: text('sensitivities'),
+  // 'sedentary' | 'light' | 'moderate' | 'active'
+  activityBaseline: text('activity_baseline'),
+  goalsText: text('goals_text'),
+  equipmentAccess: text('equipment_access'),
+});
+
+export const authTokens = pgTable('auth_tokens', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull(),
+  token: text('token').notNull().unique(),
+  label: text('label'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  lastUsedAt: timestamp('last_used_at'),
 });
 
 export const weeklyMetrics = pgTable('weekly_metrics', {

@@ -1,9 +1,7 @@
 import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import type { InvocationType, TrainerResponse } from "@/lib/trainer-types";
-
-// Single-user mode for now — same assumption the rest of the app makes.
-const HARDCODED_USER_ID = 1;
 
 export type AgentInvocationInput = {
   invocation_type: InvocationType;
@@ -15,21 +13,22 @@ export type AgentInvocationResult = {
   response: TrainerResponse;
 };
 
-type AgentInvocationRequestBody = AgentInvocationInput & {
-  user_id: number;
-};
-
 /**
- * Invoke the Trainer agent via the new `/api/agents/trainer/invoke` endpoint.
+ * Invoke the Trainer agent via `/api/agents/trainer/invoke`.
  *
- * Replaces the legacy `useCheckin` → `/api/checkin/submit` path. Use this for
- * any invocation type (`check_in`, `post_workout`, etc.). The caller supplies
- * the `invocation_type` and a typed `trigger_payload`; `user_id` is currently
- * hardcoded to 1.
+ * Auth model: the request's `user_id` is now derived server-side from the
+ * bearer token (the backend reads `c.get('user_id')` and ignores any
+ * `user_id` in the body). We deliberately do NOT send `user_id` from the
+ * client — single source of truth is the token.
  *
- * On success the query cache for `plan` and `progress` is invalidated to
- * match the old hook's semantics — the agent typically produces proposals
- * that, once accepted, will change the plan.
+ * The hook still guards client-side: if `useCurrentUser` hasn't resolved a
+ * user yet (no token, or `/api/auth/me` failed), the mutation rejects with
+ * a "not logged in" error rather than firing a doomed request. This keeps
+ * the UX honest if a component calls `mutate()` before auth is ready.
+ *
+ * On success the `plan` and `progress` query caches are invalidated to
+ * mirror the legacy `useCheckin` semantics — accepted proposals typically
+ * mutate the active plan.
  */
 export function useAgentInvoke(): UseMutationResult<
   AgentInvocationResult,
@@ -37,15 +36,16 @@ export function useAgentInvoke(): UseMutationResult<
   AgentInvocationInput
 > {
   const qc = useQueryClient();
+  const { data: currentUser } = useCurrentUser();
+
   return useMutation<AgentInvocationResult, Error, AgentInvocationInput>({
     mutationFn: (input) => {
-      const body: AgentInvocationRequestBody = {
-        ...input,
-        user_id: HARDCODED_USER_ID,
-      };
+      if (!currentUser) {
+        return Promise.reject(new Error("Not logged in"));
+      }
       return api.post<AgentInvocationResult>(
         "/api/agents/trainer/invoke",
-        body,
+        input,
       );
     },
     onSuccess: () => {

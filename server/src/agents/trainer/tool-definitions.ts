@@ -44,7 +44,7 @@ export const getHealthBaselineDef: ToolDefinition = {
 export const getCycleStatusDef: ToolDefinition = {
   name: 'get_cycle_status',
   description:
-    "Use this to fetch the user's current menstrual cycle phase (menstrual / follicular / ovulatory / luteal), cycle day, and regularity signal. Call this when planning a block or week so you can align intensity with cycle phase. Returns null/unknown if the user doesn't track their cycle — handle that gracefully and don't force cycle framing on users who haven't opted in.",
+    "Use this to fetch the user's life-stage cycle context. Returns a `status` field — one of `cycling`, `irregular`, `perimenopause`, `menopause`, `pregnancy`, `not_applicable`, or `unknown` — plus `tracking: true|false`. When `tracking` is true (cycling/irregular users with a known last period), the response includes `phase`, `cycle_day`, `cycle_length_days`, and `days_until_next`. When `tracking` is false, the response includes a `note` you should use to frame guidance (post-menopausal lean-mass focus, perimenopausal irregularity, pregnancy deference, etc.). Call this before any block/week proposal so you align intensity with the user's actual hormonal context — not a default-cycler assumption.",
   input_schema: {
     type: 'object',
     properties: {},

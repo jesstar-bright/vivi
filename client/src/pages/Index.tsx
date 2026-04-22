@@ -6,6 +6,7 @@ import WorkoutsTab from "@/components/WorkoutsTab";
 import LifestyleTab from "@/components/LifestyleTab";
 import MenuTab from "@/components/MenuTab";
 import ProfileTab from "@/components/ProfileTab";
+import UserBadge from "@/components/UserBadge";
 import CheckInModal from "@/components/CheckInModal";
 import PostWorkoutModal from "@/components/PostWorkoutModal";
 import { useCurrentPlan } from "@/hooks/useCurrentPlan";
@@ -93,6 +94,7 @@ const Index = () => {
   return (
     <div className="min-h-screen pb-24">
       <div className="max-w-md mx-auto px-4 pt-12">
+        <UserBadge />
         {tab === "workouts" && (
           <WorkoutsTab
             days={days}

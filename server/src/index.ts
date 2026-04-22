@@ -17,8 +17,11 @@ import { workoutsRouter } from './routes/workouts.js';
 import { progressRouter } from './routes/progress.js';
 import { mealsRouter } from './routes/meals.js';
 import { agentsRouter } from './routes/agents.js';
+import { authRouter } from './routes/auth.js';
+import { onboardingRouter } from './routes/onboarding.js';
+import type { AppEnv } from './types/hono-env.js';
 
-const app = new Hono();
+const app = new Hono<AppEnv>();
 
 // Global error handler
 app.onError(errorHandler);
@@ -51,6 +54,8 @@ app.route('/api/workout', workoutsRouter);
 app.route('/api/progress', progressRouter);
 app.route('/api/meals', mealsRouter);
 app.route('/api/agents', agentsRouter);
+app.route('/api/auth', authRouter);
+app.route('/api/onboarding', onboardingRouter);
 
 // Serve React frontend build (static assets: JS, CSS, images)
 app.use('/*', serveStatic({ root: '../client/dist' }));
