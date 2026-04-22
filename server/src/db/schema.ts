@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer, real, date, timestamp, boolean, jsonb, primaryKey } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, integer, real, date, timestamp, boolean, jsonb, primaryKey, unique } from 'drizzle-orm/pg-core';
 
 export const userProfiles = pgTable('user_profiles', {
   id: serial('id').primaryKey(),
@@ -15,7 +15,7 @@ export const userProfiles = pgTable('user_profiles', {
 export const weeklyMetrics = pgTable('weekly_metrics', {
   id: serial('id').primaryKey(),
   userId: integer('user_id'),
-  date: date('date').notNull().unique(),
+  date: date('date').notNull(),
   rhr: real('rhr'),
   hrv: real('hrv'),
   sleepScore: real('sleep_score'),
@@ -25,7 +25,9 @@ export const weeklyMetrics = pgTable('weekly_metrics', {
   vigorousMinutes: integer('vigorous_minutes'),
   stressAvg: real('stress_avg'),
   weight: real('weight'),
-});
+}, (table) => ({
+  userDateUnique: unique('weekly_metrics_user_date_unique').on(table.userId, table.date),
+}));
 
 export const checkIns = pgTable('check_ins', {
   id: serial('id').primaryKey(),

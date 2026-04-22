@@ -1,0 +1,2 @@
+ALTER TABLE "weekly_metrics" DROP CONSTRAINT "weekly_metrics_date_unique";--> statement-breakpoint
+ALTER TABLE "weekly_metrics" ADD CONSTRAINT "weekly_metrics_user_date_unique" UNIQUE("user_id","date");
